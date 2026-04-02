@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Handjet:wght@400&family=Montserrat:wght@400&family=Space+Grotesk:wght@400&display=swap" rel="stylesheet">
+    <title>Rilian</title>
+  </head>
+  <body>
+
+    <!-- NAV -->
+    <nav id="nav">
+      <div class="nav-inner">
+        <a href="#" class="nav-logo"><img src="/src/assets/rilian-logo.svg" alt="Rilian" height="18"></a>
+        <div class="nav-links">
+          <div class="nav-dropdown">
+            <button class="nav-link">Products <span class="chevron">›</span></button>
+            <div class="dropdown-panel">
+              <a href="#caspian" class="dropdown-link">Caspian</a>
+              <a href="#dawntreader" class="dropdown-link">DawnTreader</a>
+              <a href="#armory" class="dropdown-link">Armory</a>
+            </div>
+          </div>
+          <div class="nav-dropdown">
+            <button class="nav-link">Company <span class="chevron">›</span></button>
+            <div class="dropdown-panel">
+              <a href="#about" class="dropdown-link">About</a>
+              <a href="#newsroom" class="dropdown-link">Newsroom</a>
+            </div>
+          </div>
+        </div>
+        <div class="nav-actions">
+          <a href="#" class="btn-ghost btn-sm">See How It Works</a>
+          <a href="#" class="btn-primary btn-sm">Request a Briefing</a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- HERO -->
+    <section id="hero">
+      <div class="hero-grid"></div>
+      <div class="hero-rulers" aria-hidden="true">
+        <span class="hr-line"></span>
+        <span class="hr-line"></span>
+      </div>
+
+      <!-- Three.js WebGL canvas — glass disc orbital ring -->
+      <div class="hero-orbs" id="hero-orbs"></div>
+
+      <div class="hero-inner">
+        <div class="hero-loader" id="hero-loader">
+          <div class="loader-top">
+            <span class="loader-label">INITIALIZING PLATFORM</span>
+            <span class="loader-pct" id="loader-pct">0%</span>
+          </div>
+          <div class="loader-bar">
+            <div class="loader-fill" id="loader-fill"></div>
+          </div>
+        </div>
+        <div class="hero-headline-frame">
+          <h1 class="hero-headline stagger-text">Built by security experts to win the battles of tomorrow.</h1>
+        </div>
+        <p class="hero-sub">In the age of AI, defenders are outnumbered, understaffed, and fighting a fragmented battle. Rilian gives them the platform to fight back — and win.</p>
+        <div class="hero-actions">
+          <a href="#caspian" class="btn-primary">See How It Works</a>
+          <a href="#" class="btn-ghost">Request a Briefing</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ALL SECTIONS RISE TOGETHER — single rising panel over the hero -->
+    <div id="sections-rise">
+      <div class="rise-arc"></div>
+
+    <!-- PROBLEM -->
+    <section id="problem" class="section section-center">
+      <div class="section-inner">
+        <p class="section-label">The Problem</p>
+        <h2 class="section-header">On the technology battlefield, the good guys are outnumbered and outgunned.</h2>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-top"><span class="stat-num">88</span><span class="stat-suffix">%</span></div>
+            <h3 class="stat-title">The Expertise Gap</h3>
+            <p class="stat-desc">of security organizations have experienced a significant consequence from a skills shortage. When your best analysts leave, their knowledge leaves with them.</p>
+          </div>
+          <div class="stat-card">
+            <div class="stat-top"><span class="stat-num">200</span><span class="stat-suffix">+</span></div>
+            <h3 class="stat-title">The Fragmentation Crisis</h3>
+            <p class="stat-desc">Security teams average 200+ tools — almost none of them connected. 89% struggle with integration. The expertise required to master each one is itself a scarce resource.</p>
+          </div>
+          <div class="stat-card">
+            <div class="stat-top"><span class="stat-num">29</span><span class="stat-suffix">min</span></div>
+            <h3 class="stat-title">The Speed Gap</h3>
+            <p class="stat-desc">AI-enabled adversaries increased activity 89% year-over-year. The average breakout time is now 29 minutes. Defenders are still measured in hours.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CASPIAN -->
+    <section id="caspian" class="section section-alt">
+
+      <div class="section-inner caspian-content" id="caspian-content">
+        <p class="caspian-intro-label">The Solution</p>
+        <div class="caspian-title-box" id="caspian-title-box">
+          <!-- Box trace SVG — draws the border glowing around the rectangle -->
+          <svg class="caspian-streak" id="caspian-streak" aria-hidden="true">
+            <rect class="streak-rect" id="streak-rect" x="1" y="1" rx="4"/>
+          </svg>
+          <h2 class="caspian-big-title" id="caspian-big-title">CASPIAN</h2>
+        </div>
+        <h2 class="section-header">Your analysts shouldn't be navigating fragmented systems. They should be executing the mission.</h2>
+        <p class="section-body">Caspian is Rilian's agentic security orchestration platform. It sits across your entire security stack, orchestrates every tool through a single interface, and captures the tradecraft of your best practitioners — so that expertise compounds instead of walking out the door.</p>
+        <div class="caspian-screen-wrap">
+          <div class="caspian-screen-inner">
+            <img src="/src/assets/caspian-screen.png" class="caspian-screen" alt="Caspian Command Layer dashboard">
+          </div>
+        </div>
+        <div class="value-props">
+          <div class="vp-card">
+            <div class="vp-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><polygon points="12,2 22,8 22,16 12,22 2,16 2,8" stroke="currentColor" stroke-width="1.5"/></svg>
+            </div>
+            <h3>Expertise on Demand</h3>
+            <p>Pre-trained agents built on real-world operating protocols, ready to execute out of the box.</p>
+          </div>
+          <div class="vp-card">
+            <div class="vp-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M9 12h6M12 9v6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </div>
+            <h3>Visual, Transparent, Correctable</h3>
+            <p>Every workflow is visible, editable, and fully auditable in real time.</p>
+          </div>
+          <div class="vp-card">
+            <div class="vp-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="2" y="7" width="6" height="10" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="9" y="3" width="6" height="18" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="16" y="10" width="6" height="7" rx="1" stroke="currentColor" stroke-width="1.5"/></svg>
+            </div>
+            <h3>Modular Flexibility</h3>
+            <p>Works with any tools or LLM. No fine-tuning lock-in. No vendor dependency.</p>
+          </div>
+          <div class="vp-card">
+            <div class="vp-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5"/><path d="M12 7v5l3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </div>
+            <h3>Control Over Learning &amp; Knowledge Retention</h3>
+            <p>You decide what the system remembers, learns, and retains. Intelligence you fully own.</p>
+          </div>
+          <div class="vp-card">
+            <div class="vp-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 3L20 7V12C20 16.4 16.4 20.5 12 22C7.6 20.5 4 16.4 4 12V7L12 3Z" stroke="currentColor" stroke-width="1.5"/></svg>
+            </div>
+            <h3>Responsible by Design</h3>
+            <p>Built with privacy compliance and ethical AI as first principles. Every agent operates within boundaries you define, with full auditability.</p>
+          </div>
+        </div>
+        <div class="caspian-iso-wrap">
+          <img src="/src/assets/caspian-iso-grid.svg" class="caspian-iso-grid" aria-hidden="true" />
+          <img src="/src/assets/caspian-iso.png" class="caspian-iso" alt="Caspian platform overview" />
+        </div>
+        <div class="caspian-cta-wrap">
+          <a href="#" class="btn-primary caspian-cta">Explore Caspian</a>
+        </div>
+      </div><!-- /.caspian-content -->
+    </section>
+
+    <!-- DAWNTREADER -->
+    <section id="dawntreader" class="section reveal section-center">
+      <div class="section-inner">
+        <div>
+          <p class="section-label">Deploy Without Compromise: DawnTreader</p>
+          <h2 class="section-header">A great product that can't operate in your environment isn't a solution.</h2>
+          <p class="section-body">DawnTreader is Rilian's autonomous deployment and compliance engine — built to deliver Caspian into sovereign, air-gapped, and compliance-restricted environments. Deployable in days, not months.</p>
+          <div class="dt-screen-wrap">
+            <div class="dt-screen-inner">
+              <img src="/src/assets/dawntreader-screen.png" class="dt-screen" alt="DawnTreader Marketplace Battlecards">
+            </div>
+          </div>
+          <div class="dt-cards">
+            <div class="dt-card">Operates in air-gapped networks, bare metal, sovereign cloud, and multi-geo classified environments</div>
+            <div class="dt-card">Automated compliance enforcement that adapts to changing requirements</div>
+            <div class="dt-card">Proven international deployment track record</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- GLOBE DECORATION -->
+    <div class="globe-scene" aria-hidden="true">
+      <img src="/src/assets/globe.svg" class="globe-svg" alt="">
+    </div>
+
+    <!-- ARMORY -->
+    <section id="armory" class="section reveal section-alt section-center">
+      <div class="section-inner">
+        <p class="section-label">The Armory: The Ultimate Security Stack</p>
+        <h2 class="section-header">3,500+ cybersecurity vendors exist. Almost none are built for your operational environment.</h2>
+        <p class="section-body">The Rilian Marketplace is a curated ecosystem of COTS and GOTS technologies — vetted by practitioner SMEs across 8 capability domains for sovereign environments and mission relevance.</p>
+        <div class="armory-screen-wrap">
+          <div class="armory-screen-inner">
+            <img class="armory-screen" src="/src/assets/armory-screen.png" alt="Armory dashboard" />
+          </div>
+        </div>
+        <div class="armory-tags">
+          <span class="tag">Pre-selected</span>
+          <span class="tag">Pre-integrated</span>
+          <span class="tag">Mission-ready</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- WHY RILIAN -->
+    <section id="why" class="section reveal section-center">
+      <div class="section-inner">
+        <p class="section-label">Why Rilian</p>
+        <h2 class="section-header">Practitioner depth. Platform speed.</h2>
+        <p class="section-body">Rilian occupies the white space between legacy systems integrators (too slow, too services-heavy) and point solutions (too narrow, not sovereign-ready). We make the tools you use better and deliver three things no single vendor offers together:</p>
+        <div class="diff-stack">
+          <div class="diff-card">
+            <span class="diff-num">01</span>
+            <div class="diff-divider"></div>
+            <h3>Sovereign-grade deployment</h3>
+            <p>Air-gapped, compliant, and operable where commercial cloud is off the table.</p>
+          </div>
+          <div class="diff-card">
+            <span class="diff-num">02</span>
+            <div class="diff-divider"></div>
+            <h3>Unified command across a fragmented security stack</h3>
+            <p>One agentic interface across every tool in your environment.</p>
+          </div>
+          <div class="diff-card">
+            <span class="diff-num">03</span>
+            <div class="diff-divider"></div>
+            <h3>Agentic intelligence built on real practitioner expertise</h3>
+            <p>Not workflow diagrams, not generic AI.</p>
+          </div>
+        </div>
+        <p class="diff-hint">drag to explore</p>
+
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="about" class="section reveal section-mission">
+      <div class="section-inner">
+        <div class="about-frame-outer">
+        <div class="about-frame">
+          <div class="about-rays" aria-hidden="true">
+            <svg class="about-sweep-svg" viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+              <path d="M-100,620 C50,300 500,-80 1300,-20"  stroke="rgba(160,200,255,0.14)" stroke-width="1.2" fill="none"/>
+              <path d="M-100,580 C50,260 500,-120 1300,-60"  stroke="rgba(160,200,255,0.11)" stroke-width="1"   fill="none"/>
+              <path d="M-100,660 C50,340 500,-40 1300,20"   stroke="rgba(160,200,255,0.09)" stroke-width="1"   fill="none"/>
+              <path d="M-100,700 C50,380 500,0 1300,60"     stroke="rgba(160,200,255,0.07)" stroke-width="0.9" fill="none"/>
+              <path d="M-100,740 C50,420 500,40 1300,100"   stroke="rgba(160,200,255,0.05)" stroke-width="0.8" fill="none"/>
+              <path d="M-100,540 C50,220 500,-160 1300,-100" stroke="rgba(160,200,255,0.07)" stroke-width="0.9" fill="none"/>
+              <path d="M-100,500 C50,180 500,-200 1300,-140" stroke="rgba(160,200,255,0.05)" stroke-width="0.8" fill="none"/>
+              <path d="M-100,780 C50,460 500,80 1300,140"   stroke="rgba(160,200,255,0.03)" stroke-width="0.7" fill="none"/>
+            </svg>
+          </div>
+          <p class="section-label">About Us</p>
+          <h2 class="section-header">We didn't study this problem from the outside.</h2>
+          <div class="about-body">
+            <p>We've been the analysts on the floor at 2 a.m. We built the playbooks, ran the investigations, and watched critical knowledge walk out the door when our best people moved on. We started Rilian because we lived the problem — and because we knew the industry wasn't going to solve it with another dashboard.</p>
+            <p>Rilian is an agentic systems integrator. We build AI that thinks like a practitioner, deploys into mission-controlled environments, and turns your team's hard-won expertise into a permanent, compounding asset.</p>
+            <p>We didn't come here to compete. We came here to rebalance the board towards the defense.</p>
+          </div>
+          <div class="about-actions">
+            <a href="#" class="btn-primary">Meet the Team</a>
+            <a href="#" class="btn-ghost">Request a Briefing</a>
+          </div>
+        </div>
+        </div><!-- /.about-frame-outer -->
+      </div>
+    </section>
+
+
+    <!-- NEWSROOM -->
+    <section id="newsroom" class="section reveal">
+      <div class="section-inner">
+        <p class="section-label">Newsroom</p>
+        <h2 class="section-header">The latest from Rilian — news, insights, and analysis from the front lines of cyber defense.</h2>
+        <div class="news-tabs">
+          <button class="news-tab active">Press Releases</button>
+          <button class="news-tab">In the News</button>
+          <button class="news-tab">Blogs</button>
+          <button class="news-tab">Event Spotlight</button>
+        </div>
+        <div class="news-grid">
+          <div class="news-card">
+            <span class="news-cat">Press Release</span>
+            <h4>Rilian Announces General Availability of Caspian Platform</h4>
+            <span class="news-date">March 2025</span>
+          </div>
+          <div class="news-card">
+            <span class="news-cat">Press Release</span>
+            <h4>Rilian Secures Series A to Expand Sovereign Deployment Capabilities</h4>
+            <span class="news-date">January 2025</span>
+          </div>
+          <div class="news-card">
+            <span class="news-cat">Press Release</span>
+            <h4>Rilian Partners with Leading Critical Infrastructure Organizations</h4>
+            <span class="news-date">November 2024</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer id="footer">
+      <div class="footer-inner">
+        <div class="footer-top">
+          <a href="#" class="nav-logo"><img src="/src/assets/rilian-logo.svg" alt="Rilian" height="18"></a>
+          <p class="footer-tagline">Built by practitioners. Deployed where it matters.</p>
+        </div>
+        <div class="footer-links">
+          <div class="footer-col">
+            <span class="footer-col-title">Products</span>
+            <a href="#caspian">Caspian</a>
+            <a href="#dawntreader">DawnTreader</a>
+            <a href="#armory">Armory</a>
+          </div>
+          <div class="footer-col">
+            <span class="footer-col-title">Company</span>
+            <a href="#about">About</a>
+            <a href="#">Careers</a>
+            <a href="#">Contact</a>
+          </div>
+          <div class="footer-col">
+            <span class="footer-col-title">Legal</span>
+            <a href="#">Privacy</a>
+            <a href="#">Terms</a>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <span>© 2025 Rilian. All rights reserved.</span>
+        </div>
+      </div>
+    </footer>
+
+    </div><!-- /#sections-rise -->
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

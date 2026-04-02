@@ -1,0 +1,1746 @@
+/* ── Reset & Variables ─────────────────────────────────────── */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --cursor-x: -9999;   /* off-screen default — no spotlight until mouse enters */
+  --cursor-y: -9999;
+  --bg:          #05061c;           /* rilian.com exact dark navy */
+  --bg-alt:      #06082a;
+  --bg-blue:     #030b2e;           /* deep blue — matches sphere */
+  --bg-card:     rgba(255,255,255,0.02);
+  --blue:        #0941BB;
+  --blue-bright: #0016FF;          /* rilian.com decorative accent */
+  --blue-h:      #1a55d4;
+  --text:        #ffffff;
+  --muted:       #9aa3b6;          /* rilian.com --dark */
+  --border:      rgba(73,85,112,0.22); /* rilian.com --border-color */
+  --font:        'Montserrat', sans-serif;
+  --font-heading:'Space Grotesk', sans-serif;
+  --max-w:       1200px;
+  --pad-x:       clamp(1.5rem, 5vw, 4rem);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 16px;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+a { text-decoration: none; color: inherit; }
+
+h1, h2, h3, h4, h5, h6,
+.nav-logo,
+.section-header,
+.hero-headline,
+.stat-title,
+.diff-content h3,
+.footer-col-title {
+  font-family: var(--font-heading);
+}
+
+/* ── Buttons ───────────────────────────────────────────────── */
+.btn-primary,
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.85rem 1.75rem;
+  border-radius: 0;
+  font-family: var(--font);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border: none;
+  white-space: nowrap;
+  position: relative;
+  overflow: hidden;
+
+  /* Blue glass fill — visible against dark bg */
+  background: rgba(9, 65, 187, 0.22);
+  color: #ffffff;
+  box-shadow: inset 0 1px 0 rgba(120, 170, 255, 0.12);
+  transition: background 0.22s ease, color 0.22s ease, box-shadow 0.22s ease;
+}
+
+/* Diagonal arrow on every button */
+.btn-primary::after,
+.btn-ghost::after {
+  content: '↗';
+  font-size: 1.05em;
+  line-height: 1;
+}
+
+/* Corner bracket marks — 8 thin lines (2 per corner) via gradients */
+.btn-primary::before,
+.btn-ghost::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(var(--blue-bright), var(--blue-bright)) top    left  / 13px 1.5px no-repeat,
+    linear-gradient(var(--blue-bright), var(--blue-bright)) top    left  / 1.5px 13px no-repeat,
+    linear-gradient(var(--blue-bright), var(--blue-bright)) top    right / 13px 1.5px no-repeat,
+    linear-gradient(var(--blue-bright), var(--blue-bright)) top    right / 1.5px 13px no-repeat,
+    linear-gradient(var(--blue-bright), var(--blue-bright)) bottom left  / 13px 1.5px no-repeat,
+    linear-gradient(var(--blue-bright), var(--blue-bright)) bottom left  / 1.5px 13px no-repeat,
+    linear-gradient(var(--blue-bright), var(--blue-bright)) bottom right / 13px 1.5px no-repeat,
+    linear-gradient(var(--blue-bright), var(--blue-bright)) bottom right / 1.5px 13px no-repeat;
+}
+
+.btn-primary:hover,
+.btn-ghost:hover {
+  background: rgba(9, 65, 187, 0.38);
+  color: #ffffff;
+  box-shadow: inset 0 1px 0 rgba(120, 170, 255, 0.18);
+}
+
+/* Character stagger animation (rilian.com style) */
+.btn-chars-clip {
+  display: inline-flex;
+  overflow: hidden;
+  height: 1.15em;
+  align-items: center;
+  vertical-align: middle;
+}
+.btn-chars { display: inline-flex; }
+
+.btn-char {
+  display: inline-block;
+  transition: transform 0.6s cubic-bezier(0.625, 0.05, 0, 1);
+  text-shadow: 0 1.3em currentColor;  /* ghost copy sits below, slides up on hover */
+}
+
+.btn-primary:hover .btn-char,
+.btn-ghost:hover .btn-char {
+  transform: translateY(-1.3em);
+}
+
+.btn-sm {
+  padding: 0.6rem 1.2rem;
+  font-size: 0.7rem;
+}
+
+/* ── Nav ───────────────────────────────────────────────────── */
+#nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  padding: 1.5rem 0;
+  transition: background 0.3s, padding 0.3s, backdrop-filter 0.3s;
+}
+
+#nav.scrolled {
+  background: rgba(5,6,28,0.96);
+  backdrop-filter: blur(14px);
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.nav-inner {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 0 var(--pad-x);
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.nav-links {
+  display: flex;
+  gap: 0.25rem;
+  flex: 1;
+}
+
+.nav-dropdown { position: relative; }
+
+.nav-link {
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-family: var(--font);
+  font-size: 0.83rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  padding: 0.5rem 0.8rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  transition: color 0.2s;
+}
+.nav-link:hover { color: var(--text); }
+
+.chevron {
+  font-style: normal;
+  transition: transform 0.2s;
+  display: inline-block;
+}
+.nav-dropdown:hover .chevron { transform: rotate(90deg); }
+
+.dropdown-panel {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  left: 0;
+  background: rgba(6,10,18,0.98);
+  backdrop-filter: blur(14px);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.5rem 0;
+  min-width: 155px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-6px);
+  transition: all 0.2s ease;
+}
+.nav-dropdown:hover .dropdown-panel {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.dropdown-link {
+  display: block;
+  padding: 0.6rem 1.2rem;
+  font-size: 0.83rem;
+  font-weight: 500;
+  color: var(--muted);
+  transition: color 0.2s, background 0.2s;
+}
+.dropdown-link:hover {
+  color: var(--text);
+  background: rgba(255,255,255,0.04);
+}
+
+.nav-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+/* ── Hero ──────────────────────────────────────────────────── */
+#hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: #030b2e;
+}
+
+.hero-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(9,65,187,0.145) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(9,65,187,0.145) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(ellipse 85% 75% at 50% 50%, black, transparent);
+}
+
+/* ── Column rulers + square dot markers ─────────────────────── */
+.hero-rulers {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 6vw;
+}
+
+.hr-line {
+  width: 1px;
+  background: rgba(80, 130, 255, 0.28);
+  position: relative;
+  flex-shrink: 0;
+}
+
+/* Square dot markers — inset from edges for visibility */
+.hr-line::before,
+.hr-line::after {
+  content: '';
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: rgba(80, 140, 255, 0.75);
+  left: -3px;
+}
+.hr-line::before { top: 8rem; }
+.hr-line::after  { bottom: 8rem; }
+
+.hero-inner {
+  position: relative;
+  z-index: 2;   /* below orbs (z-index 4) but above grid */
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 120px var(--pad-x) 6rem;
+  text-align: center;
+}
+
+/* Loader */
+.hero-loader {
+  max-height: 80px;
+  overflow: hidden;
+  margin-bottom: 3rem;
+  transition: max-height 0.55s ease, opacity 0.45s ease, margin-bottom 0.55s ease;
+}
+.hero-loader.done {
+  max-height: 0;
+  opacity: 0;
+  margin-bottom: 0;
+}
+
+.loader-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.6rem;
+  max-width: 420px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.loader-label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  color: var(--blue);
+}
+
+.loader-pct {
+  font-size: 0.72rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+}
+
+.loader-bar {
+  width: 100%;
+  max-width: 420px;
+  height: 2px;
+  background: rgba(9,65,187,0.2);
+  border-radius: 2px;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+.loader-fill {
+  height: 100%;
+  width: 0%;
+  background: var(--blue);
+  border-radius: 2px;
+  transition: width 0.06s linear;
+}
+
+/* Problem section centring overrides (inside #sections-rise) */
+#problem .section-label  { justify-content: center; margin-bottom: 1.2rem; }
+#problem .section-header { margin: 0 auto 3rem; text-align: center; }
+#problem .stat-num,
+#problem .stat-suffix    { color: #ffffff; }
+
+/* ── Hero WebGL Canvas ─────────────────────────────────────── */
+.hero-orbs {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+  opacity: 0;           /* GSAP fades in after loader */
+}
+
+.hero-orbs canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* ── Rising sections panel ─────────────────────────────────── */
+/* Flat panel containing all sections from problem onwards.
+   Rises over the hero on scroll. Arc glow only on top via ::before. */
+#sections-rise {
+  position: relative;
+  z-index: 7;
+  margin-top: -100vh;
+  background: #030b2e;
+  opacity: 0;
+}
+
+
+/* ── Planet arc ────────────────────────────────────────────── */
+/* A giant circle: only its top arc peeks above #sections-rise.
+   Against the dark hero sky the curved edge is naturally visible.
+   The glow comes from box-shadow — the bottom edge is hidden
+   inside #sections-rise (same colour) so no second line.       */
+.rise-arc {
+  position: absolute;
+  top: -6vh;             /* how much of the arc peeks above the panel */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 280vw;
+  height: 372vw;         /* taller oval pushes bottom rim below Armory section */
+  border-radius: 50%;
+  background: #030b2e;   /* same as #sections-rise — bottom edge invisible */
+  box-shadow:
+    0 0  2px  2px rgba(200, 235, 255, 1.00),   /* bright white-blue rim */
+    0 0 20px  8px rgba(100, 180, 255, 0.90),   /* close intense glow */
+    0 0 60px 20px rgba(50,  120, 255, 0.70),   /* mid spread */
+    0 0 120px 50px rgba(20,  70,  255, 0.45),  /* wide atmospheric */
+    0 0 200px 80px rgba(10,  40,  220, 0.25);  /* far haze */
+  pointer-events: none;
+  z-index: -1;
+}
+
+
+/* ── Bottom horizon arc (Armory → Why Rilian) ───────────────── */
+.horizon-arc {
+  width: 100%;
+  height: 300px;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 120% 60% at 50% 115%,
+    rgba(200, 235, 255, 1.00)  0%,
+    rgba(100, 180, 255, 0.80)  8%,
+    rgba(50,  120, 255, 0.50) 22%,
+    rgba(20,   70, 255, 0.25) 42%,
+    transparent                65%
+  );
+}
+
+/* Hero text */
+.hero-headline-frame {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 0;
+}
+
+.hero-headline-frame::before {
+  content: '';
+  position: absolute;
+  inset: -10px;
+  pointer-events: none;
+  background:
+    linear-gradient(rgba(255,255,255,0.55), rgba(255,255,255,0.55)) top    left  / 18px 1.5px no-repeat,
+    linear-gradient(rgba(255,255,255,0.55), rgba(255,255,255,0.55)) top    left  / 1.5px 18px no-repeat,
+    linear-gradient(rgba(255,255,255,0.55), rgba(255,255,255,0.55)) top    right / 18px 1.5px no-repeat,
+    linear-gradient(rgba(255,255,255,0.55), rgba(255,255,255,0.55)) top    right / 1.5px 18px no-repeat,
+    linear-gradient(rgba(255,255,255,0.55), rgba(255,255,255,0.55)) bottom left  / 18px 1.5px no-repeat,
+    linear-gradient(rgba(255,255,255,0.55), rgba(255,255,255,0.55)) bottom left  / 1.5px 18px no-repeat,
+    linear-gradient(rgba(255,255,255,0.55), rgba(255,255,255,0.55)) bottom right / 18px 1.5px no-repeat,
+    linear-gradient(rgba(255,255,255,0.55), rgba(255,255,255,0.55)) bottom right / 1.5px 18px no-repeat;
+}
+
+.hero-headline {
+  font-size: clamp(1.50rem, 3.42vw, 2.87rem);
+  font-weight: 400;          /* rilian.com H1 weight */
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin-bottom: 1.75rem;
+  text-transform: uppercase;
+  /* opacity/transform set and driven by GSAP */
+}
+
+.hero-headline .word {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.hero-sub {
+  font-size: clamp(0.95rem, 1.8vw, 1.1rem);
+  font-weight: 400;
+  color: var(--muted);
+  max-width: 660px;
+  margin: 0 auto 2.5rem;
+  line-height: 1.8;
+  /* opacity/transform driven by GSAP */
+}
+
+.hero-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  /* opacity/transform driven by GSAP */
+}
+
+/* ── Sections ──────────────────────────────────────────────── */
+.section { padding: 7rem 0; }
+.section-alt  { background: var(--bg-alt); }
+.section-blue { background: var(--bg-blue); }
+
+/* All sections inside the rising panel share the same background — no colour seams */
+#sections-rise .section-alt { background: transparent; }
+
+/* Center-aligned section variant */
+.section-center .section-inner  { text-align: center; }
+.section-center .section-label  { justify-content: center; }
+.section-center .section-header,
+.section-center .section-body   { margin-left: auto; margin-right: auto; }
+.section-center .feature-list   { align-items: center; text-align: center; }
+.section-center .feature-list li { text-align: center; }
+.section-center .armory-tags    { justify-content: center; }
+.section-center .diff-stack { justify-content: center; }
+.section-center .diff-card  { text-align: center; }
+
+.section-inner {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 0 var(--pad-x);
+}
+
+.section-label {
+  font-family: var(--font-heading);
+  font-size: 0.72rem;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #C6DAF7;
+  margin-bottom: 1.4rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* Left accent line — rilian.com decorative element */
+.section-label::before {
+  content: '';
+  display: inline-block;
+  width: 28px;
+  height: 1.5px;
+  background: var(--blue-bright);
+  flex-shrink: 0;
+}
+
+.section-header {
+  font-size: clamp(1.75rem, 3.5vw, 2.9rem);
+  font-weight: 400;           /* rilian uses regular weight for big headings */
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  max-width: 780px;
+  margin-bottom: 1.5rem;
+}
+
+.section-body {
+  font-size: 0.975rem;
+  color: var(--muted);
+  max-width: 680px;
+  line-height: 1.85;
+  margin-bottom: 3rem;
+}
+
+/* Scroll reveal */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.in-view { opacity: 1; transform: translateY(0); }
+
+.reveal-child {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.reveal-child.in-view { opacity: 1; transform: translateY(0); }
+
+/* ── Problem / Stats ───────────────────────────────────────── */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-top: 3rem;
+}
+
+.stat-card {
+  background-color: var(--bg-card);
+  background-image: radial-gradient(
+    300px 300px at calc(var(--cursor-x) * 1px) calc(var(--cursor-y) * 1px),
+    rgba(80, 140, 255, 0.07),
+    transparent
+  );
+  background-attachment: fixed;
+  border: 1px solid var(--border);
+  border-radius: 0;
+  padding: 2rem 1.75rem;
+  position: relative;
+  transition: border-color 0.3s, transform 0.3s;
+}
+.stat-card:hover {
+  border-color: rgba(9,65,187,0.35);
+  transform: translateY(-4px);
+}
+
+/* Corner bracket accent — rilian.com .box style */
+.stat-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(var(--blue-bright), var(--blue-bright)) top    left  / 16px 2px no-repeat,
+    linear-gradient(var(--blue-bright), var(--blue-bright)) top    left  / 2px 16px no-repeat,
+    linear-gradient(var(--blue-bright), var(--blue-bright)) bottom right / 16px 2px no-repeat,
+    linear-gradient(var(--blue-bright), var(--blue-bright)) bottom right / 2px 16px no-repeat;
+}
+
+.stat-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 0.15rem;
+  margin-bottom: 0.85rem;
+}
+
+.stat-num {
+  font-family: 'Handjet', sans-serif;
+  font-size: clamp(4.55rem, 7.8vw, 6.5rem);
+  font-weight: 400;
+  color: var(--blue);
+  line-height: 1;
+}
+
+.stat-suffix {
+  font-family: 'Handjet', sans-serif;
+  font-size: clamp(2.5rem, 4vw, 4rem);
+  font-weight: 400;
+  color: var(--blue);
+}
+
+.stat-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  margin-bottom: 0.7rem;
+  letter-spacing: 0.01em;
+}
+
+.stat-desc {
+  font-size: 0.85rem;
+  color: var(--muted);
+  line-height: 1.75;
+}
+
+/* ── Caspian section ───────────────────────────────────────── */
+.caspian-intro-label {
+  font-family: var(--font-heading);
+  font-size: 0.72rem;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #C6DAF7;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.caspian-intro-label::before {
+  content: '';
+  display: inline-block;
+  width: 28px;
+  height: 1.5px;
+  background: var(--blue-bright);
+}
+
+/* ── Caspian streak + box ──────────────────────────────────── */
+/* stroke-dashoffset set dynamically by JS */
+
+.caspian-title-box {
+  display: inline-block;
+  position: relative;
+  overflow: visible;
+  padding: 0.78rem 1.82rem;
+  margin: 0 0 2.5rem;
+  border: 2px solid rgba(255,255,255,0.06);
+  border-radius: 6px;
+}
+
+/* Hide the old SVG streak */
+.caspian-streak { display: none; }
+
+/* Cursor glow border — element-relative coordinates via JS */
+.caspian-title-box {
+  --caspian-x: -999px;
+  --caspian-y: -999px;
+}
+
+.caspian-title-box::before {
+  content: '';
+  pointer-events: none;
+  position: absolute;
+  inset: -2px;
+  padding: 2px;
+  border-radius: 8px;
+  background: radial-gradient(
+    220px 220px at var(--caspian-x) var(--caspian-y),
+    rgba(100, 170, 255, 1),
+    transparent 70%
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: destination-out;
+  mask-composite: exclude;
+  z-index: 2;
+}
+
+/* Corner bracket accents */
+.caspian-title-box::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+  background:
+    linear-gradient(var(--blue-bright), var(--blue-bright)) top    left  / 16px 2px no-repeat,
+    linear-gradient(var(--blue-bright), var(--blue-bright)) top    left  / 2px 16px no-repeat,
+    linear-gradient(var(--blue-bright), var(--blue-bright)) bottom right / 16px 2px no-repeat,
+    linear-gradient(var(--blue-bright), var(--blue-bright)) bottom right / 2px 16px no-repeat;
+}
+
+@keyframes caspian-reveal {
+  0%   { clip-path: inset(0 100% 0 0); }
+  100% { clip-path: inset(0 0%   0 0); }
+}
+
+.caspian-big-title {
+  font-family: var(--font-heading);
+  font-size: clamp(1.94rem, 3.24vw, 3.57rem);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  color: #ffffff;
+  margin: 0;
+  text-align: center;
+  clip-path: inset(0 100% 0 0);
+}
+
+.caspian-content::before {
+  content: '';
+  position: absolute;
+  top: 7rem;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 420px;
+  height: 420px;
+  border-radius: 50%;
+  background: radial-gradient(circle at center,
+    rgba(40, 90, 255, 0.42) 0%,
+    rgba(20, 60, 220, 0.20) 45%,
+    transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0;
+  transition: opacity 1.08s ease;
+}
+
+.caspian-content.glow-visible::before {
+  opacity: 0.5;
+}
+
+.caspian-big-title.reveal-in {
+  animation: caspian-reveal 2.30s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.caspian-content {
+  text-align: center;
+  position: relative;
+}
+
+#caspian .section-header {
+  font-size: clamp(1.575rem, 3.15vw, 2.61rem);
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+#caspian .section-body { text-align: center; margin-left: auto; margin-right: auto; }
+#caspian      { padding-bottom: 6rem; }
+#dawntreader  { padding-top: 6rem; }
+#dawntreader  { padding-bottom: 6rem; }
+#armory       { padding-top: 6rem; }
+
+/* ── DawnTreader screen mockup ─────────────────────────────── */
+.dt-screen-wrap {
+  margin-top: 3rem;
+  margin-bottom: 3rem;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.dt-screen-inner {
+  --dt-screen-x: -999px;
+  --dt-screen-y: -999px;
+  position: relative;
+  width: 100%;
+  max-width: 960px;
+  border-radius: 14px;
+}
+
+.dt-screen-inner::before {
+  content: '';
+  pointer-events: none;
+  position: absolute;
+  inset: -2px;
+  border-radius: 14px;
+  padding: 2px;
+  background: radial-gradient(
+    400px 400px at var(--dt-screen-x) var(--dt-screen-y),
+    rgba(100, 170, 255, 0.9),
+    transparent 70%
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: destination-out;
+  mask-composite: exclude;
+  z-index: 2;
+}
+
+.dt-screen {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  display: block;
+  filter: drop-shadow(0 0 60px rgba(23, 95, 255, 0.22));
+}
+
+/* ── Armory screen mockup ──────────────────────────────────── */
+.armory-screen-wrap {
+  margin-top: 3rem;
+  margin-bottom: 3rem;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.armory-screen-inner {
+  --armory-screen-x: -999px;
+  --armory-screen-y: -999px;
+  position: relative;
+  width: 100%;
+  max-width: 960px;
+  border-radius: 14px;
+}
+
+.armory-screen-inner::before {
+  content: '';
+  pointer-events: none;
+  position: absolute;
+  inset: -2px;
+  border-radius: 14px;
+  padding: 2px;
+  background: radial-gradient(
+    400px 400px at var(--armory-screen-x) var(--armory-screen-y),
+    rgba(100, 170, 255, 0.9),
+    transparent 70%
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: destination-out;
+  mask-composite: exclude;
+  z-index: 2;
+}
+
+.armory-screen {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  display: block;
+  filter: drop-shadow(0 0 60px rgba(23, 95, 255, 0.22));
+}
+
+/* ── DawnTreader feature cards ─────────────────────────────── */
+.dt-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-top: 2.5rem;
+}
+
+.dt-card {
+  background-color: var(--bg-card);
+  background-image: radial-gradient(
+    300px 300px at calc(var(--cursor-x) * 1px) calc(var(--cursor-y) * 1px),
+    rgba(80, 140, 255, 0.07),
+    transparent
+  );
+  background-attachment: fixed;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1.5rem;
+  font-size: 0.88rem;
+  color: var(--muted);
+  line-height: 1.75;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: border-color 0.3s, transform 0.3s;
+}
+
+.dt-card:hover { border-color: rgba(9,65,187,0.35); transform: translateY(-4px); }
+
+/* Corner bracket accent matching vp-card */
+.dt-card::before {
+  content: '';
+  position: absolute;
+  top: -1px; left: -1px;
+  width: 14px; height: 14px;
+  border-top: 2px solid var(--blue-bright);
+  border-left: 2px solid var(--blue-bright);
+  border-radius: 2px 0 0 0;
+}
+.dt-card::after {
+  content: '';
+  position: absolute;
+  bottom: -1px; right: -1px;
+  width: 14px; height: 14px;
+  border-bottom: 2px solid var(--blue-bright);
+  border-right: 2px solid var(--blue-bright);
+  border-radius: 0 0 2px 0;
+}
+
+/* ── Value Props (Caspian) ─────────────────────────────────── */
+.value-props {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-auto-rows: 1fr;
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+/* Top 3 cards: 2 cols each. Bottom 2: 3 cols each → same total width, fully aligned */
+.vp-card { grid-column: span 2; }
+.vp-card:nth-child(4) { grid-column: 1 / 4; }
+.vp-card:nth-child(5) { grid-column: 4 / 7; }
+
+.vp-card {
+  background-color: var(--bg-card);
+  background-image: radial-gradient(
+    300px 300px at calc(var(--cursor-x) * 1px) calc(var(--cursor-y) * 1px),
+    rgba(80, 140, 255, 0.07),
+    transparent
+  );
+  background-attachment: fixed;
+  border: 1px solid var(--border);
+  border-radius: 0;
+  padding: 0.75rem 1.5rem;
+  position: relative;
+  transition: border-color 0.3s, transform 0.3s;
+}
+.vp-card:hover { border-color: rgba(0,22,255,0.35); transform: translateY(-4px); }
+
+.vp-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(var(--blue-bright), var(--blue-bright)) top    left  / 14px 1.5px no-repeat,
+    linear-gradient(var(--blue-bright), var(--blue-bright)) top    left  / 1.5px 14px no-repeat,
+    linear-gradient(var(--blue-bright), var(--blue-bright)) bottom right / 14px 1.5px no-repeat,
+    linear-gradient(var(--blue-bright), var(--blue-bright)) bottom right / 1.5px 14px no-repeat;
+}
+
+.vp-icon {
+  color: var(--blue);
+  margin-bottom: 0.4rem;
+}
+
+.vp-card h3 {
+  font-size: 0.88rem;
+  font-weight: 700;
+  margin-bottom: 0.6rem;
+  line-height: 1.35;
+}
+
+.vp-card p {
+  font-size: 0.83rem;
+  color: var(--muted);
+  line-height: 1.75;
+}
+
+/* Spotlight border glow — cursor-proximity ring */
+.vp-card::after,
+.stat-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 1px;
+  border-radius: inherit;
+  background: radial-gradient(
+    220px 220px at calc(var(--cursor-x) * 1px) calc(var(--cursor-y) * 1px),
+    rgba(100, 165, 255, 0.65),
+    transparent 70%
+  );
+  background-attachment: fixed;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: destination-out;
+  mask-composite: exclude;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ── Split layout (DawnTreader) ────────────────────────────── */
+.split-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5rem;
+  align-items: center;
+}
+
+.feature-list {
+  list-style: none;
+  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.feature-list li {
+  font-size: 0.88rem;
+  color: var(--muted);
+  padding-left: 1.25rem;
+  position: relative;
+  line-height: 1.75;
+}
+.feature-list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.62em;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--blue);
+}
+
+.env-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.env-node {
+  background: rgba(9,65,187,0.07);
+  border: 1px solid rgba(9,65,187,0.22);
+  border-radius: 6px;
+  padding: 1.5rem 1.25rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-align: center;
+  color: rgba(255,255,255,0.75);
+  text-transform: uppercase;
+  transition: background 0.25s, border-color 0.25s;
+}
+.env-node:hover {
+  background: rgba(9,65,187,0.14);
+  border-color: var(--blue);
+}
+
+/* ── Armory Tags ───────────────────────────────────────────── */
+.armory-tags {
+  display: flex;
+  gap: 0.9rem;
+  flex-wrap: wrap;
+}
+
+.tag {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 0;
+  padding: 0.75rem 1.5rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.82);
+  position: relative;
+  transition: border-color 0.3s, transform 0.3s;
+}
+.tag:hover {
+  border-color: rgba(9,65,187,0.35);
+  transform: translateY(-4px);
+}
+/* Corner brackets matching other cards */
+.tag::before {
+  content: '';
+  position: absolute;
+  top: -1px; left: -1px;
+  width: 10px; height: 10px;
+  border-top: 2px solid var(--blue-bright);
+  border-left: 2px solid var(--blue-bright);
+}
+.tag::after {
+  content: '';
+  position: absolute;
+  bottom: -1px; right: -1px;
+  width: 10px; height: 10px;
+  border-bottom: 2px solid var(--blue-bright);
+  border-right: 2px solid var(--blue-bright);
+}
+
+/* ── Differentiators — draggable card stack (Why Rilian) ────── */
+.diff-stack {
+  position: relative;
+  height: 480px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: -4rem 0 2rem;
+  touch-action: none;
+}
+
+.diff-card {
+  position: absolute;
+  width: 400px;
+  padding: 3rem 2.75rem;
+  background: linear-gradient(160deg, #111a3a 0%, #0a0f28 100%);
+  border: none;
+  border-radius: 4px;
+  box-shadow: 0 12px 60px rgba(0,0,0,0.7);
+  cursor: grab;
+  user-select: none;
+  will-change: transform, opacity;
+  transition:
+    transform 0.55s cubic-bezier(0.34, 1.3, 0.64, 1),
+    opacity   0.4s ease,
+    box-shadow 0.3s ease,
+    border-color 0.3s ease;
+}
+.diff-card:active { cursor: grabbing; }
+
+/* Front card — elevated with glow */
+.diff-card.is-front {
+  box-shadow:
+    0 0 40px rgba(9,65,187,0.2),
+    0 20px 60px rgba(0,0,0,0.7);
+}
+
+/* Position states set by JS */
+.diff-card.is-front {
+  transform: translateX(0) translateY(0) scale(1) rotate(0deg);
+  z-index: 3;
+  opacity: 1;
+}
+.diff-card.is-left {
+  transform: translateX(-170px) translateY(20px) scale(0.92) rotate(-2deg);
+  z-index: 2;
+  opacity: 0.7;
+  cursor: pointer;
+}
+.diff-card.is-right {
+  transform: translateX(170px) translateY(20px) scale(0.92) rotate(2deg);
+  z-index: 1;
+  opacity: 0.7;
+  cursor: pointer;
+}
+.diff-card.is-left:hover,
+.diff-card.is-right:hover {
+  opacity: 0.92;
+  transform: translateX(-170px) translateY(14px) scale(0.94) rotate(-1deg);
+}
+.diff-card.is-right:hover {
+  transform: translateX(170px) translateY(14px) scale(0.94) rotate(1deg);
+}
+
+/* All 4 corner brackets */
+.diff-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: 4px;
+  background:
+    linear-gradient(var(--blue-bright), var(--blue-bright)) top    left  / 18px 1.5px no-repeat,
+    linear-gradient(var(--blue-bright), var(--blue-bright)) top    left  / 1.5px 18px no-repeat,
+    linear-gradient(var(--blue-bright), var(--blue-bright)) top    right / 18px 1.5px no-repeat,
+    linear-gradient(var(--blue-bright), var(--blue-bright)) top    right / 1.5px 18px no-repeat,
+    linear-gradient(var(--blue-bright), var(--blue-bright)) bottom left  / 18px 1.5px no-repeat,
+    linear-gradient(var(--blue-bright), var(--blue-bright)) bottom left  / 1.5px 18px no-repeat,
+    linear-gradient(var(--blue-bright), var(--blue-bright)) bottom right / 18px 1.5px no-repeat,
+    linear-gradient(var(--blue-bright), var(--blue-bright)) bottom right / 1.5px 18px no-repeat;
+  opacity: 0.5;
+  transition: opacity 0.3s ease;
+}
+.diff-card.is-front::before { opacity: 1; }
+
+/* Top-edge glow bar on front card */
+.diff-card::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 10%; right: 10%;
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(9,65,187,0.9), transparent);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  border-radius: 1px;
+}
+.diff-card.is-front::after { opacity: 1; }
+
+.diff-num {
+  font-family: 'Handjet', monospace;
+  font-size: 4.5rem;
+  font-weight: 400;
+  color: rgba(100, 160, 255, 0.9);
+  letter-spacing: 0.12em;
+  margin-bottom: 0;
+  display: block;
+  line-height: 1;
+}
+
+/* Divider between number and text */
+.diff-divider {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(to right, rgba(9,65,187,0.5), transparent);
+  margin: 1.1rem 0 1.25rem;
+}
+
+.diff-card h3 {
+  font-size: 1.08rem;
+  font-weight: 700;
+  margin-bottom: 0.65rem;
+  line-height: 1.4;
+}
+
+.diff-card p {
+  font-size: 0.875rem;
+  color: var(--muted);
+  line-height: 1.75;
+}
+
+/* Hint text below stack */
+.diff-hint {
+  text-align: center;
+  font-size: 0.72rem;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  opacity: 0.6;
+  margin-top: -1rem;
+}
+
+/* Load hint: subtle nudge animation */
+@keyframes diff-nudge {
+  0%   { transform: translateX(0) translateY(0) scale(1) rotate(0deg); }
+  30%  { transform: translateX(-18px) translateY(0) scale(1) rotate(-1deg); }
+  60%  { transform: translateX(14px) translateY(0) scale(1) rotate(0.8deg); }
+  100% { transform: translateX(0) translateY(0) scale(1) rotate(0deg); }
+}
+.diff-card.is-front.nudge {
+  animation: diff-nudge 0.7s cubic-bezier(0.34, 1.3, 0.64, 1) forwards;
+}
+
+/* ── Caspian isometric illustration ───────────────────────── */
+.caspian-iso-wrap {
+  margin-top: 4rem;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  position: relative;
+}
+
+.caspian-iso-grid {
+  position: absolute;
+  top: 50%;
+  left: calc(51% - 8px);
+  transform: translate(-50%, -50%);
+  width: 100vw;
+  height: auto;
+  opacity: 0.16;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.caspian-iso {
+  width: 110%;
+  max-width: 110%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+.caspian-cta-wrap {
+  margin-top: -5rem;
+  position: relative;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+}
+
+.caspian-cta {
+  background: rgba(5, 6, 28, 0.85) !important;
+  border-color: rgba(9, 65, 187, 0.9) !important;
+  box-shadow: 0 0 24px rgba(9, 65, 187, 0.35), inset 0 0 12px rgba(9, 65, 187, 0.08);
+  backdrop-filter: blur(8px);
+}
+
+/* ── Caspian screen mockup ─────────────────────────────────── */
+.caspian-screen-wrap {
+  margin-top: 3.5rem;
+  margin-bottom: 3.5rem;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.caspian-screen-inner {
+  --screen-x: -999px;
+  --screen-y: -999px;
+  position: relative;
+  width: 100%;
+  max-width: 900px;
+  border-radius: 14px;
+}
+
+/* Cursor glow border around the screen */
+.caspian-screen-inner::before {
+  content: '';
+  pointer-events: none;
+  position: absolute;
+  inset: -2px;
+  border-radius: 14px;
+  padding: 2px;
+  background: radial-gradient(
+    400px 400px at var(--screen-x) var(--screen-y),
+    rgba(100, 170, 255, 0.9),
+    transparent 70%
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: destination-out;
+  mask-composite: exclude;
+  z-index: 2;
+}
+
+.caspian-screen {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  display: block;
+  filter: drop-shadow(0 0 60px rgba(23, 95, 255, 0.22));
+}
+
+/* ── Globe decoration ──────────────────────────────────────── */
+.globe-scene {
+  position: relative;
+  height: 0;
+  overflow: visible;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.globe-svg {
+  position: absolute;
+  right: -200px;
+  top: -80px;
+  width: 714px;
+  height: 714px;
+  transform: rotate(-30deg);
+  filter: drop-shadow(0 0 40px rgba(23, 95, 255, 0.18));
+}
+
+/* ── Logo strip ────────────────────────────────────────────── */
+.logo-strip-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 1.25rem;
+}
+
+.logo-strip {
+  display: flex;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.logo-ph {
+  width: 96px;
+  height: 34px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+
+/* ── Mission CTA Treatment ─────────────────────────────────── */
+/* Applied to sections that get the "JOIN THE MISSION" dark spotlight treatment */
+.section-mission {
+  background: var(--bg);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Transparent inside the rising panel to avoid color seams */
+#sections-rise .section-mission { background: transparent; }
+
+/* Line grid overlay — crosshatch */
+.section-mission::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(9,65,187,0.28) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(9,65,187,0.28) 1px, transparent 1px);
+  background-size: 64px 64px;
+  pointer-events: none;
+  z-index: 0;
+  mask-image: linear-gradient(to bottom, transparent 0%, black 40%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 40%);
+}
+
+/* Blue radial spotlight from top-center */
+.section-mission::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 50% -20%, rgba(0,22,255,0.18) 0%, transparent 60%),
+    linear-gradient(to right, transparent 0%, rgba(9,65,187,0.5) 15%, rgba(9,65,187,0.5) 85%, transparent 100%) bottom / 100% 1px no-repeat;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.section-mission .section-inner {
+  position: relative;
+  z-index: 1;
+}
+
+
+/* ── Arc Divider ─────────────────────────────────────────────── */
+.arc-divider {
+  width: 100%;
+  height: 420px;
+  pointer-events: none;
+  margin-top: -2rem;
+}
+
+/* ── About Frame ─────────────────────────────────────────────── */
+/* Outer wrapper = border colour, clip-path gives the chamfered corners */
+.about-frame-outer {
+  padding: 1px;
+  background: rgba(9, 65, 187, 0.45);
+  clip-path: polygon(
+    28px 0, calc(100% - 28px) 0,
+    100% 28px,
+    100% calc(100% - 28px), calc(100% - 28px) 100%,
+    28px 100%, 0 calc(100% - 28px),
+    0 28px
+  );
+}
+
+/* Inner frame = dark fill, slightly smaller clip-path */
+.about-frame {
+  position: relative;
+  padding: 2.5rem 3.5rem;
+  overflow: hidden;
+  text-align: center;
+  background: #05061c;
+  clip-path: polygon(
+    27px 0, calc(100% - 27px) 0,
+    100% 27px,
+    100% calc(100% - 27px), calc(100% - 27px) 100%,
+    27px 100%, 0 calc(100% - 27px),
+    0 27px
+  );
+}
+
+/* Sweeping light rays from lower-left */
+.about-rays {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse at -5% 110%, rgba(0, 22, 255, 0.28) 0%, transparent 50%),
+    radial-gradient(ellipse at 8%  90%,  rgba(9, 65, 187, 0.18) 0%, transparent 38%),
+    radial-gradient(ellipse at 55% -15%, rgba(0, 22, 255, 0.10) 0%, transparent 45%);
+}
+
+.about-sweep-svg {
+  display: none;
+}
+
+/* All direct children above the rays */
+.about-frame > *:not(.about-rays) {
+  position: relative;
+  z-index: 1;
+}
+
+#about .section-header {
+  max-width: 680px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 2rem;
+}
+
+#about .about-body {
+  max-width: 860px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+#about .about-actions {
+  justify-content: center;
+}
+
+#about .section-label {
+  justify-content: center;
+}
+
+#about .logo-strip-label {
+  text-align: center;
+}
+
+#about .logo-strip {
+  justify-content: center;
+}
+
+/* Bordered mission container with corner brackets */
+.mission-box {
+  border: 1px solid rgba(9,65,187,0.35);
+  padding: 5rem 3rem;
+  text-align: center;
+  position: relative;
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+/* All 4 corner brackets */
+.mission-box::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(var(--blue-bright), var(--blue-bright)) top    left  / 24px 2px no-repeat,
+    linear-gradient(var(--blue-bright), var(--blue-bright)) top    left  / 2px 24px no-repeat,
+    linear-gradient(var(--blue-bright), var(--blue-bright)) top    right / 24px 2px no-repeat,
+    linear-gradient(var(--blue-bright), var(--blue-bright)) top    right / 2px 24px no-repeat,
+    linear-gradient(var(--blue-bright), var(--blue-bright)) bottom left  / 24px 2px no-repeat,
+    linear-gradient(var(--blue-bright), var(--blue-bright)) bottom left  / 2px 24px no-repeat,
+    linear-gradient(var(--blue-bright), var(--blue-bright)) bottom right / 24px 2px no-repeat,
+    linear-gradient(var(--blue-bright), var(--blue-bright)) bottom right / 2px 24px no-repeat;
+}
+
+.mission-box .section-label {
+  justify-content: center;
+}
+
+.mission-box .section-header {
+  max-width: 100%;
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  margin-bottom: 1.25rem;
+}
+
+.mission-box .section-body {
+  max-width: 580px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 2.5rem;
+}
+
+/* ── About ─────────────────────────────────────────────────── */
+.about-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  max-width: 860px;
+  margin-bottom: 1.5rem;
+}
+
+.about-body p {
+  font-size: 0.975rem;
+  color: var(--muted);
+  line-height: 1.85;
+}
+
+.about-actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 3rem;
+}
+
+/* ── Newsroom ──────────────────────────────────────────────── */
+.news-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border);
+  margin: 2.5rem 0 2rem;
+}
+
+.news-tab {
+  background: none;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  font-family: var(--font);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--muted);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: color 0.2s, border-color 0.2s;
+  letter-spacing: 0.03em;
+}
+.news-tab:hover { color: var(--text); }
+.news-tab.active {
+  color: var(--text);
+  border-bottom-color: var(--blue);
+}
+
+.news-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+.news-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.75rem;
+  cursor: pointer;
+  transition: border-color 0.3s, transform 0.3s;
+}
+.news-card:hover {
+  border-color: rgba(9,65,187,0.4);
+  transform: translateY(-4px);
+}
+
+.news-cat {
+  display: inline-block;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--blue);
+  margin-bottom: 0.75rem;
+}
+
+.news-card h4 {
+  font-size: 0.92rem;
+  font-weight: 600;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+
+.news-date {
+  font-size: 0.76rem;
+  color: var(--muted);
+}
+
+/* ── Footer ────────────────────────────────────────────────── */
+#footer {
+  background: #040710;
+  border-top: 1px solid var(--border);
+  padding: 5rem 0 2.5rem;
+}
+
+.footer-inner {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 0 var(--pad-x);
+}
+
+.footer-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding-bottom: 3rem;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 3rem;
+}
+
+.footer-tagline {
+  font-size: 0.83rem;
+  color: var(--muted);
+  font-style: italic;
+}
+
+.footer-links {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+.footer-col {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.footer-col-title {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text);
+  margin-bottom: 0.25rem;
+}
+
+.footer-col a {
+  font-size: 0.87rem;
+  color: var(--muted);
+  transition: color 0.2s;
+}
+.footer-col a:hover { color: var(--text); }
+
+.footer-bottom {
+  border-top: 1px solid var(--border);
+  padding-top: 1.5rem;
+  font-size: 0.76rem;
+  color: var(--muted);
+}
+
+/* ── Responsive ────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .value-props { grid-template-columns: repeat(2, 1fr); }
+  .vp-card,
+  .vp-card:nth-child(4),
+  .vp-card:nth-child(5) { grid-column: span 1; }
+}
+
+@media (max-width: 768px) {
+  .stats-grid      { grid-template-columns: 1fr; }
+  .split-layout    { grid-template-columns: 1fr; gap: 3rem; }
+  .news-grid       { grid-template-columns: 1fr; }
+  .nav-links       { display: none; }
+}
+
+@media (max-width: 560px) {
+  .value-props     { grid-template-columns: 1fr; }
+  .footer-links    { grid-template-columns: 1fr 1fr; }
+  .nav-actions .btn-ghost { display: none; }
+}
