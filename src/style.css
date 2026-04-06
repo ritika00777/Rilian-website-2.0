@@ -248,6 +248,21 @@ h1, h2, h3, h4, h5, h6,
   user-select: none;
 }
 
+#hero-hud-text {
+  position: absolute;
+  bottom: 10%;
+  left: 6%;
+  z-index: 6;
+  opacity: 0;
+  pointer-events: none;
+  width: 294px;
+}
+
+#hero-hud-text img {
+  width: 100%;
+  display: block;
+}
+
 #hero-stars {
   position: absolute;
   inset: 0;

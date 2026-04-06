@@ -29,10 +29,12 @@ const subEl     = document.querySelector('.hero-sub')         as HTMLElement
 const actionsEl = document.querySelector('.hero-actions')     as HTMLElement
 const rulersEl  = document.querySelector('.hero-rulers')      as HTMLElement
 const starsEl   = document.getElementById('hero-stars')       as HTMLElement
+const hudTextEl = document.getElementById('hero-hud-text')    as HTMLElement
 
 gsap.set([headline, subEl, actionsEl], { opacity: 0, y: 28 })
 gsap.set(rulersEl,  { opacity: 0 })
 gsap.set(starsEl,   { opacity: 0 })
+gsap.set(hudTextEl, { opacity: 0, visibility: 'hidden' })
 gsap.set(blueRise, { y: '100vh' }) // start below viewport, rises to y:0
 
 /* ─────────────────────────────────────────────────────────────
@@ -285,7 +287,9 @@ function initHero() {
   loaderEl.classList.add('done')
   animate()
 
-  gsap.to(orbsEl, { opacity: 1, duration: 1.2, ease: 'power2.out' })
+  gsap.to(orbsEl,    { opacity: 1, duration: 1.2, ease: 'power2.out' })
+  gsap.set(hudTextEl, { visibility: 'visible' })
+  gsap.to(hudTextEl, { opacity: 1, duration: 6.0, delay: 0.6, ease: 'power2.out' })
 
   // Arc stays hidden until scroll timeline reveals it after text appears
 }
@@ -330,6 +334,8 @@ heroTl
   .to(headline,  { opacity: 1, y: 0, ease: 'power2.out', duration: 0.35 }, 0.52)
   .to(subEl,     { opacity: 1, y: 0, ease: 'power2.out', duration: 0.30 }, 0.64)
   .to(actionsEl, { opacity: 1, y: 0, ease: 'power2.out', duration: 0.25 }, 0.72)
+  // HUD text card fades out gradually as hero text appears
+  .fromTo(hudTextEl, { opacity: 1 }, { opacity: 0, ease: 'none', duration: 0.50, immediateRender: false }, 0.0)
   // Arc fades in right after headline
   .to(blueRise,  { opacity: 1, duration: 0.20, ease: 'power2.out' }, 0.70)
 
