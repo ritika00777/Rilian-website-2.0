@@ -245,6 +245,40 @@ h1, h2, h3, h4, h5, h6,
   justify-content: center;
   overflow: hidden;
   background: #030b2e;
+  user-select: none;
+}
+
+.crosshair-x,
+.crosshair-y {
+  position: absolute;
+  pointer-events: none;
+  z-index: 7;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.crosshair-x {
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: none;
+  border-top: 1px dashed rgba(80, 160, 255, 0.4);
+  -webkit-mask-image: linear-gradient(to right, transparent, white 20%, white 80%, transparent);
+  mask-image: linear-gradient(to right, transparent, white 20%, white 80%, transparent);
+  transform: translateY(-50%);
+}
+.crosshair-y {
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: none;
+  border-left: 1px dashed rgba(80, 160, 255, 0.4);
+  -webkit-mask-image: linear-gradient(to bottom, transparent, white 20%, white 80%, transparent);
+  mask-image: linear-gradient(to bottom, transparent, white 20%, white 80%, transparent);
+  transform: translateX(-50%);
+}
+#hero:hover .crosshair-x,
+#hero:hover .crosshair-y {
+  opacity: 1;
 }
 
 .hero-grid {

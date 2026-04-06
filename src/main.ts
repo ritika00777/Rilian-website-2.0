@@ -27,8 +27,10 @@ const blueRise  = document.getElementById('sections-rise')!   as HTMLElement
 const headline  = document.querySelector('.hero-headline-frame')    as HTMLElement
 const subEl     = document.querySelector('.hero-sub')         as HTMLElement
 const actionsEl = document.querySelector('.hero-actions')     as HTMLElement
+const rulersEl  = document.querySelector('.hero-rulers')      as HTMLElement
 
 gsap.set([headline, subEl, actionsEl], { opacity: 0, y: 28 })
+gsap.set(rulersEl, { opacity: 0 })
 gsap.set(blueRise, { y: '100vh' }) // start below viewport, rises to y:0
 
 /* ─────────────────────────────────────────────────────────────
@@ -65,8 +67,11 @@ const SWARM_R     = 3.8   // sphere radius in scene units
 
 const swarmGeo  = new THREE.TetrahedronGeometry(0.022)
 const swarmMat  = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.85 })
-const redColor  = new THREE.Color(0xff2200)
-const blueColor = new THREE.Color(0x0088ff)
+const redColor   = new THREE.Color(3.0, 0.25, 0.0)
+const blueColor  = new THREE.Color(0.0, 2.5, 6.0)
+const oceanColor     = new THREE.Color(0.06, 0.008, 0.0)   // very faint red for ocean
+const oceanBlueColor = new THREE.Color(0.0, 0.06, 0.16)   // very faint blue for ocean
+const isLandArr  = new Uint8Array(SWARM_COUNT).fill(1)  // default all land until mask loads
 const swarmMesh = new THREE.InstancedMesh(swarmGeo, swarmMat, SWARM_COUNT)
 swarmMesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage)
 
@@ -87,20 +92,48 @@ for (let i = 0; i < SWARM_COUNT; i++) {
 }
 if (swarmMesh.instanceColor) swarmMesh.instanceColor.needsUpdate = true
 
+// Load Earth specular map: bright = ocean, dark = land
+{
+  const maskImg = new Image()
+  maskImg.crossOrigin = 'anonymous'
+  maskImg.src = 'https://raw.githubusercontent.com/mrdoob/three.js/r160/examples/textures/planets/earth_specular_2048.jpg'
+  maskImg.onload = () => {
+    const mc = document.createElement('canvas')
+    mc.width  = maskImg.naturalWidth
+    mc.height = maskImg.naturalHeight
+    const mctx = mc.getContext('2d')!
+    mctx.drawImage(maskImg, 0, 0)
+    const pd = mctx.getImageData(0, 0, mc.width, mc.height)
+    for (let i = 0; i < SWARM_COUNT; i++) {
+      const phi   = Math.acos(-1 + (2 * i) / SWARM_COUNT)
+      const theta = (Math.sqrt(SWARM_COUNT * Math.PI) * phi) % (Math.PI * 2)
+      const u = theta / (Math.PI * 2)
+      const v = phi / Math.PI
+      const px = Math.min(Math.floor(u * mc.width),  mc.width  - 1)
+      const py = Math.min(Math.floor(v * mc.height), mc.height - 1)
+      const brightness = pd.data[(py * mc.width + px) * 4]
+      isLandArr[i] = brightness < 120 ? 1 : 0  // dark = land, bright = ocean
+    }
+  }
+}
+
 // Bloom post-processing
 const composer = new EffectComposer(renderer)
 composer.addPass(new RenderPass(scene, camera))
 const bloomPass = new UnrealBloomPass(
   new THREE.Vector2(window.innerWidth, window.innerHeight),
-  2.0, 1.2, 0.1
+  1.7, 1.02, 0.1
 )
 composer.addPass(bloomPass)
 
 /* ─────────────────────────────────────────────────────────────
    RENDER LOOP
 ───────────────────────────────────────────────────────────── */
-const dummy  = new THREE.Object3D()
-const target = new THREE.Vector3()
+const dummy   = new THREE.Object3D()
+const target  = new THREE.Vector3()
+const _quat   = new THREE.Quaternion()
+const _axisX  = new THREE.Vector3(1, 0, 0)
+const _axisY  = new THREE.Vector3(0, 1, 0)
 
 /* ── Drag-to-rotate ─────────────────────────────────────────── */
 let isDragging = false
@@ -125,9 +158,9 @@ window.addEventListener('pointermove', (e: PointerEvent) => {
   mouseNDC.y = ((e.clientY - rect.top)  / rect.height) * -2 + 1
 }, { passive: true })
 
-const PUSH_R     = 1.6
-const PUSH_FORCE = 0.20
-const COLOR_R    = 2.3
+const COLOR_R     = 1.15
+const colorBlend  = new Float32Array(SWARM_COUNT)   // 0 = base color, 1 = blue
+const _tempColor  = new THREE.Color()
 
 // Listen on document — hero-inner (z-index 5) sits above the canvas
 // and would swallow canvas-level events
@@ -147,7 +180,7 @@ document.addEventListener('pointerdown', (e: PointerEvent) => {
 
 document.addEventListener('pointermove', (e: PointerEvent) => {
   if (!isDragging) return
-  dragVelY = -(e.clientX - dragPrevX) * 0.003
+  dragVelY =  (e.clientX - dragPrevX) * 0.003
   dragVelX =  (e.clientY - dragPrevY) * 0.003
   dragPrevX = e.clientX
   dragPrevY = e.clientY
@@ -162,17 +195,15 @@ document.addEventListener('pointerup', () => {
 function animate() {
   requestAnimationFrame(animate)
 
-  if (isDragging) {
-    // Direct drag
-    ringGroup.rotation.y += dragVelY
-    ringGroup.rotation.x += dragVelX
-  } else {
-    // Momentum fades out, auto-spin takes over
+  if (!isDragging) {
     dragVelX *= 0.97
     dragVelY *= 0.97
-    ringGroup.rotation.y += 0.0012 + dragVelY
-    ringGroup.rotation.x += 0.0004 + dragVelX
   }
+  // Rotate around world-space axes (quaternion) — prevents gimbal flip
+  _quat.setFromAxisAngle(_axisY, 0.0012 + dragVelY)
+  ringGroup.quaternion.premultiply(_quat)
+  _quat.setFromAxisAngle(_axisX, 0.0004 + dragVelX)
+  ringGroup.quaternion.premultiply(_quat)
 
   // Transform cursor ray into ringGroup local space
   ringGroup.updateMatrixWorld()
@@ -197,22 +228,19 @@ function animate() {
     _toPos.subVectors(swarmPositions[i], _localRay.origin)
     const t = _toPos.dot(_localDir)
     _closestOnRay.copy(_localRay.origin).addScaledVector(_localDir, t)
-    const dx = swarmPositions[i].x - _closestOnRay.x
-    const dy = swarmPositions[i].y - _closestOnRay.y
-    const dz = swarmPositions[i].z - _closestOnRay.z
-    const distSq = dx * dx + dy * dy + dz * dz
-    if (distSq < PUSH_R * PUSH_R && distSq > 0.0001) {
-      const dist  = Math.sqrt(distSq)
-      const force = PUSH_FORCE * (1 - dist / PUSH_R)
-      swarmPositions[i].x += (dx / dist) * force
-      swarmPositions[i].y += (dy / dist) * force
-      swarmPositions[i].z += (dz / dist) * force
-      swarmMesh.setColorAt(i, blueColor)
-    } else if (distSq < COLOR_R * COLOR_R) {
-      swarmMesh.setColorAt(i, blueColor)
-    } else {
-      swarmMesh.setColorAt(i, redColor)
+    const distSq = swarmPositions[i].distanceToSquared(_closestOnRay)
+
+    // Front-face check: particle normal (its position) dotted with direction to camera
+    // _toPos = particle - cameraLocal, so dot(particle, _toPos) < 0 means facing camera
+    const frontFacing = swarmPositions[i].dot(_toPos) < 0
+
+    // Fade to blue when cursor is near and particle faces camera — never fades back
+    if (frontFacing && distSq < COLOR_R * COLOR_R) {
+      colorBlend[i] += (1.0 - colorBlend[i]) * 0.12
     }
+    const targetBlue = isLandArr[i] ? blueColor : oceanBlueColor
+    _tempColor.copy(isLandArr[i] ? redColor : oceanColor).lerp(targetBlue, colorBlend[i])
+    swarmMesh.setColorAt(i, _tempColor)
 
     dummy.position.copy(swarmPositions[i])
     dummy.updateMatrix()
@@ -294,19 +322,20 @@ heroTl
     }
   }, 0)
 
-  // ── Phase 2: text fades in (0.72 → 1.17) — stays fixed ──────────────
-  .to(headline,  { opacity: 1, y: 0, ease: 'power2.out', duration: 0.35 }, 0.72)
-  .to(subEl,     { opacity: 1, y: 0, ease: 'power2.out', duration: 0.30 }, 0.84)
-  .to(actionsEl, { opacity: 1, y: 0, ease: 'power2.out', duration: 0.25 }, 0.92)
+  // ── Phase 2: text fades in — stays fixed ──────────────────────────────
+  .to(rulersEl,  { opacity: 1, ease: 'power2.out', duration: 0.35 }, 0.52)
+  .to(headline,  { opacity: 1, y: 0, ease: 'power2.out', duration: 0.35 }, 0.52)
+  .to(subEl,     { opacity: 1, y: 0, ease: 'power2.out', duration: 0.30 }, 0.64)
+  .to(actionsEl, { opacity: 1, y: 0, ease: 'power2.out', duration: 0.25 }, 0.72)
   // Arc fades in right after headline
-  .to(blueRise,  { opacity: 1, duration: 0.20, ease: 'power2.out' }, 0.80)
+  .to(blueRise,  { opacity: 1, duration: 0.20, ease: 'power2.out' }, 0.70)
 
-  // ── Phase 3: panel rises (0.85 → 1.20) ───────────────────────────────
+  // ── Phase 3: panel rises ───────────────────────────────────────────────
   .to(blueRise, {
     y:        0,
     ease:     'power1.inOut',
     duration: 0.35
-  }, 0.85)
+  }, 0.75)
 
 
 /* ─────────────────────────────────────────────────────────────
@@ -370,9 +399,19 @@ window.addEventListener('resize', alignHeroGrid)
 /* ─────────────────────────────────────────────────────────────
    SPOTLIGHT CURSOR — feeds --cursor-x / --cursor-y to all cards
 ───────────────────────────────────────────────────────────── */
+const crosshairX = document.getElementById('crosshair-x')!
+const crosshairY = document.getElementById('crosshair-y')!
+
 document.addEventListener('pointermove', (e: PointerEvent) => {
   document.documentElement.style.setProperty('--cursor-x', String(e.clientX))
   document.documentElement.style.setProperty('--cursor-y', String(e.clientY))
+
+  // Crosshair lines follow cursor within hero
+  const heroRect = heroEl.getBoundingClientRect()
+  if (e.clientY >= heroRect.top && e.clientY <= heroRect.bottom) {
+    crosshairX.style.top = `${e.clientY - heroRect.top}px`
+    crosshairY.style.left = `${e.clientX - heroRect.left}px`
+  }
 
   // CASPIAN box: element-relative coords for border glow
   const caspianBox = document.getElementById('caspian-title-box')
