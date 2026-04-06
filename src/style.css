@@ -67,9 +67,9 @@ h1, h2, h3, h4, h5, h6,
   overflow: hidden;
 
   /* Blue glass fill — visible against dark bg */
-  background: rgba(9, 65, 187, 0.22);
+  background: rgba(9, 65, 187, 0.45);
   color: #ffffff;
-  box-shadow: inset 0 1px 0 rgba(120, 170, 255, 0.12);
+  box-shadow: inset 0 1px 0 rgba(120, 170, 255, 0.25), 0 0 18px rgba(30, 80, 255, 0.30);
   transition: background 0.22s ease, color 0.22s ease, box-shadow 0.22s ease;
 }
 
@@ -250,11 +250,13 @@ h1, h2, h3, h4, h5, h6,
 .hero-grid {
   position: absolute;
   inset: 0;
+  z-index: 5;
   background-image:
-    linear-gradient(rgba(9,65,187,0.145) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(9,65,187,0.145) 1px, transparent 1px);
+    linear-gradient(rgba(40, 100, 255, 0.14) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(40, 100, 255, 0.14) 1px, transparent 1px);
   background-size: 64px 64px;
   mask-image: radial-gradient(ellipse 85% 75% at 50% 50%, black, transparent);
+  pointer-events: none;
 }
 
 /* ── Column rulers + square dot markers ─────────────────────── */
@@ -262,7 +264,7 @@ h1, h2, h3, h4, h5, h6,
   position: absolute;
   inset: 0;
   pointer-events: none;
-  z-index: 1;
+  z-index: 6;
   display: flex;
   justify-content: space-between;
   padding: 0 6vw;
@@ -290,7 +292,7 @@ h1, h2, h3, h4, h5, h6,
 
 .hero-inner {
   position: relative;
-  z-index: 2;   /* below orbs (z-index 4) but above grid */
+  z-index: 6;   /* above grid (5) and canvas (4) */
   max-width: 860px;
   margin: 0 auto;
   padding: 120px var(--pad-x) 6rem;
@@ -371,7 +373,9 @@ h1, h2, h3, h4, h5, h6,
   display: block;
   width: 100% !important;
   height: 100% !important;
+  pointer-events: auto;
 }
+
 
 /* ── Rising sections panel ─────────────────────────────────── */
 /* Flat panel containing all sections from problem onwards.
@@ -380,7 +384,7 @@ h1, h2, h3, h4, h5, h6,
   position: relative;
   z-index: 7;
   margin-top: -100vh;
-  background: #030b2e;
+  background: linear-gradient(to bottom, #07070A 0%, #030b2e 600px) no-repeat, #030b2e;
   opacity: 0;
 }
 
@@ -400,11 +404,13 @@ h1, h2, h3, h4, h5, h6,
   border-radius: 50%;
   background: #030b2e;   /* same as #sections-rise — bottom edge invisible */
   box-shadow:
-    0 0  2px  2px rgba(200, 235, 255, 1.00),   /* bright white-blue rim */
-    0 0 20px  8px rgba(100, 180, 255, 0.90),   /* close intense glow */
-    0 0 60px 20px rgba(50,  120, 255, 0.70),   /* mid spread */
-    0 0 120px 50px rgba(20,  70,  255, 0.45),  /* wide atmospheric */
-    0 0 200px 80px rgba(10,  40,  220, 0.25);  /* far haze */
+    0 0  3px   3px rgba(200, 235, 255, 1.00),   /* bright white-blue rim */
+    0 0 40px  18px rgba(100, 180, 255, 1.00),   /* close intense glow */
+    0 0 120px 50px rgba(50,  130, 255, 0.90),   /* mid spread */
+    0 0 250px 110px rgba(20, 80,  255, 0.75),   /* wide atmospheric */
+    0 0 450px 180px rgba(10, 50,  230, 0.55),   /* far haze */
+    0 0 700px 280px rgba(5,  25,  200, 0.35),   /* very far bloom */
+    0 0 1000px 400px rgba(3, 15, 180, 0.18);    /* extreme reach */
   pointer-events: none;
   z-index: -1;
 }
@@ -571,8 +577,10 @@ h1, h2, h3, h4, h5, h6,
 }
 
 .stat-card {
-  background-color: var(--bg-card);
-  background-image: radial-gradient(
+  background-color: #010510;
+  background-image:
+    radial-gradient(ellipse 90% 70% at 0% 100%, rgba(20, 70, 255, 0.28), transparent 70%),
+    radial-gradient(
     300px 300px at calc(var(--cursor-x) * 1px) calc(var(--cursor-y) * 1px),
     rgba(80, 140, 255, 0.07),
     transparent
@@ -607,19 +615,20 @@ h1, h2, h3, h4, h5, h6,
   align-items: baseline;
   justify-content: center;
   gap: 0.15rem;
-  margin-bottom: 0.85rem;
+  margin-bottom: 0.5rem;
+  margin-top: 0.5rem;
 }
 
 .stat-num {
-  font-family: 'Handjet', sans-serif;
-  font-size: clamp(4.55rem, 7.8vw, 6.5rem);
+  font-family: 'Saira Stencil One', sans-serif;
+  font-size: clamp(3.64rem, 6.24vw, 5.2rem);
   font-weight: 400;
   color: var(--blue);
   line-height: 1;
 }
 
 .stat-suffix {
-  font-family: 'Handjet', sans-serif;
+  font-family: 'Saira Stencil One', sans-serif;
   font-size: clamp(2.5rem, 4vw, 4rem);
   font-weight: 400;
   color: var(--blue);
@@ -773,8 +782,33 @@ h1, h2, h3, h4, h5, h6,
   margin-right: auto;
 }
 #caspian .section-body { text-align: center; margin-left: auto; margin-right: auto; }
-#caspian      { padding-bottom: 6rem; }
-#dawntreader  { padding-top: 6rem; }
+#caspian      { padding-bottom: 6rem; position: relative; }
+
+#caspian::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to bottom, transparent 20%, #07070A 100%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+#caspian > * { position: relative; z-index: 1; }
+
+#dawntreader  { padding-top: 6rem; position: relative; }
+#dawntreader::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 600px;
+  background: linear-gradient(to bottom, #07070A 0%, transparent 100%);
+  pointer-events: none;
+  z-index: 0;
+}
+#dawntreader > * { position: relative; z-index: 1; }
 #dawntreader  { padding-bottom: 6rem; }
 #armory       { padding-top: 6rem; }
 
@@ -1201,7 +1235,7 @@ h1, h2, h3, h4, h5, h6,
 .diff-card.is-front::after { opacity: 1; }
 
 .diff-num {
-  font-family: 'Handjet', monospace;
+  font-family: 'Saira Stencil One', sans-serif;
   font-size: 4.5rem;
   font-weight: 400;
   color: rgba(100, 160, 255, 0.9);
@@ -1268,7 +1302,7 @@ h1, h2, h3, h4, h5, h6,
   top: 50%;
   left: calc(51% - 8px);
   transform: translate(-50%, -50%);
-  width: 100vw;
+  width: 110vw;
   height: auto;
   opacity: 0.16;
   pointer-events: none;
@@ -1286,7 +1320,7 @@ h1, h2, h3, h4, h5, h6,
 }
 
 .caspian-cta-wrap {
-  margin-top: -5rem;
+  margin-top: -3.5rem;
   position: relative;
   z-index: 2;
   display: flex;
@@ -1318,32 +1352,15 @@ h1, h2, h3, h4, h5, h6,
   border-radius: 14px;
 }
 
-/* Cursor glow border around the screen */
-.caspian-screen-inner::before {
-  content: '';
-  pointer-events: none;
-  position: absolute;
-  inset: -2px;
-  border-radius: 14px;
-  padding: 2px;
-  background: radial-gradient(
-    400px 400px at var(--screen-x) var(--screen-y),
-    rgba(100, 170, 255, 0.9),
-    transparent 70%
-  );
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: destination-out;
-  mask-composite: exclude;
-  z-index: 2;
-}
+/* Cursor glow border removed */
+.caspian-screen-inner::before { display: none; }
 
 .caspian-screen {
   width: 100%;
   height: auto;
   border-radius: 12px;
   display: block;
-  filter: drop-shadow(0 0 60px rgba(23, 95, 255, 0.22));
+  filter: none;
 }
 
 /* ── Globe decoration ──────────────────────────────────────── */
@@ -1361,7 +1378,7 @@ h1, h2, h3, h4, h5, h6,
   top: -80px;
   width: 714px;
   height: 714px;
-  transform: rotate(-30deg);
+  transform: rotate(-75deg);
   filter: drop-shadow(0 0 40px rgba(23, 95, 255, 0.18));
 }
 

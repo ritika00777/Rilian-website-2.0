@@ -2,6 +2,9 @@ import './style.css'
 import * as THREE from 'three'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js'
+import { RenderPass }     from 'three/addons/postprocessing/RenderPass.js'
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -38,9 +41,9 @@ const renderer = new THREE.WebGLRenderer({
 })
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 renderer.setSize(window.innerWidth, window.innerHeight)
-renderer.toneMapping         = THREE.ACESFilmicToneMapping
-renderer.toneMappingExposure = 1.3
-renderer.outputColorSpace    = THREE.SRGBColorSpace
+renderer.setClearColor(0x000000, 1)
+renderer.toneMapping      = THREE.NoToneMapping
+renderer.outputColorSpace = THREE.SRGBColorSpace
 orbsEl.appendChild(renderer.domElement)
 
 /* ─────────────────────────────────────────────────────────────
@@ -55,136 +58,170 @@ const camera = new THREE.PerspectiveCamera(
 camera.position.z = 13
 
 /* ─────────────────────────────────────────────────────────────
-   LIGHTING
-   Blue key + purple fill + deep-blue rim + soft front fill.
-   This combination produces the blue-purple iridescent look
-   from the reference.
+   PARTICLE SWARM — instanced tetrahedra lerp onto sphere surface
 ───────────────────────────────────────────────────────────── */
-scene.add(new THREE.AmbientLight(0x08051a, 3))
+const SWARM_COUNT = 2500
+const SWARM_R     = 3.8   // sphere radius in scene units
 
-// Cool blue key from top-left
-const keyLight = new THREE.DirectionalLight(0x88aaff, 7)
-keyLight.position.set(-3, 10, 6)
-scene.add(keyLight)
-
-// Magenta/pink fill from lower-right — produces the pink iridescent band
-const fillLight = new THREE.PointLight(0xff33cc, 9, 40)
-fillLight.position.set(9, -5, 4)
-scene.add(fillLight)
-
-// Deep violet rim from behind
-const rimLight = new THREE.PointLight(0x6622ff, 12, 35)
-rimLight.position.set(-2, 5, -10)
-scene.add(rimLight)
-
-// Soft cyan front fill
-const frontLight = new THREE.PointLight(0x44ddff, 3, 26)
-frontLight.position.set(0, 0, 13)
-scene.add(frontLight)
-
-// Extra warm purple from top-right for colour variety
-const accentLight = new THREE.PointLight(0xaa44ff, 7, 32)
-accentLight.position.set(6, 8, 2)
-scene.add(accentLight)
-
-/* ─────────────────────────────────────────────────────────────
-   GEOMETRY & MATERIAL
-   MeshPhysicalMaterial with iridescence is what gives the
-   blue-purple glass shimmer seen in the reference. The
-   iridescenceThicknessRange controls which color bands appear.
-───────────────────────────────────────────────────────────── */
-// Cylinder with visible rim — flat face + clear edge like the reference
-const discGeo = new THREE.CylinderGeometry(1.25, 1.25, 0.19, 64)
-
-function makeGlassMat(): THREE.MeshPhysicalMaterial {
-  return new THREE.MeshPhysicalMaterial({
-    color:                       new THREE.Color(0x1a10cc),  // blue-violet base
-    emissive:                    new THREE.Color(0x180830),
-    emissiveIntensity:           0.6,
-    transparent:                 true,
-    opacity:                     0.90,
-    roughness:                   0.01,                       // near-mirror smooth
-    metalness:                   0.0,
-    iridescence:                 1.0,
-    iridescenceIOR:              2.0,                        // strong colour spread
-    iridescenceThicknessRange:   [100, 800] as [number, number],
-    side:                        THREE.DoubleSide
-  })
-}
-
-/* ─────────────────────────────────────────────────────────────
-   DISC RING SETUP
-   8 disc-meshes arranged on "arms" that radiate from the
-   ring-group centre. ring-group is tilted on X (-0.62 rad ≈ 35°)
-   so the orbit appears as an ellipse from the camera.
-
-   Each disc starts facing the ring-group's +Z (toward camera).
-   rotation.set(π/2, 0, spinOffset) with Three.js XYZ Euler order:
-     - rz = spinOffset : coin-flip spin axis
-     - rx = π/2        : orient flat face toward camera
-   The z-component increments every frame producing the
-   face-on → edge-on → face-on cycle (the "coin flip").
-───────────────────────────────────────────────────────────── */
-const ORBIT_R   = 4.0
-const RING_TILT = -0.70
-const ORBIT_SPD = 0.36                            // rad/s, orbital
-const SPIN_SPDS = [1.8, 2.1, 1.6, 2.3, 1.9, 2.05, 1.72, 2.25]  // rad/s, self-spin per disc
+const swarmGeo  = new THREE.TetrahedronGeometry(0.022)
+const swarmMat  = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.85 })
+const redColor  = new THREE.Color(0xff2200)
+const blueColor = new THREE.Color(0x0088ff)
+const swarmMesh = new THREE.InstancedMesh(swarmGeo, swarmMat, SWARM_COUNT)
+swarmMesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage)
 
 const ringGroup = new THREE.Group()
-ringGroup.rotation.x = RING_TILT
-ringGroup.scale.setScalar(0.7)   // 30% smaller
+ringGroup.add(swarmMesh)
+ringGroup.scale.setScalar(0.757)
 scene.add(ringGroup)
 
-type DiscEntry = {
-  arm:       THREE.Group
-  mesh:      THREE.Mesh
-  mat:       THREE.MeshPhysicalMaterial
-  spinOffset: number
-  spinSpeed:  number
+// Start positions: random cloud that converges onto the sphere
+const swarmPositions: THREE.Vector3[] = []
+for (let i = 0; i < SWARM_COUNT; i++) {
+  swarmPositions.push(new THREE.Vector3(
+    (Math.random() - 0.5) * SWARM_R * 4,
+    (Math.random() - 0.5) * SWARM_R * 4,
+    (Math.random() - 0.5) * SWARM_R * 4
+  ))
+  swarmMesh.setColorAt(i, redColor)
 }
+if (swarmMesh.instanceColor) swarmMesh.instanceColor.needsUpdate = true
 
-const discEntries: DiscEntry[] = []
-
-for (let i = 0; i < 8; i++) {
-  const arm = new THREE.Group()
-  arm.rotation.z = (i / 8) * Math.PI * 2   // spread arms evenly around 360°
-  ringGroup.add(arm)
-
-  const mat  = makeGlassMat()
-  const mesh = new THREE.Mesh(discGeo, mat)
-  mesh.position.x = ORBIT_R
-  // Initial orientation: flat face toward ring's +Z (camera)
-  mesh.rotation.set(Math.PI / 2, 0, (i / 8) * Math.PI * 2)
-  arm.add(mesh)
-
-  discEntries.push({
-    arm, mesh, mat,
-    spinOffset: (i / 8) * Math.PI * 2,   // start each disc out of phase
-    spinSpeed:  SPIN_SPDS[i]
-  })
-}
+// Bloom post-processing
+const composer = new EffectComposer(renderer)
+composer.addPass(new RenderPass(scene, camera))
+const bloomPass = new UnrealBloomPass(
+  new THREE.Vector2(window.innerWidth, window.innerHeight),
+  2.0, 1.2, 0.1
+)
+composer.addPass(bloomPass)
 
 /* ─────────────────────────────────────────────────────────────
    RENDER LOOP
-   Two simultaneous rotations:
-   1. ringGroup.rotation.z → all discs orbit (the "ring spins")
-   2. mesh.rotation.z per disc → individual coin-flip self-spin
 ───────────────────────────────────────────────────────────── */
-const clock = new THREE.Clock()
+const dummy  = new THREE.Object3D()
+const target = new THREE.Vector3()
+
+/* ── Drag-to-rotate ─────────────────────────────────────────── */
+let isDragging = false
+let dragPrevX  = 0
+let dragPrevY  = 0
+let dragVelX   = 0
+let dragVelY   = 0
+
+/* ── Cursor repulsion ───────────────────────────────────────── */
+const mouseNDC     = new THREE.Vector2(9999, 9999)
+const _raycaster    = new THREE.Raycaster()
+const _invMat       = new THREE.Matrix4()
+const _localOrigin  = new THREE.Vector3()
+const _localDir     = new THREE.Vector3()
+const _localRay     = new THREE.Ray()
+const _closestOnRay = new THREE.Vector3()
+const _toPos        = new THREE.Vector3()
+
+window.addEventListener('pointermove', (e: PointerEvent) => {
+  const rect = renderer.domElement.getBoundingClientRect()
+  mouseNDC.x = ((e.clientX - rect.left) / rect.width)  *  2 - 1
+  mouseNDC.y = ((e.clientY - rect.top)  / rect.height) * -2 + 1
+}, { passive: true })
+
+const PUSH_R     = 1.6
+const PUSH_FORCE = 0.20
+const COLOR_R    = 2.3
+
+// Listen on document — hero-inner (z-index 5) sits above the canvas
+// and would swallow canvas-level events
+const heroEl = document.getElementById('hero')!
+heroEl.style.cursor = 'grab'
+
+document.addEventListener('pointerdown', (e: PointerEvent) => {
+  // Only start drag if clicking within the hero section
+  if (!heroEl.contains(e.target as Node)) return
+  isDragging = true
+  dragPrevX  = e.clientX
+  dragPrevY  = e.clientY
+  dragVelX   = 0
+  dragVelY   = 0
+  heroEl.style.cursor = 'grabbing'
+})
+
+document.addEventListener('pointermove', (e: PointerEvent) => {
+  if (!isDragging) return
+  dragVelY = -(e.clientX - dragPrevX) * 0.003
+  dragVelX =  (e.clientY - dragPrevY) * 0.003
+  dragPrevX = e.clientX
+  dragPrevY = e.clientY
+})
+
+document.addEventListener('pointerup', () => {
+  if (!isDragging) return
+  isDragging = false
+  heroEl.style.cursor = 'grab'
+})
 
 function animate() {
   requestAnimationFrame(animate)
-  const t = clock.getElapsedTime()
 
-  // Rotation 1: orbital (whole ring rotates on Z)
-  ringGroup.rotation.z = t * ORBIT_SPD
+  if (isDragging) {
+    // Direct drag
+    ringGroup.rotation.y += dragVelY
+    ringGroup.rotation.x += dragVelX
+  } else {
+    // Momentum fades out, auto-spin takes over
+    dragVelX *= 0.97
+    dragVelY *= 0.97
+    ringGroup.rotation.y += 0.0012 + dragVelY
+    ringGroup.rotation.x += 0.0004 + dragVelX
+  }
 
-  // Rotation 2: each disc flips on its own axis (rz component)
-  discEntries.forEach(({ mesh, spinOffset, spinSpeed }) => {
-    mesh.rotation.set(Math.PI / 2, 0, spinOffset + t * spinSpeed)
-  })
+  // Transform cursor ray into ringGroup local space
+  ringGroup.updateMatrixWorld()
+  _invMat.copy(ringGroup.matrixWorld).invert()
+  _raycaster.setFromCamera(mouseNDC, camera)
+  _localOrigin.copy(_raycaster.ray.origin).applyMatrix4(_invMat)
+  _localDir.copy(_raycaster.ray.direction).transformDirection(_invMat)
+  _localRay.set(_localOrigin, _localDir)
 
-  renderer.render(scene, camera)
+  // Lerp each particle toward its fibonacci sphere target + cursor repulsion
+  for (let i = 0; i < SWARM_COUNT; i++) {
+    const phi   = Math.acos(-1 + (2 * i) / SWARM_COUNT)
+    const theta = Math.sqrt(SWARM_COUNT * Math.PI) * phi
+    target.set(
+      SWARM_R * Math.cos(theta) * Math.sin(phi),
+      SWARM_R * Math.sin(theta) * Math.sin(phi),
+      SWARM_R * Math.cos(phi)
+    )
+    swarmPositions[i].lerp(target, 0.08)
+
+    // Perpendicular distance from particle to cursor ray
+    _toPos.subVectors(swarmPositions[i], _localRay.origin)
+    const t = _toPos.dot(_localDir)
+    _closestOnRay.copy(_localRay.origin).addScaledVector(_localDir, t)
+    const dx = swarmPositions[i].x - _closestOnRay.x
+    const dy = swarmPositions[i].y - _closestOnRay.y
+    const dz = swarmPositions[i].z - _closestOnRay.z
+    const distSq = dx * dx + dy * dy + dz * dz
+    if (distSq < PUSH_R * PUSH_R && distSq > 0.0001) {
+      const dist  = Math.sqrt(distSq)
+      const force = PUSH_FORCE * (1 - dist / PUSH_R)
+      swarmPositions[i].x += (dx / dist) * force
+      swarmPositions[i].y += (dy / dist) * force
+      swarmPositions[i].z += (dz / dist) * force
+      swarmMesh.setColorAt(i, blueColor)
+    } else if (distSq < COLOR_R * COLOR_R) {
+      swarmMesh.setColorAt(i, blueColor)
+    } else {
+      swarmMesh.setColorAt(i, redColor)
+    }
+
+    dummy.position.copy(swarmPositions[i])
+    dummy.updateMatrix()
+    swarmMesh.setMatrixAt(i, dummy.matrix)
+  }
+  swarmMesh.instanceMatrix.needsUpdate = true
+  if (swarmMesh.instanceColor) swarmMesh.instanceColor.needsUpdate = true
+
+  composer.render()
 }
 
 /* ─────────────────────────────────────────────────────────────
@@ -194,6 +231,7 @@ window.addEventListener('resize', () => {
   camera.aspect = window.innerWidth / window.innerHeight
   camera.updateProjectionMatrix()
   renderer.setSize(window.innerWidth, window.innerHeight)
+  composer.setSize(window.innerWidth, window.innerHeight)
 }, { passive: true })
 
 /* ─────────────────────────────────────────────────────────────
@@ -230,7 +268,7 @@ function initHero() {
    GSAP animates Three.js object properties directly — this
    works because GSAP can tween any numeric JS property.
 ───────────────────────────────────────────────────────────── */
-const ringProxy = { scale: 0.7, opacity: 0.88 }
+const ringProxy = { scale: 0.757, opacity: 1.0 }
 
 const heroTl = gsap.timeline({
   scrollTrigger: {
@@ -252,7 +290,7 @@ heroTl
     duration: 0.75,
     onUpdate() {
       ringGroup.scale.setScalar(ringProxy.scale)
-      discEntries.forEach(({ mat }) => { mat.opacity = ringProxy.opacity })
+      swarmMat.opacity = ringProxy.opacity
     }
   }, 0)
 
