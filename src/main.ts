@@ -28,9 +28,11 @@ const headline  = document.querySelector('.hero-headline-frame')    as HTMLEleme
 const subEl     = document.querySelector('.hero-sub')         as HTMLElement
 const actionsEl = document.querySelector('.hero-actions')     as HTMLElement
 const rulersEl  = document.querySelector('.hero-rulers')      as HTMLElement
+const starsEl   = document.getElementById('hero-stars')       as HTMLElement
 
 gsap.set([headline, subEl, actionsEl], { opacity: 0, y: 28 })
-gsap.set(rulersEl, { opacity: 0 })
+gsap.set(rulersEl,  { opacity: 0 })
+gsap.set(starsEl,   { opacity: 0 })
 gsap.set(blueRise, { y: '100vh' }) // start below viewport, rises to y:0
 
 /* ─────────────────────────────────────────────────────────────
@@ -324,6 +326,7 @@ heroTl
 
   // ── Phase 2: text fades in — stays fixed ──────────────────────────────
   .to(rulersEl,  { opacity: 1, ease: 'power2.out', duration: 0.35 }, 0.52)
+  .to(starsEl,   { opacity: 1, ease: 'power2.out', duration: 0.50 }, 0.52)
   .to(headline,  { opacity: 1, y: 0, ease: 'power2.out', duration: 0.35 }, 0.52)
   .to(subEl,     { opacity: 1, y: 0, ease: 'power2.out', duration: 0.30 }, 0.64)
   .to(actionsEl, { opacity: 1, y: 0, ease: 'power2.out', duration: 0.25 }, 0.72)
@@ -355,31 +358,7 @@ const obs = new IntersectionObserver((entries) => {
 document.querySelectorAll('.reveal').forEach(el => obs.observe(el))
 
 /* Caspian text: hidden until CASPIAN title animation finishes */
-const caspianHeader  = document.querySelector('#caspian .section-header')     as HTMLElement | null
-const caspianBody    = document.querySelector('#caspian .section-body')        as HTMLElement | null
-const caspianScreen  = document.querySelector('#caspian .caspian-screen-wrap') as HTMLElement | null
-const caspianVP      = document.querySelector('#caspian .value-props')         as HTMLElement | null
-const caspianIso     = document.querySelector('#caspian .caspian-iso-wrap')    as HTMLElement | null
-const caspianBtn     = document.querySelector('#caspian .caspian-cta-wrap')    as HTMLElement | null
-const caspianTextEls = [caspianHeader, caspianBody, caspianScreen, caspianVP, caspianIso, caspianBtn].filter(Boolean) as HTMLElement[]
-gsap.set(caspianTextEls, { opacity: 0, y: 30 })
-
-/* Caspian title: reveal when centred in viewport */
-const caspianTitleEl = document.querySelector('.caspian-big-title') as HTMLElement | null
-if (caspianTitleEl) {
-  const titleObs = new IntersectionObserver((entries) => {
-    if (entries[0].isIntersecting) {
-      titleObs.disconnect()
-
-      caspianTitleEl.classList.add('reveal-in')
-      setTimeout(() => {
-        document.getElementById('caspian-content')?.classList.add('glow-visible')
-      }, 1150)
-      gsap.to(caspianTextEls, { opacity: 1, y: 0, duration: 0.35, ease: 'power2.out', stagger: 0.07, delay: 0.3 })
-    }
-  }, { threshold: 0, rootMargin: '-40% 0px -40% 0px' })
-  titleObs.observe(caspianTitleEl)
-}
+/* Caspian section now uses standard reveal like other sections */
 
 /* ─────────────────────────────────────────────────────────────
    HERO GRID — align background to headline-frame corners
@@ -395,6 +374,42 @@ function alignHeroGrid() {
 }
 window.addEventListener('load',   alignHeroGrid)
 window.addEventListener('resize', alignHeroGrid)
+
+/* ── Hero star dots ─────────────────────────────────────────── */
+function drawStars() {
+  const canvas = document.getElementById('hero-stars') as HTMLCanvasElement
+  const hero   = document.getElementById('hero')!
+  canvas.width  = hero.offsetWidth
+  canvas.height = hero.offsetHeight
+  const ctx = canvas.getContext('2d')!
+  ctx.clearRect(0, 0, canvas.width, canvas.height)
+
+  const COUNT = 39
+  for (let i = 0; i < COUNT; i++) {
+    const x    = Math.random() * canvas.width
+    const y    = Math.random() * canvas.height
+    const r    = Math.random() * 1.2 + 0.3        // 0.3–1.5px radius
+    const glow = r * 6
+
+    const grad = ctx.createRadialGradient(x, y, 0, x, y, glow)
+    grad.addColorStop(0,   `rgba(100, 180, 255, ${0.54 + Math.random() * 0.36})`)
+    grad.addColorStop(0.3, `rgba(60,  130, 255, ${0.135 + Math.random() * 0.09})`)
+    grad.addColorStop(1,   'rgba(0, 0, 0, 0)')
+
+    ctx.beginPath()
+    ctx.arc(x, y, glow, 0, Math.PI * 2)
+    ctx.fillStyle = grad
+    ctx.fill()
+
+    // Bright core dot
+    ctx.beginPath()
+    ctx.arc(x, y, r, 0, Math.PI * 2)
+    ctx.fillStyle = `rgba(180, 220, 255, ${0.63 + Math.random() * 0.27})`
+    ctx.fill()
+  }
+}
+window.addEventListener('load',   drawStars)
+window.addEventListener('resize', drawStars)
 
 /* ─────────────────────────────────────────────────────────────
    SPOTLIGHT CURSOR — feeds --cursor-x / --cursor-y to all cards
@@ -541,9 +556,48 @@ if (diffCards.length) {
   if (stackObs) nudgeObs.observe(stackObs)
 }
 
+/* ── DAWNTREADER title: robotic letter-by-letter reveal ─────── */
+function initRoboticTitle(el: HTMLElement) {
+  const text = el.textContent ?? ''
+  el.innerHTML = text.split('').map(ch =>
+    `<span class="dt-char">${ch === ' ' ? '&nbsp;' : ch}</span>`
+  ).join('')
+  const chars = Array.from(el.querySelectorAll<HTMLElement>('.dt-char'))
+  const obs = new IntersectionObserver((entries) => {
+    if (!entries[0].isIntersecting) return
+    obs.disconnect()
+    const order = chars.map((_, i) => i).sort(() => Math.random() - 0.5)
+    order.forEach((charIdx, step) => {
+      setTimeout(() => chars[charIdx].classList.add('on'), step * 60)
+    })
+  }, { threshold: 0.5 })
+  obs.observe(el)
+}
+
+const dtTitleEl = document.querySelector<HTMLElement>('.dawntreader-title')
+if (dtTitleEl) initRoboticTitle(dtTitleEl)
+
+const armoryTitleEl = document.querySelector<HTMLElement>('.armory-title')
+if (armoryTitleEl) initRoboticTitle(armoryTitleEl)
+
+const caspianTitleNew = document.querySelector<HTMLElement>('.caspian-title')
+if (caspianTitleNew) initRoboticTitle(caspianTitleNew)
+
 /* ─────────────────────────────────────────────────────────────
    NEWS TABS
 ───────────────────────────────────────────────────────────── */
+/* ── #caspian anchor: scroll past the hero pin to the real section start ── */
+document.querySelectorAll<HTMLAnchorElement>('a[href="#caspian"]').forEach(link => {
+  link.addEventListener('click', (e) => {
+    e.preventDefault()
+    const heroEl2    = document.getElementById('hero')!
+    const problemEl  = document.getElementById('problem')!
+    const trigger    = ScrollTrigger.getAll().find(t => t.trigger === heroEl2)
+    const pinEnd     = trigger ? trigger.end : heroEl2.offsetHeight
+    window.scrollTo({ top: pinEnd + problemEl.offsetHeight, behavior: 'smooth' })
+  })
+})
+
 document.querySelectorAll('.news-tab').forEach(tab => {
   tab.addEventListener('click', () => {
     document.querySelectorAll('.news-tab').forEach(t => t.classList.remove('active'))

@@ -33,7 +33,6 @@
           </div>
         </div>
         <div class="nav-actions">
-          <a href="#" class="btn-ghost btn-sm">See How It Works</a>
           <a href="#" class="btn-primary btn-sm">Request a Briefing</a>
         </div>
       </div>
@@ -54,6 +53,9 @@
       <div class="crosshair-x" id="crosshair-x"></div>
       <div class="crosshair-y" id="crosshair-y"></div>
 
+      <!-- Star dots behind hero text -->
+      <canvas id="hero-stars"></canvas>
+
       <div class="hero-inner">
         <div class="hero-loader" id="hero-loader">
           <div class="loader-top">
@@ -69,7 +71,6 @@
         </div>
         <p class="hero-sub">In the age of AI, defenders are outnumbered, understaffed, and fighting a fragmented battle. Rilian gives them the platform to fight back — and win.</p>
         <div class="hero-actions">
-          <a href="#caspian" class="btn-primary">See How It Works</a>
           <a href="#" class="btn-ghost">Request a Briefing</a>
         </div>
       </div>
@@ -105,17 +106,11 @@
     </section>
 
     <!-- CASPIAN -->
-    <section id="caspian" class="section section-alt">
+    <section id="caspian" class="section section-alt section-center">
 
-      <div class="section-inner caspian-content" id="caspian-content">
-        <p class="caspian-intro-label">The Solution</p>
-        <div class="caspian-title-box" id="caspian-title-box">
-          <!-- Box trace SVG — draws the border glowing around the rectangle -->
-          <svg class="caspian-streak" id="caspian-streak" aria-hidden="true">
-            <rect class="streak-rect" id="streak-rect" x="1" y="1" rx="4"/>
-          </svg>
-          <h2 class="caspian-big-title" id="caspian-big-title">CASPIAN</h2>
-        </div>
+      <div class="section-inner caspian-content reveal" id="caspian-content">
+        <p class="section-label">The Solution</p>
+        <h1 class="dt-title caspian-title">CASPIAN</h1>
         <h2 class="section-header">Your analysts shouldn't be navigating fragmented systems. They should be executing the mission.</h2>
         <p class="section-body">Caspian is Rilian's agentic security orchestration platform. It sits across your entire security stack, orchestrates every tool through a single interface, and captures the tradecraft of your best practitioners — so that expertise compounds instead of walking out the door.</p>
         <div class="caspian-screen-wrap">
@@ -160,10 +155,7 @@
             <p>Built with privacy compliance and ethical AI as first principles. Every agent operates within boundaries you define, with full auditability.</p>
           </div>
         </div>
-        <div class="caspian-iso-wrap">
-          <img src="/src/assets/caspian-iso-grid.svg" class="caspian-iso-grid" aria-hidden="true" />
-          <img src="/src/assets/caspian-iso.png" class="caspian-iso" alt="Caspian platform overview" />
-        </div>
+
         <div class="caspian-cta-wrap">
           <a href="#" class="btn-primary caspian-cta">Explore Caspian</a>
         </div>
@@ -171,15 +163,16 @@
     </section>
 
     <!-- DAWNTREADER -->
-    <section id="dawntreader" class="section reveal section-center">
-      <div class="section-inner">
+    <section id="dawntreader" class="section section-center">
+      <div class="section-inner reveal">
         <div>
-          <p class="section-label">Deploy Without Compromise: DawnTreader</p>
+          <p class="section-label">Deploy Without Compromise</p>
+          <h1 class="dt-title dawntreader-title">DAWNTREADER</h1>
           <h2 class="section-header">A great product that can't operate in your environment isn't a solution.</h2>
           <p class="section-body">DawnTreader is Rilian's autonomous deployment and compliance engine — built to deliver Caspian into sovereign, air-gapped, and compliance-restricted environments. Deployable in days, not months.</p>
           <div class="dt-screen-wrap">
             <div class="dt-screen-inner">
-              <img src="/src/assets/dawntreader-screen.png" class="dt-screen" alt="DawnTreader Marketplace Battlecards">
+              <img src="/src/assets/armory-screen.png" class="dt-screen" alt="DawnTreader Marketplace Battlecards">
             </div>
           </div>
           <div class="dt-cards">
@@ -197,14 +190,15 @@
     </div>
 
     <!-- ARMORY -->
-    <section id="armory" class="section reveal section-alt section-center">
-      <div class="section-inner">
-        <p class="section-label">The Armory: The Ultimate Security Stack</p>
+    <section id="armory" class="section section-alt section-center">
+      <div class="section-inner reveal">
+        <p class="section-label">The Ultimate Security Stack</p>
+        <h1 class="dt-title armory-title">ARMORY</h1>
         <h2 class="section-header">3,500+ cybersecurity vendors exist. Almost none are built for your operational environment.</h2>
         <p class="section-body">The Rilian Marketplace is a curated ecosystem of COTS and GOTS technologies — vetted by practitioner SMEs across 8 capability domains for sovereign environments and mission relevance.</p>
         <div class="armory-screen-wrap">
           <div class="armory-screen-inner">
-            <img class="armory-screen" src="/src/assets/armory-screen.png" alt="Armory dashboard" />
+            <img class="armory-screen" src="/src/assets/dawntreader-screen.png" alt="Armory dashboard" />
           </div>
         </div>
         <div class="armory-tags">

@@ -248,6 +248,15 @@ h1, h2, h3, h4, h5, h6,
   user-select: none;
 }
 
+#hero-stars {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 5;
+}
+
 .crosshair-x,
 .crosshair-y {
   position: absolute;
@@ -434,7 +443,7 @@ h1, h2, h3, h4, h5, h6,
   left: 50%;
   transform: translateX(-50%);
   width: 280vw;
-  height: 372vw;         /* taller oval pushes bottom rim below Armory section */
+  height: 343vw;
   border-radius: 50%;
   background: #030b2e;   /* same as #sections-rise — bottom edge invisible */
   box-shadow:
@@ -833,6 +842,30 @@ h1, h2, h3, h4, h5, h6,
 #caspian > * { position: relative; z-index: 1; }
 
 #dawntreader  { padding-top: 6rem; position: relative; }
+#dawntreader .section-header,
+#armory .section-header { font-size: clamp(1.49rem, 2.99vw, 2.48rem); }
+@keyframes dt-char-flicker {
+  0%   { opacity: 0; }
+  40%  { opacity: 0.6; }
+  60%  { opacity: 0.3; }
+  100% { opacity: 1; }
+}
+.dt-title .dt-char {
+  display: inline-block;
+  opacity: 0;
+}
+.dt-title .dt-char.on {
+  animation: dt-char-flicker 0.18s steps(1, end) forwards;
+}
+
+.dt-title {
+  font-size: clamp(2.7rem, 6.3vw, 5.4rem);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  margin: -1.4rem 0 1.6rem;
+  color: #4499ff;
+  text-shadow: 0 0 24px rgba(60, 140, 255, 0.55), 0 0 60px rgba(40, 100, 255, 0.25);
+}
 #dawntreader::before {
   content: '';
   position: absolute;
@@ -994,6 +1027,7 @@ h1, h2, h3, h4, h5, h6,
   grid-template-columns: repeat(6, 1fr);
   grid-auto-rows: 1fr;
   gap: 1.5rem;
+  margin-top: -2rem;
   margin-bottom: 3rem;
 }
 
@@ -1354,7 +1388,7 @@ h1, h2, h3, h4, h5, h6,
 }
 
 .caspian-cta-wrap {
-  margin-top: -3.5rem;
+  margin-top: 2.5rem;
   position: relative;
   z-index: 2;
   display: flex;
