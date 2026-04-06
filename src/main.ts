@@ -289,7 +289,9 @@ function initHero() {
 
   gsap.to(orbsEl,    { opacity: 1, duration: 1.2, ease: 'power2.out' })
   gsap.set(hudTextEl, { visibility: 'visible' })
-  gsap.to(hudTextEl, { opacity: 1, duration: 6.0, delay: 0.6, ease: 'power2.out' })
+  hudFadeTween = gsap.to(hudTextEl, { opacity: 1, duration: 6.0, delay: 0.6, ease: 'power2.out',
+    onStart: () => { hudReady = true }
+  })
 
   // Arc stays hidden until scroll timeline reveals it after text appears
 }
@@ -303,6 +305,8 @@ function initHero() {
    works because GSAP can tween any numeric JS property.
 ───────────────────────────────────────────────────────────── */
 const ringProxy = { scale: 0.757, opacity: 1.0 }
+let hudReady = false
+let hudFadeTween: gsap.core.Tween | null = null
 
 const heroTl = gsap.timeline({
   scrollTrigger: {
@@ -311,7 +315,16 @@ const heroTl = gsap.timeline({
     end:           '+=550%',
     pin:           true,
     scrub:         1.5,
-    anticipatePin: 1
+    anticipatePin: 1,
+    onUpdate: (self) => {
+      if (hudReady) {
+        if (hudFadeTween && self.progress > 0) {
+          hudFadeTween.kill()
+          hudFadeTween = null
+        }
+        hudTextEl.style.opacity = String(Math.max(0, 1 - self.progress / 0.45))
+      }
+    }
   }
 })
 
@@ -333,9 +346,7 @@ heroTl
   .to(starsEl,   { opacity: 1, ease: 'power2.out', duration: 0.50 }, 0.52)
   .to(headline,  { opacity: 1, y: 0, ease: 'power2.out', duration: 0.35 }, 0.52)
   .to(subEl,     { opacity: 1, y: 0, ease: 'power2.out', duration: 0.30 }, 0.64)
-  .to(actionsEl, { opacity: 1, y: 0, ease: 'power2.out', duration: 0.25 }, 0.72)
-  // HUD text card fades out gradually as hero text appears
-  .fromTo(hudTextEl, { opacity: 1 }, { opacity: 0, ease: 'none', duration: 0.50, immediateRender: false }, 0.0)
+  .to(actionsEl, { opacity: 1, y: 0, ease: 'power2.out', duration: 0.25 }, 0.64)
   // Arc fades in right after headline
   .to(blueRise,  { opacity: 1, duration: 0.20, ease: 'power2.out' }, 0.70)
 

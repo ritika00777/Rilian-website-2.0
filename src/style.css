@@ -8,9 +8,9 @@
 :root {
   --cursor-x: -9999;   /* off-screen default — no spotlight until mouse enters */
   --cursor-y: -9999;
-  --bg:          #05061c;           /* rilian.com exact dark navy */
-  --bg-alt:      #06082a;
-  --bg-blue:     #030b2e;           /* deep blue — matches sphere */
+  --bg:          #01010a;           /* near-black navy */
+  --bg-alt:      #020212;
+  --bg-blue:     #01010f;           /* near-black blue */
   --bg-card:     rgba(255,255,255,0.02);
   --blue:        #0941BB;
   --blue-bright: #0016FF;          /* rilian.com decorative accent */
@@ -236,6 +236,10 @@ h1, h2, h3, h4, h5, h6,
   flex-shrink: 0;
 }
 
+.nav-actions .btn-primary {
+  box-shadow: none;
+}
+
 /* ── Hero ──────────────────────────────────────────────────── */
 #hero {
   position: relative;
@@ -244,7 +248,7 @@ h1, h2, h3, h4, h5, h6,
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  background: #030b2e;
+  background: #01010f;
   user-select: none;
 }
 
@@ -460,7 +464,7 @@ h1, h2, h3, h4, h5, h6,
   width: 280vw;
   height: 343vw;
   border-radius: 50%;
-  background: #030b2e;   /* same as #sections-rise — bottom edge invisible */
+  background: #01010f;   /* same as #sections-rise — bottom edge invisible */
   box-shadow:
     0 0  3px   3px rgba(200, 235, 255, 1.00),   /* bright white-blue rim */
     0 0 40px  18px rgba(100, 180, 255, 1.00),   /* close intense glow */
@@ -637,12 +641,8 @@ h1, h2, h3, h4, h5, h6,
 .stat-card {
   background-color: #010510;
   background-image:
-    radial-gradient(ellipse 90% 70% at 0% 100%, rgba(20, 70, 255, 0.28), transparent 70%),
-    radial-gradient(
-    300px 300px at calc(var(--cursor-x) * 1px) calc(var(--cursor-y) * 1px),
-    rgba(80, 140, 255, 0.07),
-    transparent
-  );
+    radial-gradient(ellipse 75% 60% at 0% 100%, rgba(20, 70, 255, 0.75), transparent 100%),
+    radial-gradient(300px 300px at calc(var(--cursor-x) * 1px) calc(var(--cursor-y) * 1px), rgba(80, 140, 255, 0.07), transparent);
   background-attachment: fixed;
   border: 1px solid var(--border);
   border-radius: 0;
