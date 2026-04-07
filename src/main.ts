@@ -377,8 +377,23 @@ const obs = new IntersectionObserver((entries) => {
 
 document.querySelectorAll('.reveal').forEach(el => obs.observe(el))
 
-/* Caspian text: hidden until CASPIAN title animation finishes */
-/* Caspian section now uses standard reveal like other sections */
+/* ── Caspian numbered cards — scroll-triggered slide up ──────── */
+document.querySelectorAll<HTMLElement>('.vp-card-num').forEach((card) => {
+  gsap.fromTo(card,
+    { opacity: 0, y: 48 },
+    {
+      opacity: 1,
+      y: 0,
+      duration: 0.72,
+      ease: 'power2.out',
+      scrollTrigger: {
+        trigger: card,
+        start: 'top 88%',
+        toggleActions: 'play none none reverse'
+      }
+    }
+  )
+})
 
 /* ─────────────────────────────────────────────────────────────
    HERO GRID — align background to headline-frame corners

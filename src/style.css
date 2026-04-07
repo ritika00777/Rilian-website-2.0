@@ -871,7 +871,6 @@ h1, h2, h3, h4, h5, h6,
   position: relative;
 }
 
-#caspian .section-header,
 #dawntreader .section-header,
 #armory .section-header {
   font-size: clamp(1.58rem, 3.15vw, 2.61rem);
@@ -879,22 +878,135 @@ h1, h2, h3, h4, h5, h6,
   margin-left: auto;
   margin-right: auto;
 }
-#caspian .section-body { text-align: center; margin-left: auto; margin-right: auto; }
-#caspian      { padding-bottom: 6rem; position: relative; }
+
+/* ── Caspian redesign ──────────────────────────────────────── */
+#caspian {
+  background: linear-gradient(170deg, #0b1a8f 0%, #040d3a 42%, #050616 100%);
+  padding-top: 7rem;
+  padding-bottom: 7rem;
+  position: relative;
+}
 
 #caspian::after {
   content: '';
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(to bottom, transparent 20%, #07070A 100%);
+  inset: 0;
+  background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(0,22,252,0.08) 0%, transparent 70%);
   pointer-events: none;
   z-index: 0;
 }
 
 #caspian > * { position: relative; z-index: 1; }
+
+/* Two-column layout */
+.caspian-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5rem;
+  align-items: start;
+}
+
+/* Sticky left text column */
+.caspian-left {
+  position: sticky;
+  top: 7rem;
+  text-align: left;
+}
+
+#caspian .section-label {
+  text-align: left;
+  margin-left: 0;
+}
+
+#caspian .dt-title {
+  text-align: left;
+  margin-top: 0.5rem;
+}
+
+.caspian-subhead {
+  font-size: clamp(1.05rem, 1.8vw, 1.3rem);
+  font-weight: 500;
+  line-height: 1.45;
+  color: var(--text);
+  margin: 1.25rem 0 1rem;
+}
+
+.caspian-body-text {
+  font-size: 0.93rem;
+  color: var(--muted);
+  line-height: 1.75;
+  margin-bottom: 2rem;
+  max-width: 40ch;
+}
+
+/* Right zigzag cards column */
+.caspian-cards-col {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding-top: 0.25rem;
+}
+
+.vp-card-num {
+  position: relative;
+  border: 1px solid rgba(0, 22, 252, 0.28);
+  padding: 1.6rem 1.75rem;
+  background: rgba(4, 8, 48, 0.55);
+  backdrop-filter: blur(12px);
+  width: 72%;
+}
+
+.vp-card-num.vp-card-right {
+  margin-left: auto;
+}
+
+/* Corner accents — top-left & bottom-right */
+.vp-card-num::before {
+  content: '';
+  position: absolute;
+  top: -1px; left: -1px;
+  width: 14px; height: 14px;
+  border-top: 2px solid #0016FC;
+  border-left: 2px solid #0016FC;
+}
+
+.vp-card-num::after {
+  content: '';
+  position: absolute;
+  bottom: -1px; right: -1px;
+  width: 14px; height: 14px;
+  border-bottom: 2px solid #0016FC;
+  border-right: 2px solid #0016FC;
+}
+
+.vp-num {
+  display: block;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
+  color: #0016FC;
+  margin-bottom: 0.6rem;
+}
+
+.vp-card-num h3 {
+  font-size: 0.92rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: #fff;
+  margin-bottom: 0.4rem;
+}
+
+.vp-card-num p {
+  font-size: 0.83rem;
+  color: var(--muted);
+  line-height: 1.65;
+  margin: 0;
+}
+
+#caspian .caspian-screen-wrap {
+  margin-top: 5rem;
+  margin-bottom: 0;
+}
 
 #dawntreader  { padding-top: 6rem; position: relative; }
 #dawntreader .section-header,
@@ -1872,6 +1984,12 @@ h1, h2, h3, h4, h5, h6,
   .vp-card,
   .vp-card:nth-child(4),
   .vp-card:nth-child(5) { grid-column: span 1; }
+  .caspian-layout {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+  .caspian-left { position: static; }
+  .vp-card-num  { width: 90%; }
 }
 
 @media (max-width: 768px) {
