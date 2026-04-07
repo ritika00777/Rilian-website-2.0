@@ -259,12 +259,50 @@ h1, h2, h3, h4, h5, h6,
   z-index: 6;
   opacity: 0;
   pointer-events: none;
-  width: 294px;
+  width: 265px;
 }
 
 #hero-hud-text img {
   width: 100%;
   display: block;
+}
+
+#scroll-nudge {
+  position: absolute;
+  bottom: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 6;
+  opacity: 0;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 1.1rem 0.45rem 0.9rem;
+  border: 1px solid rgba(0, 22, 252, 0.55);
+  background: rgba(0, 10, 40, 0.45);
+  backdrop-filter: blur(8px);
+  border-radius: 2px;
+  white-space: nowrap;
+}
+
+.scroll-nudge-arrow {
+  color: #0016FC;
+  font-size: 0.75rem;
+  animation: nudge-bob 1.8s ease-in-out infinite;
+}
+
+.scroll-nudge-label {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.6rem;
+  letter-spacing: 0.18em;
+  color: rgba(255, 255, 255, 0.65);
+  text-transform: uppercase;
+}
+
+@keyframes nudge-bob {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(3px); }
 }
 
 #hero-stars {
@@ -446,7 +484,7 @@ h1, h2, h3, h4, h5, h6,
   position: relative;
   z-index: 7;
   margin-top: -100vh;
-  background: linear-gradient(to bottom, #07070A 0%, #030b2e 600px) no-repeat, #030b2e;
+  background: linear-gradient(to bottom, #07070A 0%, #01010f 600px) no-repeat, #01010f;
   opacity: 0;
 }
 
@@ -458,11 +496,11 @@ h1, h2, h3, h4, h5, h6,
    inside #sections-rise (same colour) so no second line.       */
 .rise-arc {
   position: absolute;
-  top: -6vh;             /* how much of the arc peeks above the panel */
+  top: -3vh;             /* how much of the arc peeks above the panel */
   left: 50%;
   transform: translateX(-50%);
   width: 280vw;
-  height: 343vw;
+  height: 338vw;
   border-radius: 50%;
   background: #01010f;   /* same as #sections-rise — bottom edge invisible */
   box-shadow:
@@ -833,8 +871,10 @@ h1, h2, h3, h4, h5, h6,
   position: relative;
 }
 
-#caspian .section-header {
-  font-size: clamp(1.575rem, 3.15vw, 2.61rem);
+#caspian .section-header,
+#dawntreader .section-header,
+#armory .section-header {
+  font-size: clamp(1.58rem, 3.15vw, 2.61rem);
   text-align: center;
   margin-left: auto;
   margin-right: auto;
@@ -874,7 +914,7 @@ h1, h2, h3, h4, h5, h6,
 }
 
 .dt-title {
-  font-size: clamp(2.7rem, 6.3vw, 5.4rem);
+  font-size: clamp(2.43rem, 5.67vw, 4.86rem);
   font-weight: 800;
   letter-spacing: 0.08em;
   margin: -1.4rem 0 1.6rem;
@@ -1234,10 +1274,10 @@ h1, h2, h3, h4, h5, h6,
   position: absolute;
   width: 400px;
   padding: 3rem 2.75rem;
-  background: linear-gradient(160deg, #111a3a 0%, #0a0f28 100%);
-  border: none;
+  background: linear-gradient(160deg, #0a1020 0%, #050810 100%);
+  border: 1px solid rgba(30, 70, 180, 0.35);
   border-radius: 4px;
-  box-shadow: 0 12px 60px rgba(0,0,0,0.7);
+  box-shadow: 0 12px 80px rgba(0,0,0,0.9);
   cursor: grab;
   user-select: none;
   will-change: transform, opacity;
@@ -1252,8 +1292,10 @@ h1, h2, h3, h4, h5, h6,
 /* Front card — elevated with glow */
 .diff-card.is-front {
   box-shadow:
-    0 0 40px rgba(9,65,187,0.2),
-    0 20px 60px rgba(0,0,0,0.7);
+    0 0 60px rgba(9,65,187,0.35),
+    0 0 120px rgba(9,65,187,0.15),
+    0 30px 80px rgba(0,0,0,0.95);
+  border-color: rgba(30, 80, 220, 0.6);
 }
 
 /* Position states set by JS */

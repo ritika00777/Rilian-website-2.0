@@ -29,7 +29,8 @@ const subEl     = document.querySelector('.hero-sub')         as HTMLElement
 const actionsEl = document.querySelector('.hero-actions')     as HTMLElement
 const rulersEl  = document.querySelector('.hero-rulers')      as HTMLElement
 const starsEl   = document.getElementById('hero-stars')       as HTMLElement
-const hudTextEl = document.getElementById('hero-hud-text')    as HTMLElement
+const hudTextEl   = document.getElementById('hero-hud-text')    as HTMLElement
+const scrollNudge = document.getElementById('scroll-nudge')!   as HTMLElement
 
 gsap.set([headline, subEl, actionsEl], { opacity: 0, y: 28 })
 gsap.set(rulersEl,  { opacity: 0 })
@@ -287,7 +288,8 @@ function initHero() {
   loaderEl.classList.add('done')
   animate()
 
-  gsap.to(orbsEl,    { opacity: 1, duration: 1.2, ease: 'power2.out' })
+  gsap.to(orbsEl,      { opacity: 1, duration: 1.2, ease: 'power2.out' })
+  gsap.to(scrollNudge, { opacity: 1, duration: 3.5, delay: 1.2, ease: 'power2.out' })
   gsap.set(hudTextEl, { visibility: 'visible' })
   hudFadeTween = gsap.to(hudTextEl, { opacity: 1, duration: 6.0, delay: 0.6, ease: 'power2.out',
     onStart: () => { hudReady = true }
@@ -322,7 +324,8 @@ const heroTl = gsap.timeline({
           hudFadeTween.kill()
           hudFadeTween = null
         }
-        hudTextEl.style.opacity = String(Math.max(0, 1 - self.progress / 0.45))
+        hudTextEl.style.opacity   = String(Math.max(0, 1 - self.progress / 0.45))
+        scrollNudge.style.opacity = String(Math.max(0, 1 - self.progress / 0.25))
       }
     }
   }
