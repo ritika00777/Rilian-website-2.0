@@ -33,9 +33,9 @@ const hudTextEl   = document.getElementById('hero-hud-text')    as HTMLElement
 const scrollNudge = document.getElementById('scroll-nudge')!   as HTMLElement
 
 gsap.set([headline, subEl, actionsEl], { opacity: 0, y: 28 })
-gsap.set(rulersEl,  { opacity: 0 })
-gsap.set(starsEl,   { opacity: 0 })
-gsap.set(hudTextEl, { opacity: 0, visibility: 'hidden' })
+gsap.set(rulersEl,    { opacity: 0 })
+gsap.set(starsEl,     { opacity: 0 })
+gsap.set(hudTextEl,   { opacity: 0, visibility: 'hidden' })
 gsap.set(blueRise, { y: '100vh' }) // start below viewport, rises to y:0
 
 /* ─────────────────────────────────────────────────────────────
@@ -289,7 +289,8 @@ function initHero() {
   animate()
 
   gsap.to(orbsEl,      { opacity: 1, duration: 1.2, ease: 'power2.out' })
-  gsap.to(scrollNudge, { opacity: 1, duration: 3.5, delay: 1.2, ease: 'power2.out' })
+  scrollNudge.style.visibility = 'visible'
+  nudgeFadeTween = gsap.fromTo(scrollNudge, { opacity: 0 }, { opacity: 1, duration: 1.2, ease: 'power2.out' })
   gsap.set(hudTextEl, { visibility: 'visible' })
   hudFadeTween = gsap.to(hudTextEl, { opacity: 1, duration: 6.0, delay: 0.6, ease: 'power2.out',
     onStart: () => { hudReady = true }
@@ -309,6 +310,7 @@ function initHero() {
 const ringProxy = { scale: 0.757, opacity: 1.0 }
 let hudReady = false
 let hudFadeTween: gsap.core.Tween | null = null
+let nudgeFadeTween: gsap.core.Tween | null = null
 
 const heroTl = gsap.timeline({
   scrollTrigger: {
@@ -319,13 +321,16 @@ const heroTl = gsap.timeline({
     scrub:         1.5,
     anticipatePin: 1,
     onUpdate: (self) => {
+      if (self.progress > 0) {
+        if (nudgeFadeTween) { nudgeFadeTween.kill(); nudgeFadeTween = null }
+        scrollNudge.style.opacity = String(Math.max(0, 1 - self.progress / 0.25))
+      }
       if (hudReady) {
         if (hudFadeTween && self.progress > 0) {
           hudFadeTween.kill()
           hudFadeTween = null
         }
-        hudTextEl.style.opacity   = String(Math.max(0, 1 - self.progress / 0.45))
-        scrollNudge.style.opacity = String(Math.max(0, 1 - self.progress / 0.25))
+        hudTextEl.style.opacity = String(Math.max(0, 1 - self.progress / 0.45))
       }
     }
   }
