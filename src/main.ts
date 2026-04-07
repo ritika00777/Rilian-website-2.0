@@ -377,23 +377,177 @@ const obs = new IntersectionObserver((entries) => {
 
 document.querySelectorAll('.reveal').forEach(el => obs.observe(el))
 
-/* ── Caspian numbered cards — scroll-triggered slide up ──────── */
-document.querySelectorAll<HTMLElement>('.vp-card-num').forEach((card) => {
-  gsap.fromTo(card,
-    { opacity: 0, y: 48 },
-    {
-      opacity: 1,
-      y: 0,
-      duration: 0.72,
-      ease: 'power2.out',
-      scrollTrigger: {
-        trigger: card,
-        start: 'top 88%',
-        toggleActions: 'play none none reverse'
+/* ── Caspian numbered cards — slide up on enter ──────────────── */
+const cardObs = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (!entry.isIntersecting) return
+    entry.target.classList.add('card-visible')
+    cardObs.unobserve(entry.target)
+  })
+}, { threshold: 0.12 })
+
+document.querySelectorAll('.vp-card-num').forEach(card => cardObs.observe(card))
+
+/* ── Caspian card canvas illustrations ──────────────────────── */
+function initVpCanvas(canvas: HTMLCanvasElement, index: number) {
+  const parent = canvas.parentElement as HTMLElement
+  const W = parent.offsetWidth  || 400
+  const H = parent.offsetHeight || 300
+  canvas.width  = W
+  canvas.height = H
+  const ctx = canvas.getContext('2d')!
+  switch (index) {
+    case 0: vpWavyLines(ctx, W, H);   break
+    case 1: vpNetworkNodes(ctx, W, H); break
+    case 2: vpModuleGrid(ctx, W, H);   break
+    case 3: vpOrbitData(ctx, W, H);    break
+    case 4: vpScanGrid(ctx, W, H);     break
+  }
+}
+
+function vpWavyLines(ctx: CanvasRenderingContext2D, W: number, H: number) {
+  const lines = 14, sp = W / (lines + 1)
+  let t = 0
+  ;(function frame() {
+    ctx.fillStyle = '#000'; ctx.fillRect(0, 0, W, H)
+    for (let i = 0; i < lines; i++) {
+      const x = sp * (i + 1)
+      ctx.beginPath()
+      ctx.strokeStyle = i % 4 === 0 ? '#0016FC' : `rgba(255,255,255,${0.3 + i * 0.03})`
+      ctx.lineWidth   = i % 4 === 0 ? 1.5 : 0.7
+      for (let y = 0; y <= H; y += 2) {
+        const amp = (i / lines) * 22 + 5
+        const dx  = Math.sin((y / H * 2.8 + t + i * 0.45) * Math.PI) * amp
+        y === 0 ? ctx.moveTo(x + dx, y) : ctx.lineTo(x + dx, y)
+      }
+      ctx.stroke()
+    }
+    t += 0.016
+    requestAnimationFrame(frame)
+  })()
+}
+
+function vpNetworkNodes(ctx: CanvasRenderingContext2D, W: number, H: number) {
+  const nodes = [
+    { x: W * 0.20, y: H * 0.30 }, { x: W * 0.50, y: H * 0.18 },
+    { x: W * 0.82, y: H * 0.35 }, { x: W * 0.30, y: H * 0.72 },
+    { x: W * 0.72, y: H * 0.75 },
+  ]
+  const edges = [[0,1],[1,2],[0,3],[1,4],[2,4],[3,4]]
+  let t = 0
+  ;(function frame() {
+    ctx.fillStyle = '#000'; ctx.fillRect(0, 0, W, H)
+    edges.forEach(([a, b], ei) => {
+      const na = nodes[a], nb = nodes[b]
+      ctx.beginPath(); ctx.strokeStyle = 'rgba(0,22,252,0.3)'; ctx.lineWidth = 1
+      ctx.moveTo(na.x, na.y); ctx.lineTo(nb.x, nb.y); ctx.stroke()
+      const p  = (t * 0.5 + ei * 0.25) % 1
+      ctx.beginPath()
+      ctx.arc(na.x + (nb.x - na.x) * p, na.y + (nb.y - na.y) * p, 2.5, 0, Math.PI * 2)
+      ctx.fillStyle = '#0016FC'; ctx.fill()
+    })
+    nodes.forEach((n, i) => {
+      const pulse = Math.sin(t * 1.4 + i * 0.9) * 0.5 + 0.5
+      const r = 12 + pulse * 6
+      const grd = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, r)
+      grd.addColorStop(0, 'rgba(0,22,252,0.6)'); grd.addColorStop(1, 'transparent')
+      ctx.beginPath(); ctx.arc(n.x, n.y, r, 0, Math.PI * 2); ctx.fillStyle = grd; ctx.fill()
+      ctx.beginPath(); ctx.arc(n.x, n.y, 3, 0, Math.PI * 2); ctx.fillStyle = '#fff'; ctx.fill()
+    })
+    t += 0.022; requestAnimationFrame(frame)
+  })()
+}
+
+function vpModuleGrid(ctx: CanvasRenderingContext2D, W: number, H: number) {
+  const cols = 7, rows = 5
+  const cw = W / (cols + 1), ch = H / (rows + 1)
+  const sz = Math.min(cw, ch) * 0.42
+  let t = 0
+  ;(function frame() {
+    ctx.fillStyle = '#000'; ctx.fillRect(0, 0, W, H)
+    for (let c = 0; c < cols; c++) {
+      for (let r = 0; r < rows; r++) {
+        const x = cw * (c + 1), y = ch * (r + 1)
+        const wave = (Math.sin(t * 1.2 - c * 0.7 - r * 0.5) + 1) / 2
+        const isBlue = (c + r) % 3 === 0
+        const alpha = 0.12 + wave * 0.7
+        ctx.strokeStyle = isBlue ? `rgba(0,22,252,${alpha})` : `rgba(255,255,255,${alpha * 0.55})`
+        ctx.lineWidth   = isBlue ? 1.2 : 0.7
+        ctx.strokeRect(x - sz / 2, y - sz / 2, sz, sz)
+        if (wave > 0.75) {
+          ctx.fillStyle = isBlue
+            ? `rgba(0,22,252,${(wave - 0.75) * 1.5})`
+            : `rgba(255,255,255,${(wave - 0.75) * 0.8})`
+          ctx.fillRect(x - sz / 2, y - sz / 2, sz, sz)
+        }
       }
     }
-  )
-})
+    t += 0.025; requestAnimationFrame(frame)
+  })()
+}
+
+function vpOrbitData(ctx: CanvasRenderingContext2D, W: number, H: number) {
+  const cx = W / 2, cy = H / 2, mn = Math.min(W, H)
+  const rings = [
+    { r: mn * 0.12, spd:  0.50, n: 3 },
+    { r: mn * 0.24, spd: -0.30, n: 5 },
+    { r: mn * 0.38, spd:  0.18, n: 7 },
+  ]
+  let t = 0
+  ;(function frame() {
+    ctx.fillStyle = '#000'; ctx.fillRect(0, 0, W, H)
+    const grd = ctx.createRadialGradient(cx, cy, 0, cx, cy, rings[0].r * 1.8)
+    grd.addColorStop(0, 'rgba(0,22,252,0.45)'); grd.addColorStop(1, 'transparent')
+    ctx.beginPath(); ctx.arc(cx, cy, rings[0].r * 1.8, 0, Math.PI * 2); ctx.fillStyle = grd; ctx.fill()
+    ctx.beginPath(); ctx.arc(cx, cy, 3.5, 0, Math.PI * 2); ctx.fillStyle = '#fff'; ctx.fill()
+    rings.forEach((ring, ri) => {
+      ctx.beginPath(); ctx.arc(cx, cy, ring.r, 0, Math.PI * 2)
+      ctx.strokeStyle = 'rgba(0,22,252,0.18)'; ctx.lineWidth = 0.5; ctx.stroke()
+      for (let i = 0; i < ring.n; i++) {
+        const angle = (i / ring.n) * Math.PI * 2 + t * ring.spd
+        ctx.beginPath()
+        ctx.arc(cx + Math.cos(angle) * ring.r, cy + Math.sin(angle) * ring.r, ri === 0 ? 3 : 2, 0, Math.PI * 2)
+        ctx.fillStyle = ri === 0 ? '#0016FC' : 'rgba(255,255,255,0.7)'; ctx.fill()
+      }
+    })
+    t += 0.022; requestAnimationFrame(frame)
+  })()
+}
+
+function vpScanGrid(ctx: CanvasRenderingContext2D, W: number, H: number) {
+  const gs = 30
+  let t = 0
+  ;(function frame() {
+    ctx.fillStyle = '#000'; ctx.fillRect(0, 0, W, H)
+    const scanY = (t % 1) * H
+    for (let x = 0; x <= W; x += gs) {
+      ctx.beginPath(); ctx.strokeStyle = 'rgba(0,22,252,0.1)'; ctx.lineWidth = 0.5
+      ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke()
+    }
+    for (let y = 0; y <= H; y += gs) {
+      const g = Math.max(0, 1 - Math.abs(y - scanY) / (gs * 2.5))
+      ctx.beginPath()
+      ctx.strokeStyle = `rgba(0,22,252,${0.08 + g * 0.65})`; ctx.lineWidth = 0.5 + g * 1.2
+      ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke()
+      if (g > 0.3) {
+        for (let x = 0; x <= W; x += gs) {
+          ctx.beginPath(); ctx.arc(x, y, 1.5 * g, 0, Math.PI * 2)
+          ctx.fillStyle = `rgba(0,22,252,${g * 0.9})`; ctx.fill()
+        }
+      }
+    }
+    const sg = ctx.createLinearGradient(0, scanY - 10, 0, scanY + 10)
+    sg.addColorStop(0, 'transparent'); sg.addColorStop(0.5, 'rgba(0,22,252,0.7)'); sg.addColorStop(1, 'transparent')
+    ctx.fillStyle = sg; ctx.fillRect(0, scanY - 10, W, 20)
+    t += 0.005; requestAnimationFrame(frame)
+  })()
+}
+
+setTimeout(() => {
+  document.querySelectorAll<HTMLCanvasElement>('.vp-canvas').forEach((canvas, i) => {
+    initVpCanvas(canvas, i)
+  })
+}, 200)
 
 /* ─────────────────────────────────────────────────────────────
    HERO GRID — align background to headline-frame corners

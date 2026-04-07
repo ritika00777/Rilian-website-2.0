@@ -500,7 +500,7 @@ h1, h2, h3, h4, h5, h6,
   left: 50%;
   transform: translateX(-50%);
   width: 280vw;
-  height: 338vw;
+  height: 385vw;
   border-radius: 50%;
   background: #01010f;   /* same as #sections-rise — bottom edge invisible */
   box-shadow:
@@ -881,10 +881,23 @@ h1, h2, h3, h4, h5, h6,
 
 /* ── Caspian redesign ──────────────────────────────────────── */
 #caspian {
-  background: linear-gradient(170deg, #0b1a8f 0%, #040d3a 42%, #050616 100%);
+  background: #000 !important;
   padding-top: 7rem;
   padding-bottom: 7rem;
   position: relative;
+}
+
+/* Blue left-half background — fades to black at right edge */
+#caspian::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(to right, #0b2070 0%, #0a1a6e 20%, #050e45 45%, transparent 100%);
+  pointer-events: none;
+  z-index: 0;
 }
 
 #caspian::after {
@@ -916,11 +929,12 @@ h1, h2, h3, h4, h5, h6,
 #caspian .section-label {
   text-align: left;
   margin-left: 0;
+  margin-bottom: 0.3rem;
 }
 
 #caspian .dt-title {
   text-align: left;
-  margin-top: 0.5rem;
+  margin-top: 0.1rem;
 }
 
 .caspian-subhead {
@@ -929,6 +943,7 @@ h1, h2, h3, h4, h5, h6,
   line-height: 1.45;
   color: var(--text);
   margin: 1.25rem 0 1rem;
+  max-width: 40ch;
 }
 
 .caspian-body-text {
@@ -943,64 +958,114 @@ h1, h2, h3, h4, h5, h6,
 .caspian-cards-col {
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: 2.5rem;
   padding-top: 0.25rem;
+  padding-left: 5rem;
 }
 
 .vp-card-num {
   position: relative;
-  border: 1px solid rgba(0, 22, 252, 0.28);
-  padding: 1.6rem 1.75rem;
-  background: rgba(4, 8, 48, 0.55);
-  backdrop-filter: blur(12px);
   width: 72%;
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.65s ease, transform 0.65s ease;
 }
 
-.vp-card-num.vp-card-right {
-  margin-left: auto;
+.vp-card-num.card-visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
-/* Corner accents — top-left & bottom-right */
-.vp-card-num::before {
+/* Stagger each card slightly */
+.vp-card-num:nth-child(2) { transition-delay: 0.08s; }
+.vp-card-num:nth-child(3) { transition-delay: 0.16s; }
+.vp-card-num:nth-child(4) { transition-delay: 0.24s; }
+.vp-card-num:nth-child(5) { transition-delay: 0.32s; }
+
+.vp-card-num.vp-card-right { margin-left: auto; }
+
+/* Illustration frame */
+.vp-illus {
+  position: relative;
+  background: #000;
+  width: 70%;
+  aspect-ratio: 4 / 3;
+  min-height: 112px;
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+
+/* Top-left corner bracket */
+.vp-illus::before {
   content: '';
   position: absolute;
-  top: -1px; left: -1px;
-  width: 14px; height: 14px;
-  border-top: 2px solid #0016FC;
-  border-left: 2px solid #0016FC;
+  top: 0; left: 0;
+  width: 16px; height: 16px;
+  border-top: 1.5px solid #0016FC;
+  border-left: 1.5px solid #0016FC;
+  z-index: 2;
+  pointer-events: none;
 }
 
-.vp-card-num::after {
+/* Top-right corner bracket */
+.vp-illus::after {
   content: '';
   position: absolute;
-  bottom: -1px; right: -1px;
-  width: 14px; height: 14px;
-  border-bottom: 2px solid #0016FC;
-  border-right: 2px solid #0016FC;
+  top: 0; right: 0;
+  width: 16px; height: 16px;
+  border-top: 1.5px solid #0016FC;
+  border-right: 1.5px solid #0016FC;
+  z-index: 2;
+  pointer-events: none;
 }
 
-.vp-num {
+/* Bottom-right corner bracket */
+.vp-illus-br {
+  position: absolute;
+  bottom: 0; right: 0;
+  width: 16px; height: 16px;
+  border-bottom: 1.5px solid #0016FC;
+  border-right: 1.5px solid #0016FC;
+  z-index: 2;
+}
+
+/* Canvas fills illustration area */
+.vp-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   display: block;
+}
+
+/* Number — inside illustration, bottom-left */
+.vp-num {
+  position: absolute;
+  bottom: 5px;
+  left: 6px;
   font-family: var(--font-mono, monospace);
-  font-size: 0.62rem;
+  font-size: 1.24rem;
   letter-spacing: 0.18em;
   color: #0016FC;
-  margin-bottom: 0.6rem;
+  z-index: 2;
 }
 
 .vp-card-num h3 {
-  font-size: 0.92rem;
+  font-size: 0.85rem;
   font-weight: 700;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
   color: #fff;
-  margin-bottom: 0.4rem;
+  margin: 0 0 0.4rem;
+  width: 70%;
 }
 
 .vp-card-num p {
-  font-size: 0.83rem;
+  font-size: 0.82rem;
   color: var(--muted);
   line-height: 1.65;
   margin: 0;
+  width: 70%;
 }
 
 #caspian .caspian-screen-wrap {
