@@ -280,10 +280,8 @@ h1, h2, h3, h4, h5, h6,
   align-items: center;
   gap: 0.5rem;
   padding: 0.45rem 1.1rem 0.45rem 0.9rem;
-  border: 1px solid rgba(0, 22, 252, 0.55);
-  background: rgba(0, 10, 40, 0.45);
-  backdrop-filter: blur(8px);
-  border-radius: 2px;
+  border: none;
+  background: none;
   white-space: nowrap;
 }
 
@@ -874,7 +872,7 @@ h1, h2, h3, h4, h5, h6,
 
 #dawntreader .section-header,
 #armory .section-header {
-  font-size: clamp(1.58rem, 3.15vw, 2.61rem);
+  font-size: clamp(2.43rem, 5.67vw, 4.86rem);
   text-align: center;
   margin-left: auto;
   margin-right: auto;
