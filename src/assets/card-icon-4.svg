@@ -1,0 +1,22 @@
+<svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Top node -->
+  <circle cx="50" cy="16" r="5" stroke="white" stroke-width="1.1" opacity="0.8"/>
+  <!-- Middle layer -->
+  <circle cx="22" cy="50" r="5" stroke="#4488ff" stroke-width="1.1" opacity="0.8"/>
+  <circle cx="50" cy="50" r="5" stroke="white" stroke-width="1.1" opacity="0.75"/>
+  <circle cx="78" cy="50" r="5" stroke="#4488ff" stroke-width="1.1" opacity="0.8"/>
+  <!-- Bottom nodes -->
+  <circle cx="34" cy="84" r="5" stroke="white" stroke-width="1" opacity="0.65"/>
+  <circle cx="66" cy="84" r="5" stroke="white" stroke-width="1" opacity="0.65"/>
+  <!-- Top → middle connections -->
+  <line x1="50" y1="21" x2="22" y2="45" stroke="white" stroke-width="0.7" opacity="0.38"/>
+  <line x1="50" y1="21" x2="50" y2="45" stroke="white" stroke-width="0.7" opacity="0.38"/>
+  <line x1="50" y1="21" x2="78" y2="45" stroke="white" stroke-width="0.7" opacity="0.38"/>
+  <!-- Middle → bottom connections -->
+  <line x1="22" y1="55" x2="34" y2="79" stroke="white" stroke-width="0.7" opacity="0.35"/>
+  <line x1="22" y1="55" x2="66" y2="79" stroke="#4488ff" stroke-width="0.5" opacity="0.28"/>
+  <line x1="50" y1="55" x2="34" y2="79" stroke="white" stroke-width="0.7" opacity="0.35"/>
+  <line x1="50" y1="55" x2="66" y2="79" stroke="white" stroke-width="0.7" opacity="0.35"/>
+  <line x1="78" y1="55" x2="34" y2="79" stroke="#4488ff" stroke-width="0.5" opacity="0.28"/>
+  <line x1="78" y1="55" x2="66" y2="79" stroke="white" stroke-width="0.7" opacity="0.35"/>
+</svg>

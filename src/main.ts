@@ -622,22 +622,6 @@ document.addEventListener('pointermove', (e: PointerEvent) => {
     crosshairY.style.left = `${e.clientX - heroRect.left}px`
   }
 
-  // CASPIAN box: element-relative coords for border glow
-  const caspianBox = document.getElementById('caspian-title-box')
-  if (caspianBox) {
-    const r = caspianBox.getBoundingClientRect()
-    caspianBox.style.setProperty('--caspian-x', `${e.clientX - r.left + 2}px`)
-    caspianBox.style.setProperty('--caspian-y', `${e.clientY - r.top + 2}px`)
-  }
-
-  // CASPIAN screen mockup: element-relative coords for border glow
-  const caspianScreenInner = document.querySelector('#caspian .caspian-screen-inner') as HTMLElement | null
-  if (caspianScreenInner) {
-    const r = caspianScreenInner.getBoundingClientRect()
-    caspianScreenInner.style.setProperty('--screen-x', `${e.clientX - r.left}px`)
-    caspianScreenInner.style.setProperty('--screen-y', `${e.clientY - r.top}px`)
-  }
-
   // DAWNTREADER screen mockup: element-relative coords for border glow
   const dtScreenInner = document.querySelector('#dawntreader .dt-screen-inner') as HTMLElement | null
   if (dtScreenInner) {
@@ -778,6 +762,75 @@ const caspianTitleNew = document.querySelector<HTMLElement>('.caspian-title')
 if (caspianTitleNew) initRoboticTitle(caspianTitleNew)
 
 /* ─────────────────────────────────────────────────────────────
+   PROBLEM RAYS — scroll-driven reveal on static SVG paths
+───────────────────────────────────────────────────────────── */
+;(function initProblemRays() {
+  const problem = document.getElementById('problem')
+  if (!problem) return
+
+  // Order: left-outer → left-mid → left-inner → center → right-inner → right-mid → right-outer
+  const rayIds = ['r5', 'r3', 'r1', null, 'r0', 'r2', 'r4']
+  const allPaths = rayIds.map(id =>
+    id === null
+      ? problem.querySelector<SVGPathElement>('.ray-center')!
+      : problem.querySelector<SVGPathElement>(`path[stroke="url(#${id})"]`)!
+  ).filter(Boolean)
+  if (!allPaths.length) return
+
+  // Set initial dasharray/dashoffset using actual path lengths
+  allPaths.forEach(p => {
+    const len = p.getTotalLength()
+    p.style.strokeDasharray = String(len)
+    p.style.strokeDashoffset = String(len)
+    p.style.transition = 'none'
+  })
+
+  const n = allPaths.length  // 7 paths
+
+  function update() {
+    const rect = problem!.getBoundingClientRect()
+    const vh = window.innerHeight
+    const raw = (vh - rect.top) / (vh + rect.height * 0.4)
+    const progress = Math.max(0, Math.min(1, raw))
+
+    // Each path gets an equal slice of the scroll range
+    // Path i only starts drawing once the previous one is fully drawn
+    allPaths.forEach((p, i) => {
+      const sliceStart = i / n
+      const sliceEnd   = (i + 1) / n
+      const p2 = Math.max(0, Math.min(1, (progress - sliceStart) / (sliceEnd - sliceStart)))
+      const len = parseFloat(p.style.strokeDasharray)
+      p.style.strokeDashoffset = String(len * (1 - p2))
+    })
+  }
+
+  window.addEventListener('scroll', update, { passive: true })
+  update()
+})()
+
+/* ── Center ray: from problem orb → top of caspian screen ── */
+;(function initCenterRay() {
+  const ray        = document.getElementById('center-ray')
+  const riseEl     = document.getElementById('sections-rise')
+  const orbEl      = document.querySelector<SVGCircleElement>('#problem-rays circle')
+  const screenWrap = document.querySelector<HTMLElement>('.caspian-screen-wrap')
+  if (!ray || !riseEl || !orbEl || !screenWrap) return
+
+  function position() {
+    const riseRect   = riseEl!.getBoundingClientRect()
+    const orbRect    = orbEl!.getBoundingClientRect()
+    const screenRect = screenWrap!.getBoundingClientRect()
+    const orbY   = orbRect.top  + orbRect.height  / 2 - riseRect.top
+    const endY   = screenRect.top - riseRect.top
+    ray!.style.top    = `${orbY}px`
+    ray!.style.height = `${Math.max(0, endY - orbY)}px`
+  }
+
+  requestAnimationFrame(position)
+  window.addEventListener('resize', position)
+})()
+
+/* ─────────────────────────────────────────────────────────────
    NEWS TABS
 ───────────────────────────────────────────────────────────── */
 /* ── #caspian anchor: scroll past the hero pin to the real section start ── */
@@ -798,3 +851,4 @@ document.querySelectorAll('.news-tab').forEach(tab => {
     tab.classList.add('active')
   })
 })
+

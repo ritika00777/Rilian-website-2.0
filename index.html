@@ -58,13 +58,13 @@
 
       <!-- HUD text card — bottom-left, appears with globe, fades out with scroll -->
       <div id="hero-hud-text">
-        <img src="/src/assets/hud-text-card.svg" alt="" draggable="false" />
+        <img src="/src/assets/Hero explainer.png" alt="" draggable="false" />
       </div>
 
       <!-- Scroll nudge badge — bottom-center, fades in with globe, fades out on scroll -->
       <div id="scroll-nudge">
         <span class="scroll-nudge-arrow">↓</span>
-        <span class="scroll-nudge-label">SCROLL TO DEFEND</span>
+        <span class="scroll-nudge-label">SCROLL TO PROCEED</span>
       </div>
 
       <div class="hero-inner">
@@ -90,10 +90,14 @@
     <!-- ALL SECTIONS RISE TOGETHER — single rising panel over the hero -->
     <div id="sections-rise">
       <div class="rise-arc"></div>
+      <!-- Center ray: spans from problem orb to caspian screen top. Sized by JS. -->
+      <div class="center-ray" id="center-ray" aria-hidden="true"></div>
 
     <!-- PROBLEM -->
     <section id="problem" class="section section-center">
       <div class="section-inner">
+
+
         <p class="section-label">The Problem</p>
         <h2 class="section-header">On the technology battlefield, the good guys are outnumbered and outgunned.</h2>
         <div class="stats-grid">
@@ -117,98 +121,171 @@
     </section>
 
     <!-- CASPIAN -->
-    <section id="caspian" class="section section-alt">
+    <section id="caspian" class="section">
+      <div class="caspian-beam" aria-hidden="true">
+        <img src="/src/assets/caspian-beam-new.png" alt="">
+      </div>
 
       <div class="section-inner">
-        <div class="caspian-layout">
+        <!-- Section corner brackets -->
+        <span class="caspian-corner caspian-corner--tl" aria-hidden="true"></span>
+        <span class="caspian-corner caspian-corner--tr" aria-hidden="true"></span>
+        <span class="caspian-tick" aria-hidden="true"></span>
 
-          <!-- Left: sticky text column -->
-          <div class="caspian-left">
+        <!-- Header: label + title left | subhead + body right -->
+        <div class="caspian-header">
+          <div class="caspian-header-left">
             <p class="section-label">The Solution</p>
-            <h1 class="dt-title caspian-title">CASPIAN</h1>
+            <div class="caspian-title-block">
+              <h1 class="dt-title caspian-title">CASPIAN</h1>
+              <p class="caspian-sub-label">VETTED COMPANIES</p>
+            </div>
+          </div>
+          <div class="caspian-header-right">
             <h2 class="caspian-subhead">Your analysts shouldn't be navigating fragmented systems. They should be executing the mission.</h2>
             <p class="caspian-body-text">Caspian is Rilian's agentic security orchestration platform. It sits across your entire security stack, orchestrates every tool through a single interface, and captures the tradecraft of your best practitioners — so that expertise compounds instead of walking out the door.</p>
-            <a href="#" class="btn-primary caspian-cta">Explore Caspian</a>
-          </div>
-
-          <!-- Right: numbered zigzag cards -->
-          <div class="caspian-cards-col">
-            <div class="vp-card-num">
-              <div class="vp-illus">
-                <canvas class="vp-canvas"></canvas>
-                <span class="vp-illus-br"></span>
-                <span class="vp-num">01</span>
-              </div>
-              <h3>Expertise on Demand</h3>
-              <p>Pre-trained agents built on real-world operating protocols, ready to execute out of the box.</p>
-            </div>
-            <div class="vp-card-num vp-card-right">
-              <div class="vp-illus">
-                <canvas class="vp-canvas"></canvas>
-                <span class="vp-illus-br"></span>
-                <span class="vp-num">02</span>
-              </div>
-              <h3>Visual, Transparent, Correctable</h3>
-              <p>Every workflow is visible, editable, and fully auditable in real time.</p>
-            </div>
-            <div class="vp-card-num">
-              <div class="vp-illus">
-                <canvas class="vp-canvas"></canvas>
-                <span class="vp-illus-br"></span>
-                <span class="vp-num">03</span>
-              </div>
-              <h3>Modular Flexibility</h3>
-              <p>Works with any tools or LLM. No fine-tuning lock-in. No vendor dependency.</p>
-            </div>
-            <div class="vp-card-num vp-card-right">
-              <div class="vp-illus">
-                <canvas class="vp-canvas"></canvas>
-                <span class="vp-illus-br"></span>
-                <span class="vp-num">04</span>
-              </div>
-              <h3>Control Over Learning &amp; Knowledge Retention</h3>
-              <p>You decide what the system remembers, learns, and retains. Intelligence you fully own.</p>
-            </div>
-            <div class="vp-card-num">
-              <div class="vp-illus">
-                <canvas class="vp-canvas"></canvas>
-                <span class="vp-illus-br"></span>
-                <span class="vp-num">05</span>
-              </div>
-              <h3>Responsible by Design</h3>
-              <p>Built with privacy compliance and ethical AI as first principles. Every agent operates within boundaries you define, with full auditability.</p>
-            </div>
-          </div>
-
-        </div><!-- /.caspian-layout -->
-
-        <!-- Screen mockup below the layout -->
-        <div class="caspian-screen-wrap">
-          <div class="caspian-screen-inner">
-            <img src="/src/assets/caspian-screen.png" class="caspian-screen" alt="Caspian Command Layer dashboard">
           </div>
         </div>
 
-      </div>
+        <!-- Dashboard + cards, bounded by side lines -->
+        <div class="caspian-body">
+          <div class="caspian-side-line caspian-side-line--left"  aria-hidden="true"></div>
+          <div class="caspian-side-line caspian-side-line--right" aria-hidden="true"></div>
+
+          <!-- Dashboard screenshot -->
+          <div class="caspian-screen-wrap">
+            <img src="/src/assets/caspian-globe.png" class="caspian-ring" alt="" aria-hidden="true">
+            <img src="/src/assets/caspian-dashboard-new.png" class="caspian-screen" alt="Caspian Defense Platform">
+          </div>
+
+          <!-- Feature cards — staggered layout -->
+          <div class="caspian-cards">
+
+            <div class="caspian-card caspian-card--top">
+              <span class="cc-tl" aria-hidden="true"></span><span class="cc-tr" aria-hidden="true"></span>
+              <span class="cc-bl" aria-hidden="true"></span><span class="cc-br" aria-hidden="true"></span>
+              <span class="card-right-lines" aria-hidden="true"></span>
+              <div class="card-icon-frame">
+                <span class="cif-tl" aria-hidden="true"></span>
+                <span class="cif-tr" aria-hidden="true"></span>
+                <span class="cif-br" aria-hidden="true"></span>
+                <span class="card-num">01</span>
+                <img src="/src/assets/card-icon-1.svg" class="caspian-card-icon" alt="" aria-hidden="true">
+              </div>
+              <h3 class="caspian-card-title">Expertise on Demand</h3>
+              <p class="caspian-card-desc">Pre-trained agents built on real-world operating protocols, ready to execute out of the box.</p>
+            </div>
+
+            <div class="caspian-card caspian-card--bottom">
+              <span class="cc-tl" aria-hidden="true"></span><span class="cc-tr" aria-hidden="true"></span>
+              <span class="cc-bl" aria-hidden="true"></span><span class="cc-br" aria-hidden="true"></span>
+              <span class="card-right-lines" aria-hidden="true"></span>
+              <div class="card-icon-frame">
+                <span class="cif-tl" aria-hidden="true"></span>
+                <span class="cif-tr" aria-hidden="true"></span>
+                <span class="cif-br" aria-hidden="true"></span>
+                <span class="card-num">02</span>
+                <img src="/src/assets/card-icon-2.svg" class="caspian-card-icon" alt="" aria-hidden="true">
+              </div>
+              <h3 class="caspian-card-title">Visual, Transparent, Correctable</h3>
+              <p class="caspian-card-desc">Every workflow is visible, editable, and fully auditable in real time.</p>
+            </div>
+
+            <div class="caspian-card caspian-card--top">
+              <span class="cc-tl" aria-hidden="true"></span><span class="cc-tr" aria-hidden="true"></span>
+              <span class="cc-bl" aria-hidden="true"></span><span class="cc-br" aria-hidden="true"></span>
+              <span class="card-right-lines" aria-hidden="true"></span>
+              <div class="card-icon-frame">
+                <span class="cif-tl" aria-hidden="true"></span>
+                <span class="cif-tr" aria-hidden="true"></span>
+                <span class="cif-br" aria-hidden="true"></span>
+                <span class="card-num">03</span>
+                <img src="/src/assets/card-icon-3.svg" class="caspian-card-icon" alt="" aria-hidden="true">
+              </div>
+              <h3 class="caspian-card-title">Modular Flexibility</h3>
+              <p class="caspian-card-desc">Works with any tools and LLMs. No fine-tuning lock-in. No vendor dependency.</p>
+            </div>
+
+            <div class="caspian-card caspian-card--bottom">
+              <span class="cc-tl" aria-hidden="true"></span><span class="cc-tr" aria-hidden="true"></span>
+              <span class="cc-bl" aria-hidden="true"></span><span class="cc-br" aria-hidden="true"></span>
+              <span class="card-right-lines" aria-hidden="true"></span>
+              <div class="card-icon-frame">
+                <span class="cif-tl" aria-hidden="true"></span>
+                <span class="cif-tr" aria-hidden="true"></span>
+                <span class="cif-br" aria-hidden="true"></span>
+                <span class="card-num">04</span>
+                <img src="/src/assets/card-icon-4.svg" class="caspian-card-icon" alt="" aria-hidden="true">
+              </div>
+              <h3 class="caspian-card-title">Control Over Learning</h3>
+              <p class="caspian-card-desc">You decide what the system remembers, learns, and retains. Intelligence you fully own.</p>
+            </div>
+
+
+          </div><!-- /.caspian-cards -->
+        </div><!-- /.caspian-body -->
+      </div><!-- /.section-inner -->
     </section>
 
     <!-- DAWNTREADER -->
-    <section id="dawntreader" class="section section-center">
+    <section id="dawntreader" class="section">
       <div class="section-inner reveal">
-        <div>
-          <p class="section-label">Deploy Without Compromise</p>
-          <h1 class="dt-title dawntreader-title">DAWNTREADER</h1>
-          <h2 class="section-header">A great product that can't operate in your environment isn't a solution.</h2>
-          <p class="section-body">DawnTreader is Rilian's autonomous deployment and compliance engine — built to deliver Caspian into sovereign, air-gapped, and compliance-restricted environments. Deployable in days, not months.</p>
-          <div class="dt-screen-wrap">
-            <div class="dt-screen-inner">
-              <img src="/src/assets/armory-screen.png" class="dt-screen" alt="DawnTreader Marketplace Battlecards">
+        <!-- Two-column header -->
+        <div class="dt-header">
+          <div class="dt-bracket dt-bracket-tl" aria-hidden="true"></div>
+          <div class="dt-bracket dt-bracket-tr" aria-hidden="true"></div>
+          <div class="dt-bracket dt-bracket-bl" aria-hidden="true"></div>
+
+          <div class="dt-header-left">
+            <p class="section-label">DEPLOY WITHOUT COMPROMISE</p>
+            <div class="caspian-title-block">
+              <h1 class="dt-title dawntreader-title">DAWNTREADER</h1>
+              <p class="caspian-sub-label">VETTED COMPANIES</p>
             </div>
           </div>
+
+          <div class="dt-header-right">
+            <h2 class="dt-subhead">A great product that can't operate in your environment isn't a solution.</h2>
+            <p class="dt-body-text">DawnTreader is Rilian's autonomous deployment and compliance engine — built to deliver Caspian into sovereign, air-gapped, and compliance-restricted environments. Deployable in days, not months.</p>
+          </div>
+        </div>
+
+        <!-- Globe / network visualization -->
+        <div class="dt-network-bg" aria-hidden="true">
+          <img src="/src/assets/Dawntrader globe.png" class="dt-globe" alt="">
+        </div>
+
+        <!-- Feature cards -->
+        <div class="dt-cards-wrap">
           <div class="dt-cards">
-            <div class="dt-card">Operates in air-gapped networks, bare metal, sovereign cloud, and multi-geo classified environments</div>
-            <div class="dt-card">Automated compliance enforcement that adapts to changing requirements</div>
-            <div class="dt-card">Proven international deployment track record</div>
+            <div class="dt-card">
+              <span class="dt-plus dt-plus-tl">+</span>
+              <p class="dt-card-text">Operates in air-gapped networks, bare metal, sovereign cloud, and multi-geo classified environments</p>
+              <span class="dt-line-v" aria-hidden="true"></span>
+              <span class="dt-line-h" aria-hidden="true"></span>
+              <span class="dt-plus dt-plus-br">+</span>
+            </div>
+            <div class="dt-card">
+              <span class="dt-plus dt-plus-tl">+</span>
+              <p class="dt-card-text">Automated compliance enforcement that adapts to changing requirements</p>
+              <span class="dt-line-v" aria-hidden="true"></span>
+              <span class="dt-line-h" aria-hidden="true"></span>
+              <span class="dt-plus dt-plus-br">+</span>
+            </div>
+            <div class="dt-card">
+              <span class="dt-plus dt-plus-tl">+</span>
+              <p class="dt-card-text">Proven international deployment track record</p>
+              <span class="dt-line-v" aria-hidden="true"></span>
+              <span class="dt-line-h" aria-hidden="true"></span>
+              <span class="dt-plus dt-plus-br">+</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dashboard screen -->
+        <div class="dt-screen-wrap">
+          <div class="dt-screen-inner">
+            <img src="/src/assets/DT screen.png" class="dt-screen" alt="DawnTreader Environments Dashboard">
           </div>
         </div>
       </div>
@@ -220,21 +297,47 @@
     </div>
 
     <!-- ARMORY -->
-    <section id="armory" class="section section-alt section-center">
-      <div class="section-inner reveal">
-        <p class="section-label">The Ultimate Security Stack</p>
-        <h1 class="dt-title armory-title">ARMORY</h1>
-        <h2 class="section-header">3,500+ cybersecurity vendors exist. Almost none are built for your operational environment.</h2>
-        <p class="section-body">The Rilian Marketplace is a curated ecosystem of COTS and GOTS technologies — vetted by practitioner SMEs across 8 capability domains for sovereign environments and mission relevance.</p>
-        <div class="armory-screen-wrap">
-          <div class="armory-screen-inner">
-            <img class="armory-screen" src="/src/assets/dawntreader-screen.png" alt="Armory dashboard" />
+    <section id="armory" class="section">
+      <img src="/src/assets/Armory bg sim.png" class="armory-bg-sim" alt="" aria-hidden="true">
+      <img src="/src/assets/glow armory.png" class="armory-glow" alt="" aria-hidden="true">
+      <div class="section-inner">
+        <!-- Section corner brackets -->
+        <span class="caspian-corner caspian-corner--tl" aria-hidden="true"></span>
+        <span class="caspian-corner caspian-corner--tr" aria-hidden="true"></span>
+        <span class="caspian-tick" aria-hidden="true"></span>
+
+        <!-- Header: label + title left | subhead + body right -->
+        <div class="caspian-header">
+          <div class="caspian-header-left">
+            <p class="section-label">The Ultimate Security Stack</p>
+            <div class="caspian-title-block">
+              <h1 class="dt-title caspian-title">ARMORY</h1>
+              <p class="caspian-sub-label">VETTED COMPANIES</p>
+            </div>
+          </div>
+          <div class="caspian-header-right">
+            <h2 class="caspian-subhead">3,500+ cybersecurity vendors exist. Almost none are built for your operational environment.</h2>
+            <p class="caspian-body-text">The Rilian Marketplace is a curated ecosystem of COTS and GOTS technologies — vetted by practitioner SMEs across 8 capability domains for sovereign environments and mission relevance.</p>
           </div>
         </div>
-        <div class="armory-tags">
-          <span class="tag">Pre-selected</span>
-          <span class="tag">Pre-integrated</span>
-          <span class="tag">Mission-ready</span>
+
+        <!-- Screen + tags, bounded by side lines -->
+        <div class="caspian-body">
+          <div class="caspian-side-line caspian-side-line--left"  aria-hidden="true"></div>
+          <div class="caspian-side-line caspian-side-line--right" aria-hidden="true"></div>
+
+          <div class="armory-screen-wrap-outer">
+            <img src="/src/assets/lineglow armory.png" class="armory-lineglow" alt="" aria-hidden="true">
+            <div class="caspian-screen-wrap">
+              <img src="/src/assets/Armory screen2.png" class="caspian-screen" alt="Armory dashboard">
+            </div>
+          </div>
+
+          <div class="armory-tags">
+            <span class="tag">Pre-selected</span>
+            <span class="tag">Pre-integrated</span>
+            <span class="tag">Mission-ready</span>
+          </div>
         </div>
       </div>
     </section>
