@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Handjet:wght@400&family=Saira+Stencil+One:wght@300&family=Montserrat:wght@400&family=Space+Grotesk:wght@400&display=swap" rel="stylesheet">
+    <title>Newsroom — Rilian</title>
+  </head>
+  <body>
+
+    <div id="nav-placeholder"></div>
+
+    <main class="newsroom-page">
+      <div class="newsroom-hero">
+        <p class="section-label">Newsroom</p>
+        <h1>The latest from Rilian — news, insights, and analysis from the front lines of cyber defense.</h1>
+      </div>
+
+      <div class="newsroom-body">
+        <div class="news-tabs">
+          <button class="news-tab active" data-tab="press">Press Releases</button>
+          <button class="news-tab" data-tab="news">In The News</button>
+          <button class="news-tab" data-tab="blogs">Blogs</button>
+          <button class="news-tab" data-tab="events">Event Spotlight</button>
+        </div>
+        <div class="news-grid" id="newsroom-grid"></div>
+        <div class="news-load-more-wrap">
+          <button class="news-load-more" id="load-more" hidden>Load More</button>
+        </div>
+      </div>
+    </main>
+
+    <div id="footer-placeholder"></div>
+
+    <script type="module" src="/src/newsroom.ts"></script>
+  </body>
+</html>

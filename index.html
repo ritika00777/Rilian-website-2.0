@@ -24,13 +24,8 @@
               <a href="#armory" class="dropdown-link">Armory</a>
             </div>
           </div>
-          <div class="nav-dropdown">
-            <button class="nav-link">Company <span class="chevron">›</span></button>
-            <div class="dropdown-panel">
-              <a href="#about" class="dropdown-link">About</a>
-              <a href="#newsroom" class="dropdown-link">Newsroom</a>
-            </div>
-          </div>
+          <a href="/newsroom.html" class="nav-link">Newsroom</a>
+          <a href="#about" class="nav-link">About Us</a>
         </div>
         <div class="nav-actions">
           <a href="#" class="btn-primary btn-sm">Request a Briefing</a>
@@ -103,12 +98,12 @@
         <div class="stats-grid">
           <div class="stat-card">
             <div class="stat-top"><span class="stat-num">88</span><span class="stat-suffix">%</span></div>
-            <h3 class="stat-title">The Expertise Gap</h3>
-            <p class="stat-desc">of security organizations have experienced a significant consequence from a skills shortage. When your best analysts leave, their knowledge leaves with them.</p>
+            <h3 class="stat-title">Expertise Gap</h3>
+            <p class="stat-desc">88% of security organizations have experienced a significant consequence from a skills shortage. When your best analysts leave, their knowledge leaves with them.</p>
           </div>
           <div class="stat-card">
-            <div class="stat-top"><span class="stat-num">200</span><span class="stat-suffix">+</span></div>
-            <h3 class="stat-title">The Fragmentation Crisis</h3>
+            <div class="stat-top"><span class="stat-num">89</span><span class="stat-suffix">%</span></div>
+            <h3 class="stat-title">Integration Struggle</h3>
             <p class="stat-desc">Security teams average 200+ tools — almost none of them connected. 89% struggle with integration. The expertise required to master each one is itself a scarce resource.</p>
           </div>
           <div class="stat-card">
@@ -117,6 +112,7 @@
             <p class="stat-desc">AI-enabled adversaries increased activity 89% year-over-year. The average breakout time is now 29 minutes. Defenders are still measured in hours.</p>
           </div>
         </div>
+        <p class="stats-source">Sources available upon request.</p>
       </div>
     </section>
 
@@ -138,19 +134,17 @@
             <p class="section-label">The Solution</p>
             <div class="caspian-title-block">
               <h1 class="dt-title caspian-title">CASPIAN</h1>
-              <p class="caspian-sub-label">VETTED COMPANIES</p>
+
             </div>
           </div>
           <div class="caspian-header-right">
             <h2 class="caspian-subhead">Your analysts shouldn't be navigating fragmented systems. They should be executing the mission.</h2>
-            <p class="caspian-body-text">Caspian is Rilian's agentic security orchestration platform. It sits across your entire security stack, orchestrates every tool through a single interface, and captures the tradecraft of your best practitioners — so that expertise compounds instead of walking out the door.</p>
+            <p class="caspian-body-text">Caspian is Rilian's agentic security orchestration platform. It sits across your entire security stack, orchestrates every tool through a single interface, and captures the tradecraft of your best practitioners - so that expertise compounds instead of walking out the door.</p>
           </div>
         </div>
 
-        <!-- Dashboard + cards, bounded by side lines -->
+        <!-- Dashboard + cards -->
         <div class="caspian-body">
-          <div class="caspian-side-line caspian-side-line--left"  aria-hidden="true"></div>
-          <div class="caspian-side-line caspian-side-line--right" aria-hidden="true"></div>
 
           <!-- Dashboard screenshot -->
           <div class="caspian-screen-wrap">
@@ -222,8 +216,60 @@
             </div>
 
 
+            <div class="caspian-card caspian-card--top">
+              <span class="cc-tl" aria-hidden="true"></span><span class="cc-tr" aria-hidden="true"></span>
+              <span class="cc-bl" aria-hidden="true"></span><span class="cc-br" aria-hidden="true"></span>
+              <span class="card-right-lines" aria-hidden="true"></span>
+              <div class="card-icon-frame">
+                <span class="cif-tl" aria-hidden="true"></span>
+                <span class="cif-tr" aria-hidden="true"></span>
+                <span class="cif-br" aria-hidden="true"></span>
+                <span class="card-num">05</span>
+                <img src="/src/assets/card-icon-5.svg" class="caspian-card-icon" alt="" aria-hidden="true">
+              </div>
+              <h3 class="caspian-card-title">Responsible by Design</h3>
+              <p class="caspian-card-desc">Built on ethical principles. Every agent operates within boundaries you define, fully auditable.</p>
+            </div>
+
           </div><!-- /.caspian-cards -->
         </div><!-- /.caspian-body -->
+
+        <!-- Explore Use Cases — expandable accordion -->
+        <div class="caspian-use-cases">
+          <button class="use-cases-trigger" id="use-cases-trigger" aria-expanded="false" aria-controls="use-cases-panel">
+            <span class="use-cases-label">Explore Use Cases</span>
+            <svg class="use-cases-chevron" width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <line x1="10" y1="2" x2="10" y2="13" stroke="currentColor" stroke-width="1.5" stroke-linecap="square"/>
+              <path d="M5 9L10 14.5L15 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="miter"/>
+            </svg>
+          </button>
+          <div class="use-cases-outer" id="use-cases-panel" role="region" aria-labelledby="use-cases-trigger">
+            <div class="use-cases-inner">
+              <div class="use-cases-grid">
+                <div class="use-case-card">
+                  <span class="uc-rule" aria-hidden="true"></span>
+                  <h3 class="uc-title">Critical Infrastructure Protection</h3>
+                  <p class="uc-desc">A compromised power grid doesn't send an alert. Caspian deploys pre-built agents purpose-built for OT/ICS defense — combining sensor telemetry, threat intelligence enrichment, and closed-loop detection into a single command environment, with no dependency on commercial cloud.</p>
+                </div>
+                <div class="use-case-card">
+                  <span class="uc-rule" aria-hidden="true"></span>
+                  <h3 class="uc-title">Targeting &amp; Investigations</h3>
+                  <p class="uc-desc">By the time the picture comes together manually, the window is gone. Caspian unifies OSINT, facial recognition, financial tracing, and HUMINT databases into a single investigative workflow — so analysts spend time attributing threats, not switching tools.</p>
+                </div>
+                <div class="use-case-card">
+                  <span class="uc-rule" aria-hidden="true"></span>
+                  <h3 class="uc-title">Active Defense</h3>
+                  <p class="uc-desc">Exposure without action is just a head start for the adversary. Caspian integrates attack surface visibility, exploit intelligence, and endpoint depth into a unified command cycle — detect, attribute, and counter live threats before they become incidents.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="caspian-cta">
+          <a href="#" class="btn-ghost">Explore Caspian</a>
+        </div>
+
       </div><!-- /.section-inner -->
     </section>
 
@@ -240,7 +286,7 @@
             <p class="section-label">DEPLOY WITHOUT COMPROMISE</p>
             <div class="caspian-title-block">
               <h1 class="dt-title dawntreader-title">DAWNTREADER</h1>
-              <p class="caspian-sub-label">VETTED COMPANIES</p>
+
             </div>
           </div>
 
@@ -282,19 +328,8 @@
           </div>
         </div>
 
-        <!-- Dashboard screen -->
-        <div class="dt-screen-wrap">
-          <div class="dt-screen-inner">
-            <img src="/src/assets/DT screen.png" class="dt-screen" alt="DawnTreader Environments Dashboard">
-          </div>
-        </div>
       </div>
     </section>
-
-    <!-- GLOBE DECORATION -->
-    <div class="globe-scene" aria-hidden="true">
-      <img src="/src/assets/globe.svg" class="globe-svg" alt="">
-    </div>
 
     <!-- ARMORY -->
     <section id="armory" class="section">
@@ -312,12 +347,12 @@
             <p class="section-label">The Ultimate Security Stack</p>
             <div class="caspian-title-block">
               <h1 class="dt-title caspian-title">ARMORY</h1>
-              <p class="caspian-sub-label">VETTED COMPANIES</p>
+
             </div>
           </div>
           <div class="caspian-header-right">
             <h2 class="caspian-subhead">3,500+ cybersecurity vendors exist. Almost none are built for your operational environment.</h2>
-            <p class="caspian-body-text">The Rilian Marketplace is a curated ecosystem of COTS and GOTS technologies — vetted by practitioner SMEs across 8 capability domains for sovereign environments and mission relevance.</p>
+            <p class="caspian-body-text">The Rilian Armory is a curated ecosystem of COTS and GOTS technologies - vetted by practitioner SMEs across 8 capability domains for sovereign environments and mission relevance. Pre-selected. Pre-integrated. Mission-ready.</p>
           </div>
         </div>
 
@@ -326,18 +361,7 @@
           <div class="caspian-side-line caspian-side-line--left"  aria-hidden="true"></div>
           <div class="caspian-side-line caspian-side-line--right" aria-hidden="true"></div>
 
-          <div class="armory-screen-wrap-outer">
-            <img src="/src/assets/lineglow armory.png" class="armory-lineglow" alt="" aria-hidden="true">
-            <div class="caspian-screen-wrap">
-              <img src="/src/assets/Armory screen2.png" class="caspian-screen" alt="Armory dashboard">
-            </div>
-          </div>
 
-          <div class="armory-tags">
-            <span class="tag">Pre-selected</span>
-            <span class="tag">Pre-integrated</span>
-            <span class="tag">Mission-ready</span>
-          </div>
         </div>
       </div>
     </section>
@@ -402,6 +426,13 @@
           </div>
         </div>
         </div><!-- /.about-frame-outer -->
+
+        <!-- Our Backgrounds — outside the frame -->
+        <div class="backgrounds-section">
+          <p class="backgrounds-title">Our backgrounds</p>
+          <img src="/src/assets/career logos 2.png" alt="Companies our team has worked at" class="backgrounds-img" draggable="false">
+        </div>
+
       </div>
     </section>
 
@@ -412,64 +443,60 @@
         <p class="section-label">Newsroom</p>
         <h2 class="section-header">The latest from Rilian — news, insights, and analysis from the front lines of cyber defense.</h2>
         <div class="news-tabs">
-          <button class="news-tab active">Press Releases</button>
-          <button class="news-tab">In the News</button>
-          <button class="news-tab">Blogs</button>
-          <button class="news-tab">Event Spotlight</button>
+          <button class="news-tab active" data-tab="press">Press Releases</button>
+          <button class="news-tab" data-tab="news">In The News</button>
+          <button class="news-tab" data-tab="blogs">Blogs</button>
+          <button class="news-tab" data-tab="events">Event Spotlight</button>
         </div>
-        <div class="news-grid">
-          <div class="news-card">
-            <span class="news-cat">Press Release</span>
-            <h4>Rilian Announces General Availability of Caspian Platform</h4>
-            <span class="news-date">March 2025</span>
-          </div>
-          <div class="news-card">
-            <span class="news-cat">Press Release</span>
-            <h4>Rilian Secures Series A to Expand Sovereign Deployment Capabilities</h4>
-            <span class="news-date">January 2025</span>
-          </div>
-          <div class="news-card">
-            <span class="news-cat">Press Release</span>
-            <h4>Rilian Partners with Leading Critical Infrastructure Organizations</h4>
-            <span class="news-date">November 2024</span>
-          </div>
+        <div class="news-grid" id="home-news-grid"></div>
+        <div class="news-cta">
+          <a href="/newsroom.html" class="btn-ghost">Explore More</a>
         </div>
       </div>
     </section>
 
-    <!-- FOOTER -->
+    </div><!-- /#sections-rise -->
+
+    <!-- FOOTER — sticky, revealed from behind as content scrolls away -->
     <footer id="footer">
+      <div class="footer-watermark" aria-hidden="true">
+        <img src="/src/assets/rilian-footer-watermark.svg" alt="">
+      </div>
       <div class="footer-inner">
-        <div class="footer-top">
-          <a href="#" class="nav-logo"><img src="/src/assets/rilian-logo.svg" alt="Rilian" height="18"></a>
-          <p class="footer-tagline">Built by practitioners. Deployed where it matters.</p>
-        </div>
-        <div class="footer-links">
-          <div class="footer-col">
-            <span class="footer-col-title">Products</span>
-            <a href="#caspian">Caspian</a>
-            <a href="#dawntreader">DawnTreader</a>
-            <a href="#armory">Armory</a>
-          </div>
-          <div class="footer-col">
-            <span class="footer-col-title">Company</span>
-            <a href="#about">About</a>
-            <a href="#">Careers</a>
-            <a href="#">Contact</a>
-          </div>
-          <div class="footer-col">
-            <span class="footer-col-title">Legal</span>
-            <a href="#">Privacy</a>
-            <a href="#">Terms</a>
-          </div>
-        </div>
-        <div class="footer-bottom">
+        <div class="footer-copyright">
           <span>© 2025 Rilian. All rights reserved.</span>
+        </div>
+        <div class="footer-row">
+          <nav class="footer-nav">
+            <span class="footer-nav-label">Navigation</span>
+            <div class="footer-nav-links">
+              <a href="#caspian">Platform</a>
+              <a href="#dawntreader">Solutions</a>
+              <a href="/newsroom.html">Newsroom</a>
+              <a href="#about">About Us</a>
+              <a href="#">Get in Touch</a>
+            </div>
+          </nav>
+          <div class="footer-legal">
+            <div class="footer-social">
+              <a href="#" aria-label="X (Twitter)">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.735-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+              </a>
+              <a href="#" aria-label="LinkedIn">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+              </a>
+            </div>
+            <div class="footer-legal-links">
+              <a href="#">Privacy &amp; Security</a>
+              <a href="#">Terms &amp; Conditions</a>
+              <a href="#">SLA</a>
+              <a href="#">Terms of Use</a>
+              <a href="#">Sitemap</a>
+            </div>
+          </div>
         </div>
       </div>
     </footer>
-
-    </div><!-- /#sections-rise -->
 
     <script type="module" src="/src/main.ts"></script>
   </body>

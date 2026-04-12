@@ -350,20 +350,20 @@ heroTl
   }, 0)
 
   // ── Phase 2: text fades in — stays fixed ──────────────────────────────
-  .to(rulersEl,  { opacity: 1, ease: 'power2.out', duration: 0.35 }, 0.52)
-  .to(starsEl,   { opacity: 1, ease: 'power2.out', duration: 0.50 }, 0.52)
-  .to(headline,  { opacity: 1, y: 0, ease: 'power2.out', duration: 0.35 }, 0.52)
-  .to(subEl,     { opacity: 1, y: 0, ease: 'power2.out', duration: 0.30 }, 0.64)
-  .to(actionsEl, { opacity: 1, y: 0, ease: 'power2.out', duration: 0.25 }, 0.64)
-  // Arc fades in right after headline
-  .to(blueRise,  { opacity: 1, duration: 0.20, ease: 'power2.out' }, 0.70)
+  .to(rulersEl,  { opacity: 1, ease: 'power2.out', duration: 0.35 }, 0.42)
+  .to(starsEl,   { opacity: 1, ease: 'power2.out', duration: 0.50 }, 0.42)
+  .to(headline,  { opacity: 1, y: 0, ease: 'power2.out', duration: 0.35 }, 0.42)
+  .to(subEl,     { opacity: 1, y: 0, ease: 'power2.out', duration: 0.30 }, 0.54)
+  .to(actionsEl, { opacity: 1, y: 0, ease: 'power2.out', duration: 0.25 }, 0.54)
+  // Arc fades in — delayed to give reading time on headline
+  .to(blueRise,  { opacity: 1, duration: 0.20, ease: 'power2.out' }, 0.80)
 
   // ── Phase 3: panel rises ───────────────────────────────────────────────
   .to(blueRise, {
     y:        0,
     ease:     'power1.inOut',
     duration: 0.35
-  }, 0.75)
+  }, 0.85)
 
 
 /* ─────────────────────────────────────────────────────────────
@@ -392,6 +392,7 @@ const cardObs = new IntersectionObserver((entries) => {
 }, { threshold: 0.12 })
 
 document.querySelectorAll('.vp-card-num').forEach(card => cardObs.observe(card))
+
 
 /* ── Caspian card canvas illustrations ──────────────────────── */
 function initVpCanvas(canvas: HTMLCanvasElement, index: number) {
@@ -622,21 +623,7 @@ document.addEventListener('pointermove', (e: PointerEvent) => {
     crosshairY.style.left = `${e.clientX - heroRect.left}px`
   }
 
-  // DAWNTREADER screen mockup: element-relative coords for border glow
-  const dtScreenInner = document.querySelector('#dawntreader .dt-screen-inner') as HTMLElement | null
-  if (dtScreenInner) {
-    const r = dtScreenInner.getBoundingClientRect()
-    dtScreenInner.style.setProperty('--dt-screen-x', `${e.clientX - r.left}px`)
-    dtScreenInner.style.setProperty('--dt-screen-y', `${e.clientY - r.top}px`)
-  }
 
-  // ARMORY screen mockup: element-relative coords for border glow
-  const armoryScreenInner = document.querySelector('#armory .armory-screen-inner') as HTMLElement | null
-  if (armoryScreenInner) {
-    const r = armoryScreenInner.getBoundingClientRect()
-    armoryScreenInner.style.setProperty('--armory-screen-x', `${e.clientX - r.left}px`)
-    armoryScreenInner.style.setProperty('--armory-screen-y', `${e.clientY - r.top}px`)
-  }
 }, { passive: true })
 
 /* ─────────────────────────────────────────────────────────────
@@ -845,10 +832,66 @@ document.querySelectorAll<HTMLAnchorElement>('a[href="#caspian"]').forEach(link 
   })
 })
 
-document.querySelectorAll('.news-tab').forEach(tab => {
-  tab.addEventListener('click', () => {
-    document.querySelectorAll('.news-tab').forEach(t => t.classList.remove('active'))
-    tab.classList.add('active')
+/* ─────────────────────────────────────────────────────────────
+   RISE ARC — pin bottom rim at Armory / Why Rilian boundary
+───────────────────────────────────────────────────────────── */
+;(function pinRiseArcBottom() {
+  const arc          = document.querySelector('.rise-arc')         as HTMLElement
+  const sectionsRise = document.getElementById('sections-rise')    as HTMLElement
+  const whySection   = document.getElementById('why')              as HTMLElement
+  if (!arc || !sectionsRise || !whySection) return
+
+  function update() {
+    const riseTop = sectionsRise.getBoundingClientRect().top + window.scrollY
+    const whyTop  = whySection.getBoundingClientRect().top  + window.scrollY
+    const offset  = window.innerHeight * 0.03 + 80   // compensate for top: -3vh, +80px pushes rim into #why
+    arc.style.height = `${whyTop - riseTop + offset}px`
+  }
+
+  update()
+  window.addEventListener('resize', update, { passive: true })
+})()
+
+/* ─────────────────────────────────────────────────────────────
+   NEWSROOM — homepage preview (3 cards per tab)
+───────────────────────────────────────────────────────────── */
+;(function initHomeNewsroom() {
+  import('./articles').then(({ ARTICLES, cardHTML, revealCards }) => {
+    const grid = document.getElementById('home-news-grid') as HTMLElement | null
+    if (!grid) return
+
+    function showTab(tab: string) {
+      const subset = ARTICLES.filter(a => a.tab === tab).slice(0, 3)
+      grid!.innerHTML = subset.map(cardHTML).join('')
+      revealCards(grid!)
+    }
+
+    // Initial render — press releases
+    showTab('press')
+
+    document.querySelectorAll<HTMLButtonElement>('.news-tab').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.news-tab').forEach(t => t.classList.remove('active'))
+        btn.classList.add('active')
+        const tab = btn.dataset.tab ?? 'press'
+        showTab(tab)
+      })
+    })
   })
-})
+})()
+
+/* ─────────────────────────────────────────────────────────────
+   CASPIAN — USE CASES ACCORDION
+───────────────────────────────────────────────────────────── */
+;(function initUseCases() {
+  const trigger = document.getElementById('use-cases-trigger')
+  const panel   = document.getElementById('use-cases-panel')
+  if (!trigger || !panel) return
+
+  trigger.addEventListener('click', () => {
+    const isOpen = trigger.getAttribute('aria-expanded') === 'true'
+    trigger.setAttribute('aria-expanded', String(!isOpen))
+    panel.classList.toggle('is-open', !isOpen)
+  })
+})()
 
