@@ -2702,189 +2702,163 @@ a.news-card {
 ═══════════════════════════════════════════════════════════════ */
 
 .briefing-page {
-  display: flex;
-  min-height: 100vh;
-}
-
-/* ── Left: hero panel ───────────────────────────────────── */
-.briefing-hero {
-  position: sticky;
-  top: 0;
-  width: 50%;
-  height: 100vh;
-  flex-shrink: 0;
-  overflow: hidden;
-  background: #01010f;
-  display: flex;
-  align-items: flex-end;
-}
-
-/* Background grid overlay */
-.briefing-grid-overlay {
-  position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(rgba(9, 65, 187, 0.18) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(9, 65, 187, 0.18) 1px, transparent 1px);
-  background-size: 52px 52px;
-  mask-image: radial-gradient(ellipse 100% 100% at 50% 50%, black 20%, transparent 80%);
-  -webkit-mask-image: radial-gradient(ellipse 100% 100% at 50% 50%, black 20%, transparent 80%);
-  pointer-events: none;
-}
-
-/* CSS globe */
-.briefing-globe {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-42%, -48%);
-  width: clamp(360px, 56vw, 560px);
-  height: clamp(360px, 56vw, 560px);
-  border-radius: 50%;
-  pointer-events: none;
-}
-
-.briefing-globe-inner {
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  background:
-    radial-gradient(circle at 32% 34%, #0f2f7a 0%, #071540 28%, #030d28 55%, #010610 100%);
-  box-shadow:
-    0 0 0 1px rgba(60, 120, 255, 0.18),
-    0 0 40px 8px rgba(20, 70, 220, 0.22),
-    inset 0 0 60px rgba(10, 40, 160, 0.4);
-  overflow: hidden;
-}
-
-/* Latitude/longitude mesh */
-.briefing-globe-inner::before {
-  content: '';
-  position: absolute;
-  inset: -2px;
-  border-radius: 50%;
-  background-image:
-    repeating-linear-gradient(0deg,   transparent, transparent 29px, rgba(60,120,255,0.10) 30px),
-    repeating-linear-gradient(90deg,  transparent, transparent 29px, rgba(60,120,255,0.10) 30px);
-  mask-image: radial-gradient(circle at 50% 50%, black 40%, transparent 75%);
-  -webkit-mask-image: radial-gradient(circle at 50% 50%, black 40%, transparent 75%);
-}
-
-/* Lit hemisphere highlight */
-.briefing-globe-inner::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  background: radial-gradient(circle at 28% 28%, rgba(80, 160, 255, 0.28) 0%, transparent 55%);
-}
-
-/* Atmospheric outer glow */
-.briefing-globe-glow {
-  position: absolute;
-  inset: -18%;
-  border-radius: 50%;
-  background: radial-gradient(circle at 50% 50%, transparent 40%, rgba(14, 55, 200, 0.18) 65%, rgba(8, 30, 140, 0.08) 80%, transparent 100%);
-  pointer-events: none;
-}
-
-/* Text content — bottom-left */
-.briefing-hero-content {
   position: relative;
-  z-index: 2;
-  padding: clamp(2rem, 4vw, 4rem) clamp(2rem, 5vw, 4rem);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+/* ── Full-bleed background ──────────────────────────────── */
+.briefing-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background: #000008;
+  pointer-events: none;
+}
+
+/* Blue radial gradient — deep behind the globe */
+.briefing-bg-gradient {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 70% at 40% 55%, rgba(6, 30, 120, 0.75) 0%, rgba(2, 8, 50, 0.5) 45%, transparent 70%),
+    radial-gradient(ellipse 50% 60% at 20% 80%, rgba(9, 65, 187, 0.3) 0%, transparent 60%);
+}
+
+/* Globe image */
+.briefing-bg-globe {
+  position: absolute;
+  left: -8%;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 72%;
+  max-width: 900px;
+  height: auto;
+  object-fit: contain;
+  opacity: 0.88;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Edge vignette — fades globe into black toward right */
+.briefing-bg-vignette {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to right, transparent 30%, rgba(0,0,8,0.55) 55%, rgba(0,0,8,0.92) 72%, #000008 88%),
+    linear-gradient(to bottom, rgba(0,0,8,0.5) 0%, transparent 15%, transparent 85%, rgba(0,0,8,0.5) 100%);
+}
+
+/* ── Page layout ────────────────────────────────────────── */
+.briefing-inner {
+  position: relative;
+  z-index: 1;
   width: 100%;
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 140px var(--pad-x) 6rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5rem;
+  align-items: center;
 }
 
-.briefing-heading {
-  font-size: clamp(2.4rem, 4.5vw, 3.8rem);
+/* ── Title block ────────────────────────────────────────── */
+.briefing-title-block {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.briefing-title {
+  font-size: clamp(3rem, 6vw, 5.5rem);
   font-weight: 700;
-  line-height: 1.08;
-  letter-spacing: -0.02em;
-  margin: 0.6rem 0 1.25rem;
+  line-height: 1.0;
+  letter-spacing: -0.03em;
 }
 
-.briefing-desc {
-  font-size: 0.72rem;
+.briefing-subtitle {
+  font-size: 0.7rem;
   font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.5);
-  max-width: 34ch;
-  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.45);
+  line-height: 1.8;
+  max-width: 36ch;
 }
 
-/* ── Right: form panel ──────────────────────────────────── */
-.briefing-form-panel {
-  flex: 1;
-  background: #020215;
-  border-left: 1px solid rgba(73, 85, 112, 0.2);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 120px clamp(2rem, 5vw, 4rem) 5rem;
-}
-
-.briefing-form-wrap {
-  width: 100%;
-  max-width: 480px;
+/* ── Glassy form card ───────────────────────────────────── */
+.briefing-card {
+  background: rgba(8, 16, 48, 0.52);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(80, 120, 255, 0.2);
+  padding: 2.25rem 2rem;
   position: relative;
-  /* Corner brackets */
-  padding: 1px;
 }
 
-/* Outer bracket border via gradient */
-.briefing-form-wrap::before {
+/* Corner brackets on the card */
+.briefing-card::before,
+.briefing-card::after {
   content: '';
   position: absolute;
   inset: 0;
   pointer-events: none;
+}
+.briefing-card::before {
   background:
-    linear-gradient(rgba(9, 65, 187, 0.6), rgba(9, 65, 187, 0.6)) top    left  / 20px 1.5px no-repeat,
-    linear-gradient(rgba(9, 65, 187, 0.6), rgba(9, 65, 187, 0.6)) top    left  / 1.5px 20px no-repeat,
-    linear-gradient(rgba(9, 65, 187, 0.6), rgba(9, 65, 187, 0.6)) top    right / 20px 1.5px no-repeat,
-    linear-gradient(rgba(9, 65, 187, 0.6), rgba(9, 65, 187, 0.6)) top    right / 1.5px 20px no-repeat,
-    linear-gradient(rgba(9, 65, 187, 0.6), rgba(9, 65, 187, 0.6)) bottom left  / 20px 1.5px no-repeat,
-    linear-gradient(rgba(9, 65, 187, 0.6), rgba(9, 65, 187, 0.6)) bottom left  / 1.5px 20px no-repeat,
-    linear-gradient(rgba(9, 65, 187, 0.6), rgba(9, 65, 187, 0.6)) bottom right / 20px 1.5px no-repeat,
-    linear-gradient(rgba(9, 65, 187, 0.6), rgba(9, 65, 187, 0.6)) bottom right / 1.5px 20px no-repeat;
+    linear-gradient(var(--blue-bright), var(--blue-bright)) top    left  / 18px 1.5px no-repeat,
+    linear-gradient(var(--blue-bright), var(--blue-bright)) top    left  / 1.5px 18px no-repeat,
+    linear-gradient(var(--blue-bright), var(--blue-bright)) bottom left  / 18px 1.5px no-repeat,
+    linear-gradient(var(--blue-bright), var(--blue-bright)) bottom left  / 1.5px 18px no-repeat;
+  opacity: 0.7;
+}
+.briefing-card::after {
+  background:
+    linear-gradient(var(--blue-bright), var(--blue-bright)) top    right / 18px 1.5px no-repeat,
+    linear-gradient(var(--blue-bright), var(--blue-bright)) top    right / 1.5px 18px no-repeat,
+    linear-gradient(var(--blue-bright), var(--blue-bright)) bottom right / 18px 1.5px no-repeat,
+    linear-gradient(var(--blue-bright), var(--blue-bright)) bottom right / 1.5px 18px no-repeat;
+  opacity: 0.7;
 }
 
 /* ── Form elements ──────────────────────────────────────── */
 #briefing-form {
   display: flex;
   flex-direction: column;
-  gap: 1.1rem;
+  gap: 1rem;
 }
 
 .form-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1rem;
+  gap: 0.85rem;
 }
 
 .form-field {
   display: flex;
   flex-direction: column;
-  gap: 0.45rem;
+  gap: 0.4rem;
 }
 
 .form-label {
   font-family: var(--font-heading);
-  font-size: 0.62rem;
+  font-size: 0.6rem;
   font-weight: 600;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.55);
 }
 
 .form-input {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(73, 85, 112, 0.35);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(80, 110, 200, 0.28);
   color: var(--text);
   font-family: var(--font);
   font-size: 0.85rem;
-  padding: 0.7rem 0.85rem;
+  padding: 0.65rem 0.8rem;
   border-radius: 0;
   outline: none;
   width: 100%;
@@ -2892,27 +2866,29 @@ a.news-card {
   -webkit-appearance: none;
 }
 
-.form-input::placeholder { color: rgba(255,255,255,0.18); }
+.form-input::placeholder { color: rgba(255,255,255,0.15); }
 
-.form-input:hover {
-  border-color: rgba(73, 85, 112, 0.6);
+@media (hover: hover) and (pointer: fine) {
+  .form-input:hover {
+    border-color: rgba(80, 110, 200, 0.5);
+  }
 }
 
 .form-input:focus {
-  border-color: rgba(9, 65, 187, 0.8);
-  background: rgba(9, 65, 187, 0.06);
+  border-color: rgba(9, 65, 187, 0.9);
+  background: rgba(9, 65, 187, 0.08);
 }
 
 .form-textarea {
   resize: vertical;
-  min-height: 110px;
+  min-height: 100px;
 }
 
-/* Submit button — full width */
+/* Submit */
 .briefing-submit {
   width: 100%;
   justify-content: center;
-  margin-top: 0.4rem;
+  margin-top: 0.25rem;
   transition: background 220ms ease, box-shadow 220ms ease, transform 160ms cubic-bezier(0.23, 1, 0.32, 1), opacity 200ms ease;
 }
 
@@ -2921,44 +2897,40 @@ a.news-card {
 }
 
 .briefing-submit:disabled {
-  opacity: 0.55;
+  opacity: 0.5;
   cursor: not-allowed;
 }
 
 /* Result states */
 .form-result {
-  font-size: 0.78rem;
+  font-size: 0.76rem;
   letter-spacing: 0.04em;
   line-height: 1.6;
   min-height: 0;
 }
 
-.form-result--success {
-  color: rgba(100, 210, 130, 0.9);
-}
-
-.form-result--error {
-  color: rgba(255, 110, 100, 0.9);
-}
+.form-result--success { color: rgba(100, 210, 130, 0.9); }
+.form-result--error   { color: rgba(255, 110, 100, 0.9); }
 
 /* ── Responsive ─────────────────────────────────────────── */
 @media (max-width: 860px) {
-  .briefing-page {
-    flex-direction: column;
+  .briefing-inner {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+    padding-top: 120px;
   }
 
-  .briefing-hero {
-    position: relative;
-    width: 100%;
-    height: 50vw;
-    min-height: 260px;
-    max-height: 380px;
+  .briefing-bg-globe {
+    left: 50%;
+    top: 0;
+    transform: translateX(-50%);
+    width: 140%;
+    opacity: 0.4;
   }
 
-  .briefing-form-panel {
-    border-left: none;
-    border-top: 1px solid rgba(73, 85, 112, 0.2);
-    padding-top: 3.5rem;
+  .briefing-bg-vignette {
+    background:
+      linear-gradient(to bottom, rgba(0,0,8,0.6) 0%, transparent 20%, transparent 70%, rgba(0,0,8,0.8) 100%);
   }
 }
 

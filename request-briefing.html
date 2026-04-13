@@ -15,23 +15,24 @@
 
     <main class="briefing-page">
 
-      <!-- LEFT: hero panel -->
-      <div class="briefing-hero">
-        <div class="briefing-globe" aria-hidden="true">
-          <div class="briefing-globe-inner"></div>
-          <div class="briefing-globe-glow"></div>
-        </div>
-        <div class="briefing-grid-overlay" aria-hidden="true"></div>
-        <div class="briefing-hero-content">
-          <p class="section-label">Get Started</p>
-          <h1 class="briefing-heading">Request a<br>Briefing</h1>
-          <p class="briefing-desc">Access 30+ curated cyber and defense capabilities with seamless, AI-driven integration across sovereign environments.</p>
-        </div>
+      <!-- Full-bleed background -->
+      <div class="briefing-bg" aria-hidden="true">
+        <div class="briefing-bg-gradient"></div>
+        <img src="/caspian-globe.png" class="briefing-bg-globe" alt="">
+        <div class="briefing-bg-vignette"></div>
       </div>
 
-      <!-- RIGHT: form panel -->
-      <div class="briefing-form-panel">
-        <div class="briefing-form-wrap">
+      <!-- Page content -->
+      <div class="briefing-inner">
+
+        <!-- Heading -->
+        <div class="briefing-title-block">
+          <h1 class="briefing-title">Partner<br>with Us</h1>
+          <p class="briefing-subtitle">Access 30+ curated cyber and defense capabilities with seamless, AI-driven integration across sovereign environments.</p>
+        </div>
+
+        <!-- Glassy form card -->
+        <div class="briefing-card">
 
           <form id="briefing-form" novalidate>
             <!-- Web3Forms — replace value with Rilian's access key from web3forms.com -->
@@ -63,7 +64,7 @@
 
             <div class="form-field">
               <label class="form-label" for="message">Message</label>
-              <textarea class="form-input form-textarea" id="message" name="message" rows="5"></textarea>
+              <textarea class="form-input form-textarea" id="message" name="message" rows="4"></textarea>
             </div>
 
             <div id="form-result" class="form-result" aria-live="polite"></div>
