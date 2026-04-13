@@ -11,6 +11,7 @@ export default defineConfig({
         termsAndConditions:     resolve(__dirname, 'terms-and-conditions.html'),
         serviceLevel:           resolve(__dirname, 'service-level-agreement.html'),
         termsOfUse:             resolve(__dirname, 'terms-of-use.html'),
+        requestBriefing:        resolve(__dirname, 'request-briefing.html'),
       },
     },
   },

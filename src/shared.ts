@@ -22,7 +22,7 @@ const NAV_HTML = `
       <a href="/#about" class="nav-link">About Us</a>
     </div>
     <div class="nav-actions">
-      <a href="/#" class="btn-primary btn-sm">Request a Briefing</a>
+      <a href="/request-briefing.html" class="btn-primary btn-sm">Request a Briefing</a>
     </div>
   </div>
 </nav>`

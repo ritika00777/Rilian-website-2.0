@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Handjet:wght@400&family=Saira+Stencil+One:wght@300&family=Montserrat:wght@400&family=Space+Grotesk:wght@400&display=swap" rel="stylesheet">
+    <title>Request a Briefing — Rilian</title>
+  </head>
+  <body>
+
+    <div id="nav-placeholder"></div>
+
+    <main class="briefing-page">
+
+      <!-- LEFT: hero panel -->
+      <div class="briefing-hero">
+        <div class="briefing-globe" aria-hidden="true">
+          <div class="briefing-globe-inner"></div>
+          <div class="briefing-globe-glow"></div>
+        </div>
+        <div class="briefing-grid-overlay" aria-hidden="true"></div>
+        <div class="briefing-hero-content">
+          <p class="section-label">Get Started</p>
+          <h1 class="briefing-heading">Request a<br>Briefing</h1>
+          <p class="briefing-desc">Access 30+ curated cyber and defense capabilities with seamless, AI-driven integration across sovereign environments.</p>
+        </div>
+      </div>
+
+      <!-- RIGHT: form panel -->
+      <div class="briefing-form-panel">
+        <div class="briefing-form-wrap">
+
+          <form id="briefing-form" novalidate>
+            <!-- Web3Forms — replace value with Rilian's access key from web3forms.com -->
+            <input type="hidden" name="access_key" value="YOUR-WEB3FORMS-ACCESS-KEY">
+            <input type="hidden" name="subject" value="New Briefing Request — Rilian">
+            <input type="hidden" name="from_name" value="Rilian Website">
+            <input type="checkbox" name="botcheck" style="display:none" tabindex="-1" autocomplete="off">
+
+            <div class="form-row">
+              <div class="form-field">
+                <label class="form-label" for="first-name">First Name *</label>
+                <input class="form-input" type="text" id="first-name" name="first_name" required autocomplete="given-name">
+              </div>
+              <div class="form-field">
+                <label class="form-label" for="last-name">Last Name *</label>
+                <input class="form-input" type="text" id="last-name" name="last_name" required autocomplete="family-name">
+              </div>
+            </div>
+
+            <div class="form-field">
+              <label class="form-label" for="email">Email *</label>
+              <input class="form-input" type="email" id="email" name="email" required autocomplete="email">
+            </div>
+
+            <div class="form-field">
+              <label class="form-label" for="phone">Number</label>
+              <input class="form-input" type="tel" id="phone" name="phone" autocomplete="tel">
+            </div>
+
+            <div class="form-field">
+              <label class="form-label" for="message">Message</label>
+              <textarea class="form-input form-textarea" id="message" name="message" rows="5"></textarea>
+            </div>
+
+            <div id="form-result" class="form-result" aria-live="polite"></div>
+
+            <button type="submit" class="btn-primary briefing-submit" id="briefing-submit">
+              Contact Us
+            </button>
+          </form>
+
+        </div>
+      </div>
+
+    </main>
+
+    <script type="module" src="/src/legal.ts"></script>
+    <script>
+      const form = document.getElementById('briefing-form')
+      const result = document.getElementById('form-result')
+      const submitBtn = document.getElementById('briefing-submit')
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault()
+
+        const data = new FormData(form)
+        submitBtn.disabled = true
+        submitBtn.textContent = 'Sending…'
+        result.className = 'form-result'
+        result.textContent = ''
+
+        try {
+          const res = await fetch('https://api.web3forms.com/submit', {
+            method: 'POST',
+            body: data
+          })
+          const json = await res.json()
+
+          if (json.success) {
+            result.className = 'form-result form-result--success'
+            result.textContent = 'Your briefing request has been received. We\'ll be in touch shortly.'
+            form.reset()
+          } else {
+            throw new Error(json.message || 'Submission failed')
+          }
+        } catch (err) {
+          result.className = 'form-result form-result--error'
+          result.textContent = 'Something went wrong. Please try again or email us directly.'
+        } finally {
+          submitBtn.disabled = false
+          submitBtn.textContent = 'Contact Us'
+        }
+      })
+    </script>
+
+  </body>
+</html>
