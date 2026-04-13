@@ -35,7 +35,7 @@ export const ARTICLES: Article[] = [
     date: 'January 20, 2026',
     href: 'https://www.prnewswire.com/news-releases/simspace-and-rilian-technologies-partner-to-strengthen-agentic-cyber-defense-for-critical-infrastructure-organizations-in-the-us-and-gcc-302664853.html',
     external: true,
-    image: '/src/assets/newsroom/simspace.jpg',
+    image: '/newsroom/simspace.jpg',
     excerpt: 'SimSpace and Rilian unite to deliver agentic cyber defense for critical infrastructure organizations across the US and GCC.',
   },
   {
@@ -47,7 +47,7 @@ export const ARTICLES: Article[] = [
     date: 'December 11, 2025',
     href: 'https://gulfnews.com/gn-focus/sentinelone-and-rilian-technologies-partners-to-enhance-ai-driven-cybersecurity-in-the-middle-east-1.500376632',
     external: true,
-    image: '/src/assets/newsroom/sentinelone.png',
+    image: '/newsroom/sentinelone.png',
     excerpt: 'SentinelOne and Rilian Technologies deepen AI-driven cybersecurity capabilities across the Middle East.',
   },
   {
@@ -59,7 +59,7 @@ export const ARTICLES: Article[] = [
     date: 'December 4, 2025',
     href: 'https://www.prnewswire.com/news-releases/censys-and-rilian-technologies-partner-to-strengthen-cyber-defense-and-critical-infrastructure-security-across-the-middle-east-302631272.html',
     external: true,
-    image: '/src/assets/newsroom/censys.jpg',
+    image: '/newsroom/censys.jpg',
     excerpt: 'Censys and Rilian combine attack surface intelligence with sovereign deployment to protect critical infrastructure.',
   },
   {
@@ -84,7 +84,7 @@ export const ARTICLES: Article[] = [
     date: 'March 11, 2026',
     href: 'https://www.hstoday.us/subject-matter-areas/cybersecurity/making-president-trumps-cyber-strategy-real/',
     external: true,
-    image: '/src/assets/newsroom/homeland-security.jpg',
+    image: '/newsroom/homeland-security.jpg',
     excerpt: "CEO Christian Schnedler on turning the administration's cyber strategy into operational reality in an era of digital conflict.",
   },
   {
@@ -96,7 +96,7 @@ export const ARTICLES: Article[] = [
     date: 'October 27, 2025',
     href: 'https://www.thecipherbrief.com/us-china-tech-race',
     external: true,
-    image: '/src/assets/newsroom/cipher-brief.avif',
+    image: '/newsroom/cipher-brief.avif',
     excerpt: 'Christian Schnedler and former CIA officer Duyane Norman on why America\'s alliances are the decisive factor in beating Beijing.',
   },
   {
@@ -108,7 +108,7 @@ export const ARTICLES: Article[] = [
     date: 'May 15, 2025',
     href: 'https://partners.wsj.com/invest-qatar/eye-on-qatar/why-global-companies-are-setting-up-here/',
     external: true,
-    image: '/src/assets/newsroom/wsj-qatar.avif',
+    image: '/newsroom/wsj-qatar.avif',
     excerpt: "What's driving global companies to establish operations in Qatar — and why cybersecurity infrastructure is central to the story.",
   },
 
@@ -122,7 +122,7 @@ export const ARTICLES: Article[] = [
     date: '2025',
     href: '/articles/sovereign-endpoint.html',
     external: false,
-    image: '/src/assets/newsroom/sovereign-endpoint.png',
+    image: '/newsroom/sovereign-endpoint.png',
     excerpt: 'How Rilian deployed mobile threat defense in an air-gapped sovereign environment in under seven days.',
   },
   {
@@ -134,7 +134,7 @@ export const ARTICLES: Article[] = [
     date: 'May 2025',
     href: '/articles/uae-us-tech-nexus.html',
     external: false,
-    image: '/src/assets/newsroom/uae-us-nexus.avif',
+    image: '/newsroom/uae-us-nexus.avif',
     excerpt: "The Gulf isn't buying innovation anymore — it's building it. What the Trump administration's Gulf visit confirmed for cyber operators.",
   },
   {
@@ -146,7 +146,7 @@ export const ARTICLES: Article[] = [
     date: '2025',
     href: '/articles/hidden-cost-breach.html',
     external: false,
-    image: '/src/assets/newsroom/breach-silence.jpg',
+    image: '/newsroom/breach-silence.jpg',
     excerpt: "Silence doesn't contain breaches — it amplifies them. A hard look at what delayed disclosure actually costs organizations.",
   },
 
@@ -160,7 +160,7 @@ export const ARTICLES: Article[] = [
     date: 'May 2025',
     href: '/articles/gisec-2025.html',
     external: false,
-    image: '/src/assets/newsroom/gisec-2025.png',
+    image: '/newsroom/gisec-2025.png',
     excerpt: 'Three takeaways from the floor of GISEC 2025: AI as infrastructure, OT as the primary battleground, deployment as the differentiator.',
   },
   {
@@ -172,7 +172,7 @@ export const ARTICLES: Article[] = [
     date: '2025',
     href: '/articles/oodacon.html',
     external: false,
-    image: '/src/assets/newsroom/oodacon.webp',
+    image: '/newsroom/oodacon.webp',
     excerpt: "Rilian's U.S. debut at OODAcon: how the company is building sovereign-grade security where conventional vendors can't reach.",
   },
 ]

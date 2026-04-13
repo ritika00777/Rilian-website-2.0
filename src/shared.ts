@@ -30,7 +30,7 @@ const NAV_HTML = `
 const FOOTER_HTML = `
 <footer id="footer">
   <div class="footer-watermark" aria-hidden="true">
-    <img src="/src/assets/rilian-footer-watermark.svg" alt="">
+    <img src="/rilian-footer-watermark.svg" alt="">
   </div>
   <div class="footer-inner">
     <div class="footer-copyright">
