@@ -45,6 +45,7 @@ h1, h2, h3, h4, h5, h6,
 .diff-content h3,
 .footer-col-title {
   font-family: var(--font-heading);
+  font-weight: 400;
 }
 
 /* ── Buttons ───────────────────────────────────────────────── */
@@ -2730,11 +2731,11 @@ a.news-card {
 /* Globe image */
 .briefing-bg-globe {
   position: absolute;
-  left: -8%;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 72%;
-  max-width: 900px;
+  left: 50%;
+  top: 30%;
+  transform: translate(-50%, 0%);
+  width: 108%;
+  max-width: 1320px;
   height: auto;
   object-fit: contain;
   opacity: 0.88;
@@ -2742,13 +2743,13 @@ a.news-card {
   user-select: none;
 }
 
-/* Edge vignette — fades globe into black toward right */
+/* Edge vignette — fades globe edges into black */
 .briefing-bg-vignette {
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(to right, transparent 30%, rgba(0,0,8,0.55) 55%, rgba(0,0,8,0.92) 72%, #000008 88%),
-    linear-gradient(to bottom, rgba(0,0,8,0.5) 0%, transparent 15%, transparent 85%, rgba(0,0,8,0.5) 100%);
+    linear-gradient(to right, rgba(0,0,8,0.7) 0%, transparent 20%, transparent 80%, rgba(0,0,8,0.7) 100%),
+    linear-gradient(to bottom, rgba(0,0,8,0.6) 0%, transparent 20%, transparent 60%, rgba(0,0,8,0.85) 100%);
 }
 
 /* ── Page layout ────────────────────────────────────────── */

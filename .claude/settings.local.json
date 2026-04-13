@@ -2,7 +2,10 @@
   "permissions": {
     "allow": [
       "Bash(npm install:*)",
-      "WebFetch(domain:pin.it)"
+      "WebFetch(domain:pin.it)",
+      "mcp__claude_ai_Figma__get_code_connect_suggestions",
+      "mcp__claude_ai_Figma__send_code_connect_mappings",
+      "Read(//Users/ritikavarma/**)"
     ]
   }
 }

@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pkill -f \"vite\")",
+      "Bash(npm run:*)",
+      "Bash(git -C /Users/ritikavarma/website/website status)",
+      "Bash(git -C /Users/ritikavarma/website/website push origin main)",
+      "Bash(git -C /Users/ritikavarma/website/website add src/style.css)",
+      "Bash(git -C /Users/ritikavarma/website/website log --oneline -5)",
+      "Bash(git -C /Users/ritikavarma/website/website show 7719c77 --stat)",
+      "Bash(git -C /Users/ritikavarma/website/website show 7719c77 -- src/style.css)",
+      "Skill(update-config)",
+      "Skill(update-config:*)"
+    ]
+  }
+}
