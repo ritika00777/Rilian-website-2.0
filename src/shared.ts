@@ -8,7 +8,7 @@ import './style.css'
 const NAV_HTML = `
 <nav id="nav">
   <div class="nav-inner">
-    <a href="/" class="nav-logo"><img src="/src/assets/rilian-logo.svg" alt="Rilian" height="18"></a>
+    <a href="/" class="nav-logo"><img src="/rilian-logo.svg" alt="Rilian" height="18"></a>
     <div class="nav-links">
       <div class="nav-dropdown">
         <button class="nav-link">Products <span class="chevron">›</span></button>
@@ -30,7 +30,7 @@ const NAV_HTML = `
 const FOOTER_HTML = `
 <footer id="footer">
   <div class="footer-watermark" aria-hidden="true">
-    <img src="/src/assets/rilian-logo.svg" alt="">
+    <img src="/rilian-logo.svg" alt="">
   </div>
   <div class="footer-bottom">
     <div class="footer-copyright-band">
