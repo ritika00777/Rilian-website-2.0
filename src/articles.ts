@@ -122,7 +122,7 @@ export const ARTICLES: Article[] = [
     date: '2025',
     href: '/articles/sovereign-endpoint.html',
     external: false,
-    image: '/newsroom/sovereign-endpoint.png',
+    image: '/newsroom/sovereign-endpoint-new.png',
     excerpt: 'How Rilian deployed mobile threat defense in an air-gapped sovereign environment in under seven days.',
   },
   {
