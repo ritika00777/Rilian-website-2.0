@@ -177,7 +177,7 @@ h1, h2, h3, h4, h5, h6,
   flex: 1;
 }
 
-.nav-dropdown { position: relative; }
+.nav-dropdown { position: relative; display: flex; align-items: center; }
 
 .nav-link {
   background: none;
