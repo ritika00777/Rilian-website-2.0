@@ -146,7 +146,7 @@ export const ARTICLES: Article[] = [
     date: '2025',
     href: '/articles/hidden-cost-breach.html',
     external: false,
-    image: '/newsroom/breach-silence.jpg',
+    image: '/newsroom/breach-silence-new.png',
     excerpt: "Silence doesn't contain breaches — it amplifies them. A hard look at what delayed disclosure actually costs organizations.",
   },
 
