@@ -59,7 +59,7 @@ export const ARTICLES: Article[] = [
     date: 'December 4, 2025',
     href: 'https://www.prnewswire.com/news-releases/censys-and-rilian-technologies-partner-to-strengthen-cyber-defense-and-critical-infrastructure-security-across-the-middle-east-302631272.html',
     external: true,
-    image: '/newsroom/censys.jpg',
+    image: '/newsroom/censys-new.png',
     excerpt: 'Censys and Rilian combine attack surface intelligence with sovereign deployment to protect critical infrastructure.',
   },
   {

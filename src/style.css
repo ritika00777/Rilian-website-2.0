@@ -873,10 +873,10 @@ h1, h2, h3, h4, h5, h6,
   background: rgba(var(--blue-light-rgb), 0.45);
 }
 
-/* Blue beam glow — top center, behind all content */
+/* Blue beam glow — anchored to screen top so it always connects */
 .caspian-beam {
   position: absolute;
-  top: -80px;
+  bottom: 100%;
   left: 50%;
   transform: translateX(-50%);
   width: clamp(247px, 26.2vw, 499px);
