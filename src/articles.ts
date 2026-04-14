@@ -134,7 +134,7 @@ export const ARTICLES: Article[] = [
     date: 'May 2025',
     href: '/articles/uae-us-tech-nexus.html',
     external: false,
-    image: '/newsroom/uae-us-nexus.avif',
+    image: '/newsroom/uae-us-nexus-new.png',
     excerpt: "The Gulf isn't buying innovation anymore — it's building it. What the Trump administration's Gulf visit confirmed for cyber operators.",
   },
   {
