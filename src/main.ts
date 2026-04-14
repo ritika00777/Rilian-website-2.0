@@ -32,11 +32,20 @@ const starsEl   = document.getElementById('hero-stars')       as HTMLElement
 const hudTextEl   = document.getElementById('hero-hud-text')    as HTMLElement
 const scrollNudge = document.getElementById('scroll-nudge')!   as HTMLElement
 
-gsap.set([headline, subEl, actionsEl], { opacity: 0, y: 28 })
-gsap.set(rulersEl,    { opacity: 0 })
-gsap.set(starsEl,     { opacity: 0 })
-gsap.set(hudTextEl,   { opacity: 0, visibility: 'hidden' })
-gsap.set(blueRise, { y: '100vh' }) // start below viewport, rises to y:0
+const isMobile = window.innerWidth <= 768
+
+if (isMobile) {
+  // On mobile: show everything immediately — no scroll-driven reveal
+  gsap.set([headline, subEl, actionsEl, rulersEl, starsEl], { opacity: 1, y: 0 })
+  gsap.set(hudTextEl,  { opacity: 0, visibility: 'hidden' })
+  gsap.set(blueRise,   { y: 0, opacity: 1 })
+} else {
+  gsap.set([headline, subEl, actionsEl], { opacity: 0, y: 28 })
+  gsap.set(rulersEl,   { opacity: 0 })
+  gsap.set(starsEl,    { opacity: 0 })
+  gsap.set(hudTextEl,  { opacity: 0, visibility: 'hidden' })
+  gsap.set(blueRise,   { y: '100vh' }) // start below viewport, rises to y:0
+}
 
 /* ─────────────────────────────────────────────────────────────
    THREE.JS — RENDERER
@@ -268,6 +277,34 @@ window.addEventListener('resize', () => {
 }, { passive: true })
 
 /* ─────────────────────────────────────────────────────────────
+   MOBILE NAV
+───────────────────────────────────────────────────────────── */
+const burger = document.getElementById('nav-burger') as HTMLButtonElement | null
+if (burger) {
+  const closeNav = () => {
+    nav.classList.remove('nav--open')
+    burger.setAttribute('aria-expanded', 'false')
+    document.body.style.overflow = ''
+  }
+
+  burger.addEventListener('click', () => {
+    const isOpen = nav.classList.toggle('nav--open')
+    burger.setAttribute('aria-expanded', String(isOpen))
+    document.body.style.overflow = isOpen ? 'hidden' : ''
+  })
+
+  // Close on any nav link / dropdown link click
+  document.querySelectorAll('#nav .nav-link, #nav .dropdown-link, #nav .nav-mobile-cta').forEach(link => {
+    link.addEventListener('click', closeNav)
+  })
+
+  // Close when resizing back to desktop
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 768) closeNav()
+  }, { passive: true })
+}
+
+/* ─────────────────────────────────────────────────────────────
    LOADER COUNTER
 ───────────────────────────────────────────────────────────── */
 let pct = 0
@@ -289,14 +326,28 @@ function initHero() {
   animate()
 
   gsap.to(orbsEl,      { opacity: 1, duration: 1.2, ease: 'power2.out' })
-  scrollNudge.style.visibility = 'visible'
-  nudgeFadeTween = gsap.fromTo(scrollNudge, { opacity: 0 }, { opacity: 1, duration: 1.2, ease: 'power2.out' })
-  gsap.set(hudTextEl, { visibility: 'visible' })
-  hudFadeTween = gsap.to(hudTextEl, { opacity: 1, duration: 6.0, delay: 0.6, ease: 'power2.out',
-    onStart: () => { hudReady = true }
-  })
 
-  // Arc stays hidden until scroll timeline reveals it after text appears
+  if (isMobile) {
+    // On mobile: auto-play the globe bloom after canvas fades in
+    gsap.to(ringProxy, {
+      scale:   3.85,
+      opacity: 0,
+      ease:    'power2.in',
+      duration: 1.8,
+      delay:   1.0,
+      onUpdate() {
+        ringGroup.scale.setScalar(ringProxy.scale)
+        swarmMat.opacity = ringProxy.opacity
+      }
+    })
+  } else {
+    scrollNudge.style.visibility = 'visible'
+    nudgeFadeTween = gsap.fromTo(scrollNudge, { opacity: 0 }, { opacity: 1, duration: 1.2, ease: 'power2.out' })
+    gsap.set(hudTextEl, { visibility: 'visible' })
+    hudFadeTween = gsap.to(hudTextEl, { opacity: 1, duration: 6.0, delay: 0.6, ease: 'power2.out',
+      onStart: () => { hudReady = true }
+    })
+  }
 }
 
 /* ─────────────────────────────────────────────────────────────
@@ -312,58 +363,54 @@ let hudReady = false
 let hudFadeTween: gsap.core.Tween | null = null
 let nudgeFadeTween: gsap.core.Tween | null = null
 
-const heroTl = gsap.timeline({
-  scrollTrigger: {
-    trigger:       '#hero',
-    start:         'top top',
-    end:           '+=550%',
-    pin:           true,
-    scrub:         1.5,
-    anticipatePin: 1,
-    onUpdate: (self) => {
-      if (self.progress > 0) {
-        if (nudgeFadeTween) { nudgeFadeTween.kill(); nudgeFadeTween = null }
-        scrollNudge.style.opacity = String(Math.max(0, 1 - self.progress / 0.25))
-      }
-      if (hudReady) {
-        if (hudFadeTween && self.progress > 0) {
-          hudFadeTween.kill()
-          hudFadeTween = null
+if (!isMobile) {
+  /* ── Desktop: full scroll-driven hero animation ─────────────── */
+  const heroTl = gsap.timeline({
+    scrollTrigger: {
+      trigger:       '#hero',
+      start:         'top top',
+      end:           '+=550%',
+      pin:           true,
+      scrub:         1.5,
+      anticipatePin: 1,
+      onUpdate: (self) => {
+        if (self.progress > 0) {
+          if (nudgeFadeTween) { nudgeFadeTween.kill(); nudgeFadeTween = null }
+          scrollNudge.style.opacity = String(Math.max(0, 1 - self.progress / 0.25))
         }
-        hudTextEl.style.opacity = String(Math.max(0, 1 - self.progress / 0.45))
+        if (hudReady) {
+          if (hudFadeTween && self.progress > 0) {
+            hudFadeTween.kill()
+            hudFadeTween = null
+          }
+          hudTextEl.style.opacity = String(Math.max(0, 1 - self.progress / 0.45))
+        }
       }
     }
-  }
-})
+  })
 
-heroTl
-  // ── Phase 1: ring blooms out (0 → 0.75) ──────────────────────────────
-  .to(ringProxy, {
-    scale:   3.85,
-    opacity: 0,
-    ease:    'power2.in',
-    duration: 0.75,
-    onUpdate() {
-      ringGroup.scale.setScalar(ringProxy.scale)
-      swarmMat.opacity = ringProxy.opacity
-    }
-  }, 0)
-
-  // ── Phase 2: text fades in — stays fixed ──────────────────────────────
-  .to(rulersEl,  { opacity: 1, ease: 'power2.out', duration: 0.35 }, 0.42)
-  .to(starsEl,   { opacity: 1, ease: 'power2.out', duration: 0.50 }, 0.42)
-  .to(headline,  { opacity: 1, y: 0, ease: 'power2.out', duration: 0.35 }, 0.42)
-  .to(subEl,     { opacity: 1, y: 0, ease: 'power2.out', duration: 0.30 }, 0.54)
-  .to(actionsEl, { opacity: 1, y: 0, ease: 'power2.out', duration: 0.25 }, 0.54)
-  // Arc fades in — delayed to give reading time on headline
-  .to(blueRise,  { opacity: 1, duration: 0.20, ease: 'power2.out' }, 0.80)
-
-  // ── Phase 3: panel rises ───────────────────────────────────────────────
-  .to(blueRise, {
-    y:        0,
-    ease:     'power1.inOut',
-    duration: 0.35
-  }, 0.85)
+  heroTl
+    // ── Phase 1: ring blooms out (0 → 0.75) ────────────────────
+    .to(ringProxy, {
+      scale:   3.85,
+      opacity: 0,
+      ease:    'power2.in',
+      duration: 0.75,
+      onUpdate() {
+        ringGroup.scale.setScalar(ringProxy.scale)
+        swarmMat.opacity = ringProxy.opacity
+      }
+    }, 0)
+    // ── Phase 2: text fades in ──────────────────────────────────
+    .to(rulersEl,  { opacity: 1, ease: 'power2.out', duration: 0.35 }, 0.42)
+    .to(starsEl,   { opacity: 1, ease: 'power2.out', duration: 0.50 }, 0.42)
+    .to(headline,  { opacity: 1, y: 0, ease: 'power2.out', duration: 0.35 }, 0.42)
+    .to(subEl,     { opacity: 1, y: 0, ease: 'power2.out', duration: 0.30 }, 0.54)
+    .to(actionsEl, { opacity: 1, y: 0, ease: 'power2.out', duration: 0.25 }, 0.54)
+    // ── Phase 3: panel rises ────────────────────────────────────
+    .to(blueRise,  { opacity: 1, duration: 0.20, ease: 'power2.out' }, 0.80)
+    .to(blueRise,  { y: 0, ease: 'power1.inOut', duration: 0.35 }, 0.85)
+}
 
 
 /* ─────────────────────────────────────────────────────────────
@@ -829,6 +876,30 @@ document.querySelectorAll<HTMLAnchorElement>('a[href="#caspian"]').forEach(link 
     const trigger    = ScrollTrigger.getAll().find(t => t.trigger === heroEl2)
     const pinEnd     = trigger ? trigger.end : heroEl2.offsetHeight
     window.scrollTo({ top: pinEnd + problemEl.offsetHeight, behavior: 'smooth' })
+  })
+})
+
+/* ── #about anchor: same pin compensation, skip all intermediate sections ── */
+document.querySelectorAll<HTMLAnchorElement>('a[href="#about"]').forEach(link => {
+  link.addEventListener('click', (e) => {
+    e.preventDefault()
+    const heroEl        = document.getElementById('hero')!
+    const problemEl     = document.getElementById('problem')!
+    const caspianEl     = document.getElementById('caspian')!
+    const dawntreaderEl = document.getElementById('dawntreader')!
+    const armoryEl      = document.getElementById('armory')!
+    const whyEl         = document.getElementById('why')!
+    const trigger       = ScrollTrigger.getAll().find(t => t.trigger === heroEl)
+    const pinEnd        = trigger ? trigger.end : heroEl.offsetHeight
+    window.scrollTo({
+      top: pinEnd
+        + problemEl.offsetHeight
+        + caspianEl.offsetHeight
+        + dawntreaderEl.offsetHeight
+        + armoryEl.offsetHeight
+        + whyEl.offsetHeight,
+      behavior: 'smooth'
+    })
   })
 })
 
