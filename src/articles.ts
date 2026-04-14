@@ -35,7 +35,7 @@ export const ARTICLES: Article[] = [
     date: 'January 20, 2026',
     href: 'https://www.prnewswire.com/news-releases/simspace-and-rilian-technologies-partner-to-strengthen-agentic-cyber-defense-for-critical-infrastructure-organizations-in-the-us-and-gcc-302664853.html',
     external: true,
-    image: '/newsroom/simspace.jpg',
+    image: '/newsroom/simspace.png',
     excerpt: 'SimSpace and Rilian unite to deliver agentic cyber defense for critical infrastructure organizations across the US and GCC.',
   },
   {
