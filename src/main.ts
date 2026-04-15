@@ -7,6 +7,7 @@ import { RenderPass }     from 'three/addons/postprocessing/RenderPass.js'
 import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
 
 gsap.registerPlugin(ScrollTrigger)
+ScrollTrigger.config({ ignoreMobileResize: true })
 
 // Capture hash before the browser or GSAP can interfere
 const _initialHash = location.hash
@@ -62,10 +63,12 @@ const scrollNudge = document.getElementById('scroll-nudge')!   as HTMLElement
 const isMobile = window.innerWidth <= 768
 
 if (isMobile) {
-  // On mobile: show everything immediately — no scroll-driven reveal
-  gsap.set([headline, subEl, actionsEl, rulersEl, starsEl], { opacity: 1, y: 0 })
+  // Mobile: start hidden — scroll-driven reveal mirrors desktop
+  gsap.set([headline, subEl, actionsEl], { opacity: 0, y: 20 })
+  gsap.set(rulersEl,   { opacity: 0 })
+  gsap.set(starsEl,    { opacity: 0 })
   gsap.set(hudTextEl,  { opacity: 0, visibility: 'hidden' })
-  gsap.set(blueRise,   { y: 0, opacity: 1 })
+  gsap.set(blueRise,   { y: '100vh', opacity: 0 })
 } else {
   gsap.set([headline, subEl, actionsEl], { opacity: 0, y: 28 })
   gsap.set(rulersEl,   { opacity: 0 })
@@ -367,6 +370,8 @@ function initHero() {
         swarmMat.opacity = ringProxy.opacity
       }
     })
+    scrollNudge.style.visibility = 'visible'
+    nudgeFadeTween = gsap.fromTo(scrollNudge, { opacity: 0 }, { opacity: 1, duration: 1.2, ease: 'power2.out' })
   } else {
     scrollNudge.style.visibility = 'visible'
     nudgeFadeTween = gsap.fromTo(scrollNudge, { opacity: 0 }, { opacity: 1, duration: 1.2, ease: 'power2.out' })
@@ -443,6 +448,35 @@ if (!isMobile) {
     // ── Phase 3: panel rises ────────────────────────────────────
     .to(blueRise,  { opacity: 1, duration: 0.20, ease: 'power2.out' }, 0.80)
     .to(blueRise,  { y: 0, ease: 'power1.inOut', duration: 0.35 }, 0.85)
+
+} else {
+  /* ── Mobile: scroll-driven text reveal + panel rise ─────────── */
+  const mobileTl = gsap.timeline({
+    scrollTrigger: {
+      trigger:       '#hero',
+      start:         'top top',
+      end:           '+=200%',
+      pin:           true,
+      scrub:         1.2,
+      onUpdate: (self) => {
+        if (self.progress > 0) {
+          if (nudgeFadeTween) { nudgeFadeTween.kill(); nudgeFadeTween = null }
+          scrollNudge.style.opacity = String(Math.max(0, 1 - self.progress / 0.25))
+        }
+      }
+    }
+  })
+
+  mobileTl
+    // ── Phase 2: text fades in (0 → 0.65) ──────────────────────
+    .to(rulersEl,  { opacity: 1, ease: 'power2.out', duration: 0.30 }, 0)
+    .to(starsEl,   { opacity: 1, ease: 'power2.out', duration: 0.40 }, 0)
+    .to(headline,  { opacity: 1, y: 0, ease: 'power2.out', duration: 0.30 }, 0.05)
+    .to(subEl,     { opacity: 1, y: 0, ease: 'power2.out', duration: 0.25 }, 0.20)
+    .to(actionsEl, { opacity: 1, y: 0, ease: 'power2.out', duration: 0.20 }, 0.25)
+    // ── Phase 3: panel rises (0.65 → 1.0) ──────────────────────
+    .to(blueRise,  { opacity: 1, duration: 0.15, ease: 'power2.out' }, 0.65)
+    .to(blueRise,  { y: 0, ease: 'power1.inOut', duration: 0.30 }, 0.70)
 }
 
 

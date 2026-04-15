@@ -39,7 +39,7 @@ body {
   font-family: var(--font);
   font-size: 16px;
   line-height: 1.6;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 a { text-decoration: none; color: inherit; }
@@ -538,6 +538,14 @@ h1, h2, h3, h4, h5, h6,
   opacity: 0;
 }
 
+
+/* ── Center ray (problem orb → caspian screen) ─────────────── */
+/* Must be position:absolute so JS-set height/top don't create
+   layout space and push the problem section down the page.     */
+#center-ray {
+  position: absolute;
+  pointer-events: none;
+}
 
 /* ── Planet arc ────────────────────────────────────────────── */
 /* A giant circle: only its top arc peeks above #sections-rise.
@@ -3492,14 +3500,8 @@ a.news-card {
    MOBILE FIXES — sections missing responsive overrides
 ═══════════════════════════════════════════════════════════════ */
 
-/* On mobile the hero is not pinned — sections panel sits naturally
-   after the hero instead of overlapping it via the negative margin. */
-@media (max-width: 768px) {
-  #sections-rise {
-    margin-top: 0;
-    opacity: 1;
-  }
-}
+/* Mobile hero is now pinned with scroll-driven reveal — sections-rise
+   uses the same margin-top: -100vh as desktop (no override needed). */
 
 @media (max-width: 768px) {
   /* ── About: tighter inner padding + smaller chamfer ── */
