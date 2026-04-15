@@ -3505,8 +3505,9 @@ a.news-card {
    the 280vw rise-arc from escaping its transformed stacking context. */
 @media (max-width: 768px) {
   #sections-rise {
-    /* Allow arc to peek above (-10vh) but clip the 280vw arc horizontally */
-    clip-path: inset(-10vh 0 0 0);
+    /* Clip 280vw arc horizontally (prevents layout overflow + iOS zoom-out).
+       overflow-y stays visible so the arc glow can breathe upward freely. */
+    overflow-x: clip;
   }
 }
 

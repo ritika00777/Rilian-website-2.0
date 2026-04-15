@@ -61,6 +61,7 @@ const hudTextEl   = document.getElementById('hero-hud-text')    as HTMLElement
 const scrollNudge = document.getElementById('scroll-nudge')!   as HTMLElement
 
 const isMobile = window.innerWidth <= 768
+let mobileGlobeBlend = 0   // 0 = all red, 1 = all blue — driven by scroll on mobile
 
 if (isMobile) {
   // Mobile: start hidden — scroll-driven reveal mirrors desktop
@@ -278,12 +279,18 @@ function animate() {
     // _toPos = particle - cameraLocal, so dot(particle, _toPos) < 0 means facing camera
     const frontFacing = swarmPositions[i].dot(_toPos) < 0
 
-    // Fade to blue when cursor is near and particle faces camera — never fades back
-    if (frontFacing && distSq < COLOR_R * COLOR_R) {
-      colorBlend[i] += (1.0 - colorBlend[i]) * 0.12
+    if (isMobile) {
+      // Scroll-driven: entire globe blends red → blue during Phase 1
+      _tempColor.copy(isLandArr[i] ? redColor : oceanColor)
+        .lerp(isLandArr[i] ? blueColor : oceanBlueColor, mobileGlobeBlend)
+    } else {
+      // Desktop: cursor-proximity driven per-particle — never fades back
+      if (frontFacing && distSq < COLOR_R * COLOR_R) {
+        colorBlend[i] += (1.0 - colorBlend[i]) * 0.12
+      }
+      _tempColor.copy(isLandArr[i] ? redColor : oceanColor)
+        .lerp(isLandArr[i] ? blueColor : oceanBlueColor, colorBlend[i])
     }
-    const targetBlue = isLandArr[i] ? blueColor : oceanBlueColor
-    _tempColor.copy(isLandArr[i] ? redColor : oceanColor).lerp(targetBlue, colorBlend[i])
     swarmMesh.setColorAt(i, _tempColor)
 
     dummy.position.copy(swarmPositions[i])
@@ -386,6 +393,10 @@ function initHero() {
    works because GSAP can tween any numeric JS property.
 ───────────────────────────────────────────────────────────── */
 const ringProxy = { scale: 0.757, opacity: 1.0 }
+if (isMobile) {
+  ringProxy.scale = 0.55
+  ringGroup.scale.setScalar(0.55)
+}
 let hudReady = false
 let hudFadeTween: gsap.core.Tween | null = null
 let nudgeFadeTween: gsap.core.Tween | null = null
@@ -448,6 +459,8 @@ if (!isMobile) {
       pin:           true,
       scrub:         0.8,
       onUpdate: (self) => {
+        // Globe turns fully blue as Phase 1 completes (0 → 0.45 of scroll progress)
+        mobileGlobeBlend = Math.min(1, self.progress / 0.45)
         if (self.progress > 0) {
           if (nudgeFadeTween) { nudgeFadeTween.kill(); nudgeFadeTween = null }
           scrollNudge.style.opacity = String(Math.max(0, 1 - self.progress / 0.25))
