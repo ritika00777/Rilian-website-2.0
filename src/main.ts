@@ -358,18 +358,7 @@ function initHero() {
   gsap.to(orbsEl,      { opacity: 1, duration: 1.2, ease: 'power2.out' })
 
   if (isMobile) {
-    // On mobile: auto-play the globe bloom after canvas fades in
-    gsap.to(ringProxy, {
-      scale:   3.85,
-      opacity: 0,
-      ease:    'power2.in',
-      duration: 1.8,
-      delay:   1.0,
-      onUpdate() {
-        ringGroup.scale.setScalar(ringProxy.scale)
-        swarmMat.opacity = ringProxy.opacity
-      }
-    })
+    // Globe bloom is scroll-driven via mobile ScrollTrigger — just show nudge
     scrollNudge.style.visibility = 'visible'
     nudgeFadeTween = gsap.fromTo(scrollNudge, { opacity: 0 }, { opacity: 1, duration: 1.2, ease: 'power2.out' })
   } else {
@@ -455,7 +444,7 @@ if (!isMobile) {
     scrollTrigger: {
       trigger:       '#hero',
       start:         'top top',
-      end:           '+=130%',
+      end:           '+=180%',
       pin:           true,
       scrub:         0.8,
       onUpdate: (self) => {
@@ -468,15 +457,26 @@ if (!isMobile) {
   })
 
   mobileTl
-    // ── Phase 2: text fades in (0 → 0.65) ──────────────────────
-    .to(rulersEl,  { opacity: 1, ease: 'power2.out', duration: 0.30 }, 0)
-    .to(starsEl,   { opacity: 1, ease: 'power2.out', duration: 0.40 }, 0)
-    .to(headline,  { opacity: 1, y: 0, ease: 'power2.out', duration: 0.30 }, 0.05)
-    .to(subEl,     { opacity: 1, y: 0, ease: 'power2.out', duration: 0.25 }, 0.20)
-    .to(actionsEl, { opacity: 1, y: 0, ease: 'power2.out', duration: 0.20 }, 0.25)
-    // ── Phase 3: panel rises (0.50 → 1.0) ──────────────────────
-    .to(blueRise,  { opacity: 1, duration: 0.15, ease: 'power2.out' }, 0.50)
-    .to(blueRise,  { y: 0, ease: 'power1.inOut', duration: 0.40 }, 0.55)
+    // ── Phase 1: globe blooms out (0 → 0.45) ───────────────────
+    .to(ringProxy, {
+      scale:   3.85,
+      opacity: 0,
+      ease:    'power2.in',
+      duration: 0.45,
+      onUpdate() {
+        ringGroup.scale.setScalar(ringProxy.scale)
+        swarmMat.opacity = ringProxy.opacity
+      }
+    }, 0)
+    // ── Phase 2: text fades in (0.35 → 0.75) ───────────────────
+    .to(rulersEl,  { opacity: 1, ease: 'power2.out', duration: 0.25 }, 0.35)
+    .to(starsEl,   { opacity: 1, ease: 'power2.out', duration: 0.30 }, 0.35)
+    .to(headline,  { opacity: 1, y: 0, ease: 'power2.out', duration: 0.25 }, 0.38)
+    .to(subEl,     { opacity: 1, y: 0, ease: 'power2.out', duration: 0.20 }, 0.50)
+    .to(actionsEl, { opacity: 1, y: 0, ease: 'power2.out', duration: 0.18 }, 0.55)
+    // ── Phase 3: panel rises (0.68 → 1.0) ──────────────────────
+    .to(blueRise,  { opacity: 1, duration: 0.12, ease: 'power2.out' }, 0.68)
+    .to(blueRise,  { y: 0, ease: 'power1.inOut', duration: 0.32 }, 0.70)
 }
 
 

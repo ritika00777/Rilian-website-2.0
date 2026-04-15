@@ -3505,7 +3505,8 @@ a.news-card {
    the 280vw rise-arc from escaping its transformed stacking context. */
 @media (max-width: 768px) {
   #sections-rise {
-    overflow-x: clip;
+    /* Allow arc to peek above (-10vh) but clip the 280vw arc horizontally */
+    clip-path: inset(-10vh 0 0 0);
   }
 }
 
