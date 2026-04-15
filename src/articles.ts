@@ -204,7 +204,7 @@ export function cardHTML(article: Article): string {
     ${authorLine}
     <div class="news-card-bottom">
       <span class="news-meta">${article.source} | ${article.date}</span>
-      <span class="news-read-more">Read More ↗</span>
+      <span class="news-read-more">Read More ↗︎</span>
     </div>
   </div>
 </a>`
@@ -221,7 +221,7 @@ export function cardHTML(article: Article): string {
     <span class="news-cat">${article.category}</span>
     <h4>${article.title}</h4>
     ${excerpt}
-    <span class="news-read-more">Read More ↗</span>
+    <span class="news-read-more">Read More ↗︎</span>
   </div>
 </a>`
 }
