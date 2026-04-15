@@ -84,7 +84,7 @@ h1, h2, h3, h4, h5, h6,
 /* Diagonal arrow on every button */
 .btn-primary::after,
 .btn-ghost::after {
-  content: '↗';
+  content: '↗︎';
   font-size: 1.05em;
   line-height: 1;
 }
