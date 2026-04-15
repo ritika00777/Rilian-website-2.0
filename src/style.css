@@ -3150,7 +3150,7 @@ a.news-card {
   #dawntreader { padding-top: 0.5rem; padding-bottom: 4rem; }
   #armory      { margin-top: 0; padding-top: 4rem; }
   #why         { margin-top: 0; padding-top: 13rem; }
-  .armory-bg-sim { top: -3rem; }
+  .armory-bg-sim { top: -2rem; }
   .armory-glow   { top: -2rem; }
   #armory .caspian-tick, #caspian .caspian-tick { display: none; }
   #dawntreader .dt-bracket-bl { display: none; }
@@ -3645,7 +3645,7 @@ a.news-card {
   .diff-card.is-right:hover { transform: translateX(100px)  translateY(14px) scale(0.94) rotate(1deg); }
 
   /* ── News tabs: scroll horizontally if they don't fit ── */
-  .news-tabs               { overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+  .news-tabs               { overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; touch-action: pan-x; }
   .news-tabs::-webkit-scrollbar { display: none; }
   .news-tab                { flex-shrink: 0; padding: 0.75rem 1rem; }
 }
