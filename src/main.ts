@@ -988,7 +988,8 @@ if (caspianTitleNew) initRoboticTitle(caspianTitleNew)
     const riseTop = sectionsRise.getBoundingClientRect().top + window.scrollY
     const whyTop  = whySection.getBoundingClientRect().top  + window.scrollY
     const offset  = window.innerHeight * 0.03 + 80   // compensate for top: -3vh, +80px pushes rim into #why
-    arc.style.height = `${whyTop - riseTop + offset}px`
+    const isMobile = window.innerWidth <= 768
+    arc.style.height = `${(whyTop - riseTop + offset) * (isMobile ? 1 : 1)}px`
   }
 
   update()

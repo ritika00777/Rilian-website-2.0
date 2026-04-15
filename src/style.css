@@ -3147,8 +3147,9 @@ a.news-card {
   /* ── Section spacing: neutralize desktop overlap tricks, equal gaps ── */
   .section     { padding: 4rem 0; }
   #caspian     { margin-top: 0; padding-top: 4rem; padding-bottom: 4rem; }
-  #dawntreader { padding-top: 4rem; padding-bottom: 4rem; }
+  #dawntreader { padding-top: 0.5rem; padding-bottom: 4rem; }
   #armory      { margin-top: 0; padding-top: 4rem; }
+  #why         { margin-top: 0; padding-top: 13rem; }
 
   /* ── Layout ── */
   .stats-grid   { grid-template-columns: 1fr; }
