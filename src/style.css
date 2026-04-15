@@ -3509,6 +3509,17 @@ a.news-card {
        overflow-y stays visible so the arc glow can breathe upward freely. */
     overflow-x: clip;
   }
+
+  /* Tighter glow on mobile so it fades out before hitting the clip boundary —
+     no visible hard edge at screen sides. */
+  .rise-arc {
+    box-shadow:
+      0 0  3px   3px rgba(200, 235, 255, 1.00),   /* bright white-blue rim */
+      0 0 25px  10px rgba(100, 180, 255, 1.00),   /* close intense glow */
+      0 0 60px  25px rgba(50,  130, 255, 0.85),   /* mid spread */
+      0 0 110px 45px rgba(20,  80,  255, 0.65),   /* atmospheric */
+      0 0 180px 70px rgba(10,  50,  230, 0.35);   /* soft outer edge — fades before clip */
+  }
 }
 
 @media (max-width: 768px) {
