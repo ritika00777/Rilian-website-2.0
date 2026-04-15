@@ -3144,6 +3144,12 @@ a.news-card {
 }
 
 @media (max-width: 768px) {
+  /* ── Section spacing: neutralize desktop overlap tricks, equal gaps ── */
+  .section     { padding: 4rem 0; }
+  #caspian     { margin-top: 0; padding-top: 4rem; padding-bottom: 4rem; }
+  #dawntreader { padding-top: 4rem; padding-bottom: 4rem; }
+  #armory      { margin-top: 0; padding-top: 4rem; }
+
   /* ── Layout ── */
   .stats-grid   { grid-template-columns: 1fr; }
   .split-layout { grid-template-columns: 1fr; gap: 3rem; }
@@ -3183,16 +3189,26 @@ a.news-card {
 
   .nav-link {
     padding: 0.9rem 0;
-    font-size: 0.9rem;
-    letter-spacing: 0.05em;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
     border-bottom: 1px solid var(--border);
     width: 100%;
-    color: var(--muted);
+    color: var(--text);
   }
 
-  /* Products sub-links always visible (no hover mechanic on touch) */
-  .nav-dropdown          { position: static; }
-  .nav-dropdown:hover .chevron { transform: none; }
+  /* Products — section header label on mobile */
+  .nav-dropdown { position: static; flex-direction: column; align-items: flex-start; }
+  .nav-dropdown > .nav-link {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text);
+    pointer-events: none;
+  }
+  .nav-dropdown .chevron { display: none; }
 
   .dropdown-panel {
     position: static;
@@ -3204,13 +3220,18 @@ a.news-card {
     box-shadow: none;
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
-    padding: 0 0 0.25rem 1rem;
+    padding: 0 0 0.25rem 1.5rem;
     transition: none;
   }
 
   .dropdown-link {
-    padding: 0.45rem 0;
-    font-size: 0.82rem;
+    display: block;
+    padding: 0.5rem 0;
+    font-size: 0.9rem;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid var(--border);
+    width: 100%;
+    color: var(--muted);
   }
 
   /* Mobile CTA at bottom of panel */
@@ -3235,6 +3256,9 @@ a.news-card {
 
   /* ── Rise arc: wider circle = flatter top edge on narrow screens ── */
   .rise-arc { width: 600vw; }
+
+  /* ── Caspian: hide beam PNG on mobile ── */
+  .caspian-beam { display: none; }
 }
 
 @media (max-width: 560px) {
@@ -3548,17 +3572,59 @@ a.news-card {
   /* ── About: logos row stacks vertically ── */
   .logos-row       { flex-direction: column; gap: 2.5rem; margin-top: 3rem; }
   .backgrounds-img { width: 100%; max-width: 100%; }
-  .backers-img     { width: 68%; max-width: 68%; }
+  .backers-img     { width: 90%; max-width: 90%; }
 
-  /* ── Caspian cards: single column on mobile ── */
-  .caspian-cards-row {
-    flex-direction: column;
+  /* ── Caspian cards: horizontal scroll on mobile ── */
+  .caspian-cards {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    scroll-snap-type: x mandatory;
     gap: 0.75rem;
+    padding-bottom: 1.5rem;
+    align-items: stretch;
   }
-  .caspian-cards-row--2 .caspian-card {
-    flex: 1;
+  .caspian-cards::-webkit-scrollbar { display: none; }
+
+  /* flatten rows — cards become direct flex children of .caspian-cards */
+  .caspian-cards-row {
+    display: contents;
   }
+
   .caspian-card {
+    flex: 0 0 72vw;
+    width: 72vw;
+    min-height: 160px;
+    scroll-snap-align: start;
+    clip-path: polygon(1.5% 0%, 18% 0%, 20% 3%, 99% 3%, 100% 5.5%, 100% 100%, 0% 100%, 0% 5%);
+  }
+
+  /* row-2 card sizing is now handled by .caspian-card above */
+  .caspian-cards-row--2 .caspian-card {
+    flex: 0 0 72vw;
+  }
+
+  /* ── DawnTreader cards: horizontal scroll on mobile ── */
+  .dt-cards {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    scroll-snap-type: x mandatory;
+    gap: 0.75rem;
+    padding-bottom: 1.5rem;
+    align-items: stretch;
+  }
+  .dt-cards::-webkit-scrollbar { display: none; }
+  .dt-card {
+    flex: 0 0 72vw;
+    width: 72vw;
+    min-height: 160px;
+    scroll-snap-align: start;
     clip-path: polygon(1.5% 0%, 18% 0%, 20% 3%, 99% 3%, 100% 5.5%, 100% 100%, 0% 100%, 0% 5%);
   }
 
@@ -3579,13 +3645,15 @@ a.news-card {
 }
 
 @media (max-width: 560px) {
-  /* ── Diff stack: tighter offsets on narrow viewports ── */
+  /* ── Diff stack: smaller cards, tighter offsets so side cards don't clip ── */
+  .diff-stack { height: 260px; }
   .diff-card {
-    width: calc(100vw - 3rem);
-    padding: 2rem 1.5rem;
+    width: calc(100vw - 5rem);
+    padding: 1.5rem 1.25rem;
   }
-  .diff-card.is-left        { transform: translateX(-54px) translateY(20px) scale(0.92) rotate(-2deg); }
-  .diff-card.is-right       { transform: translateX(54px)  translateY(20px) scale(0.92) rotate(2deg); }
-  .diff-card.is-left:hover  { transform: translateX(-54px) translateY(14px) scale(0.94) rotate(-1deg); }
-  .diff-card.is-right:hover { transform: translateX(54px)  translateY(14px) scale(0.94) rotate(1deg); }
+  .diff-card.is-left        { transform: translateX(-32px) translateY(16px) scale(0.92) rotate(-2deg); }
+  .diff-card.is-right       { transform: translateX(32px)  translateY(16px) scale(0.92) rotate(2deg); }
+  .diff-card.is-left:hover  { transform: translateX(-32px) translateY(12px) scale(0.94) rotate(-1deg); }
+  .diff-card.is-right:hover { transform: translateX(32px)  translateY(12px) scale(0.94) rotate(1deg); }
+  .diff-hint { margin-top: -1rem; }
 }
