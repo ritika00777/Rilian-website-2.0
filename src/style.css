@@ -3533,8 +3533,9 @@ a.news-card {
   #hero          { min-height: 100dvh; }
   #sections-rise { margin-top: -100dvh; }
 
-  /* overflow-x: clip removed — on iOS Safari it clips the y-axis too, cutting
-     the arc's top: -3vh peek. body's overflow-x: clip contains the wide arc instead. */
+  /* clip-path instead of overflow-x: clip — allows the arc to peek above (negative top)
+     while still clipping the 900vw width on left/right so iOS doesn't zoom out. */
+  #sections-rise { clip-path: inset(-5vh 0 0 0); }
 
   /* Simple arched line on mobile — no atmospheric glow to overflow or clip.
      The arc border at top:-3vh is ~427px wide, fitting naturally within the
