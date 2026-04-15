@@ -455,9 +455,9 @@ if (!isMobile) {
     scrollTrigger: {
       trigger:       '#hero',
       start:         'top top',
-      end:           '+=200%',
+      end:           '+=130%',
       pin:           true,
-      scrub:         1.2,
+      scrub:         0.8,
       onUpdate: (self) => {
         if (self.progress > 0) {
           if (nudgeFadeTween) { nudgeFadeTween.kill(); nudgeFadeTween = null }
@@ -474,9 +474,9 @@ if (!isMobile) {
     .to(headline,  { opacity: 1, y: 0, ease: 'power2.out', duration: 0.30 }, 0.05)
     .to(subEl,     { opacity: 1, y: 0, ease: 'power2.out', duration: 0.25 }, 0.20)
     .to(actionsEl, { opacity: 1, y: 0, ease: 'power2.out', duration: 0.20 }, 0.25)
-    // ── Phase 3: panel rises (0.65 → 1.0) ──────────────────────
-    .to(blueRise,  { opacity: 1, duration: 0.15, ease: 'power2.out' }, 0.65)
-    .to(blueRise,  { y: 0, ease: 'power1.inOut', duration: 0.30 }, 0.70)
+    // ── Phase 3: panel rises (0.50 → 1.0) ──────────────────────
+    .to(blueRise,  { opacity: 1, duration: 0.15, ease: 'power2.out' }, 0.50)
+    .to(blueRise,  { y: 0, ease: 'power1.inOut', duration: 0.40 }, 0.55)
 }
 
 

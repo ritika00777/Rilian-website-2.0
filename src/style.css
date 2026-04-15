@@ -3501,7 +3501,13 @@ a.news-card {
 ═══════════════════════════════════════════════════════════════ */
 
 /* Mobile hero is now pinned with scroll-driven reveal — sections-rise
-   uses the same margin-top: -100vh as desktop (no override needed). */
+   uses the same margin-top: -100vh as desktop. Clip overflow-x to prevent
+   the 280vw rise-arc from escaping its transformed stacking context. */
+@media (max-width: 768px) {
+  #sections-rise {
+    overflow-x: clip;
+  }
+}
 
 @media (max-width: 768px) {
   /* ── About: tighter inner padding + smaller chamfer ── */
