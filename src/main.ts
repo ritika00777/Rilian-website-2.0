@@ -8,6 +8,33 @@ import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
 
 gsap.registerPlugin(ScrollTrigger)
 
+// Capture hash before the browser or GSAP can interfere
+const _initialHash = location.hash
+
+/* ─────────────────────────────────────────────────────────────
+   SECTION SCROLL — shared by click handlers + hash-on-load
+───────────────────────────────────────────────────────────── */
+function scrollToSection(hash: string, behavior: ScrollBehavior = 'smooth') {
+  const heroEl        = document.getElementById('hero')!
+  const problemEl     = document.getElementById('problem')!
+  const caspianEl     = document.getElementById('caspian')!
+  const dawntreaderEl = document.getElementById('dawntreader')!
+  const armoryEl      = document.getElementById('armory')!
+  const whyEl         = document.getElementById('why')!
+  const trigger       = ScrollTrigger.getAll().find(t => t.trigger === heroEl)
+  const pinEnd        = trigger ? trigger.end : heroEl.offsetHeight
+
+  const tops: Record<string, number> = {
+    '#caspian':     pinEnd + problemEl.offsetHeight,
+    '#dawntreader': pinEnd + problemEl.offsetHeight + caspianEl.offsetHeight,
+    '#armory':      pinEnd + problemEl.offsetHeight + caspianEl.offsetHeight + dawntreaderEl.offsetHeight,
+    '#about':       pinEnd + problemEl.offsetHeight + caspianEl.offsetHeight + dawntreaderEl.offsetHeight + armoryEl.offsetHeight + whyEl.offsetHeight,
+  }
+
+  const top = tops[hash]
+  if (top !== undefined) window.scrollTo({ top, behavior })
+}
+
 /* ─────────────────────────────────────────────────────────────
    NAV
 ───────────────────────────────────────────────────────────── */
@@ -347,6 +374,12 @@ function initHero() {
     hudFadeTween = gsap.to(hudTextEl, { opacity: 1, duration: 6.0, delay: 0.6, ease: 'power2.out',
       onStart: () => { hudReady = true }
     })
+  }
+
+  // If the page was loaded with a hash (e.g. navigating back from /newsroom),
+  // scroll to the correct section now that ScrollTrigger pin math is ready.
+  if (_initialHash) {
+    setTimeout(() => scrollToSection(_initialHash, 'smooth'), 100)
   }
 }
 
@@ -718,17 +751,7 @@ if (diffCards.length) {
     })
   }
 
-  // Click a back card → bring to front
-  diffCards.forEach((card, i) => {
-    card.addEventListener('click', () => {
-      if (!card.classList.contains('is-front')) {
-        frontIdx = i
-        applyPositions()
-      }
-    })
-  })
-
-  // Drag on the stack to cycle
+  // Drag on the stack to cycle; tap a back card to bring it to front
   const stackEl = document.querySelector<HTMLElement>('.diff-stack')!
   let dragStartX = 0
   let isDragging = false
@@ -744,8 +767,21 @@ if (diffCards.length) {
     isDragging = false
     const delta = e.clientX - dragStartX
     if (Math.abs(delta) > 50) {
+      // Drag: cycle to next / previous card
       frontIdx = ((frontIdx + (delta < 0 ? 1 : -1)) + diffCards.length) % diffCards.length
       applyPositions()
+    } else {
+      // Tap / click: bring whichever back card was under the pointer to front
+      const tapped = diffCards.find(card => {
+        if (card.classList.contains('is-front')) return false
+        const r = card.getBoundingClientRect()
+        return e.clientX >= r.left && e.clientX <= r.right &&
+               e.clientY >= r.top  && e.clientY <= r.bottom
+      })
+      if (tapped) {
+        frontIdx = diffCards.indexOf(tapped)
+        applyPositions()
+      }
     }
   })
 
@@ -867,38 +903,12 @@ if (caspianTitleNew) initRoboticTitle(caspianTitleNew)
 /* ─────────────────────────────────────────────────────────────
    NEWS TABS
 ───────────────────────────────────────────────────────────── */
-/* ── #caspian anchor: scroll past the hero pin to the real section start ── */
-document.querySelectorAll<HTMLAnchorElement>('a[href="#caspian"]').forEach(link => {
-  link.addEventListener('click', (e) => {
-    e.preventDefault()
-    const heroEl2    = document.getElementById('hero')!
-    const problemEl  = document.getElementById('problem')!
-    const trigger    = ScrollTrigger.getAll().find(t => t.trigger === heroEl2)
-    const pinEnd     = trigger ? trigger.end : heroEl2.offsetHeight
-    window.scrollTo({ top: pinEnd + problemEl.offsetHeight, behavior: 'smooth' })
-  })
-})
-
-/* ── #about anchor: same pin compensation, skip all intermediate sections ── */
-document.querySelectorAll<HTMLAnchorElement>('a[href="#about"]').forEach(link => {
-  link.addEventListener('click', (e) => {
-    e.preventDefault()
-    const heroEl        = document.getElementById('hero')!
-    const problemEl     = document.getElementById('problem')!
-    const caspianEl     = document.getElementById('caspian')!
-    const dawntreaderEl = document.getElementById('dawntreader')!
-    const armoryEl      = document.getElementById('armory')!
-    const whyEl         = document.getElementById('why')!
-    const trigger       = ScrollTrigger.getAll().find(t => t.trigger === heroEl)
-    const pinEnd        = trigger ? trigger.end : heroEl.offsetHeight
-    window.scrollTo({
-      top: pinEnd
-        + problemEl.offsetHeight
-        + caspianEl.offsetHeight
-        + dawntreaderEl.offsetHeight
-        + armoryEl.offsetHeight
-        + whyEl.offsetHeight,
-      behavior: 'smooth'
+/* ── Custom anchor scroll — compensates for GSAP hero pin ── */
+;['#caspian', '#dawntreader', '#armory', '#about'].forEach(hash => {
+  document.querySelectorAll<HTMLAnchorElement>(`a[href="${hash}"]`).forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault()
+      scrollToSection(hash)
     })
   })
 })
@@ -927,12 +937,13 @@ document.querySelectorAll<HTMLAnchorElement>('a[href="#about"]').forEach(link =>
    NEWSROOM — homepage preview (3 cards per tab)
 ───────────────────────────────────────────────────────────── */
 ;(function initHomeNewsroom() {
-  import('./articles').then(({ ARTICLES, cardHTML, revealCards }) => {
+  import('./articles').then(({ ARTICLES, cardHTML, gridClass, revealCards }) => {
     const grid = document.getElementById('home-news-grid') as HTMLElement | null
     if (!grid) return
 
     function showTab(tab: string) {
       const subset = ARTICLES.filter(a => a.tab === tab).slice(0, 3)
+      grid!.className = `news-grid ${gridClass(tab as import('./articles').Tab)}`
       grid!.innerHTML = subset.map(cardHTML).join('')
       revealCards(grid!)
     }

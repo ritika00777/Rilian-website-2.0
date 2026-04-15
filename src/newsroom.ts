@@ -1,5 +1,5 @@
 import './shared'
-import { ARTICLES, type Tab, cardHTML, revealCards } from './articles'
+import { ARTICLES, type Tab, cardHTML, gridClass, revealCards } from './articles'
 
 /* ─────────────────────────────────────────────────────────────
    NEWSROOM PAGE — full listing with load more
@@ -15,6 +15,7 @@ let visible:   number  = BATCH
 function render() {
   const all = ARTICLES.filter(a => a.tab === activeTab)
 
+  grid.className = `news-grid ${gridClass(activeTab)}`
   grid.innerHTML = all.slice(0, visible).map(cardHTML).join('')
   revealCards(grid)
 

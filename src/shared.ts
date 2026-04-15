@@ -34,7 +34,7 @@ const FOOTER_HTML = `
   </div>
   <div class="footer-bottom">
     <div class="footer-copyright-band">
-      <span class="footer-copyright">© 2025 Rilian. All rights reserved.</span>
+      <span class="footer-copyright">© 2026 Rilian. All rights reserved.</span>
     </div>
     <div class="footer-nav-bar">
       <div class="footer-nav-group">
@@ -58,7 +58,6 @@ const FOOTER_HTML = `
         </div>
         <div class="footer-legal-links">
           <a href="/privacy-security.html">Privacy &amp; Security</a>
-          <a href="/terms-of-use.html">Terms of Use</a>
           <a href="/terms-and-conditions.html">Terms &amp; Conditions</a>
           <a href="/service-level-agreement.html">SLA</a>
         </div>

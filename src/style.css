@@ -2310,6 +2310,60 @@ h1, h2, h3, h4, h5, h6,
   gap: 1.5rem;
 }
 
+.news-grid--list {
+  grid-template-columns: 1fr;
+  gap: 0;
+}
+
+/* List-style card for press / news tabs */
+.news-card--list {
+  flex-direction: row;
+  align-items: center;
+  padding: 1.25rem 1.5rem;
+  border-radius: 0;
+  border-left: none;
+  border-right: none;
+  border-top: none;
+  border-bottom: 1px solid var(--border);
+  background: transparent;
+}
+.news-card--list:first-child {
+  border-top: 1px solid var(--border);
+}
+.news-card--list .news-card-content {
+  padding: 0;
+  gap: 0.3rem;
+}
+.news-card--list h4 {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text);
+  margin: 0;
+  line-height: 1.4;
+}
+.news-author {
+  font-size: 0.78rem;
+  color: var(--muted);
+  margin: 0.15rem 0 0;
+}
+.news-meta {
+  font-size: 0.75rem;
+  color: var(--muted);
+  opacity: 0.7;
+  margin-top: 0.25rem;
+  display: block;
+}
+@media (hover: hover) and (pointer: fine) {
+  .news-card--list:hover {
+    background: rgba(9, 65, 187, 0.05);
+    border-color: var(--border);
+    transform: none;
+  }
+  .news-card--list:hover h4 {
+    color: #6b9fff;
+  }
+}
+
 /* ── News cards (image-first layout) ───────────────────────── */
 
 /* Cards are <a> tags — reset link styles */
@@ -2423,6 +2477,17 @@ a.news-card {
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+.news-card-bottom {
+  margin-top: auto;
+  padding-top: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.news-card-bottom .news-read-more {
+  margin-top: 0;
 }
 
 .news-read-more {

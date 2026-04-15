@@ -15,6 +15,7 @@ export interface Article {
   external: boolean
   image?: string   // path to local image asset
   excerpt?: string // short description shown on cards
+  author?: string  // byline shown on press/news cards
 }
 
 export const TAB_LABELS: Record<Tab, string> = {
@@ -71,6 +72,7 @@ export const ARTICLES: Article[] = [
     date: 'July 30, 2025',
     href: 'https://www.businesswire.com/news/home/20250730228444/en/UAE-Cyber-Security-Council-to-Collaborate-With-Rilian-Technologies-and-CPX-Holding-to-Secure-Critical-Infrastructure-In-Collaboration-With-Leading-Partners-From-the-UAE-and-the-World',
     external: true,
+    image: '/newsroom/uae-cyber-council.png',
     excerpt: 'The UAE Cyber Security Council, Rilian Technologies, and CPX Holding align to protect national critical infrastructure.',
   },
 
@@ -86,6 +88,7 @@ export const ARTICLES: Article[] = [
     external: true,
     image: '/newsroom/homeland-security.jpg',
     excerpt: "CEO Christian Schnedler on turning the administration's cyber strategy into operational reality in an era of digital conflict.",
+    author: 'Christian Schnedler, CEO & Co-Founder, Rilian',
   },
   {
     id: 'cipher-brief',
@@ -98,6 +101,7 @@ export const ARTICLES: Article[] = [
     external: true,
     image: '/newsroom/cipher-brief.avif',
     excerpt: 'Christian Schnedler and former CIA officer Duyane Norman on why America\'s alliances are the decisive factor in beating Beijing.',
+    author: 'Christian Schnedler, CEO & Co-Founder, Rilian | Duyane Norman, Former Member, CIA\'s Senior Intelligence Service',
   },
   {
     id: 'wsj-qatar',
@@ -110,6 +114,7 @@ export const ARTICLES: Article[] = [
     external: true,
     image: '/newsroom/wsj-qatar.avif',
     excerpt: "What's driving global companies to establish operations in Qatar — and why cybersecurity infrastructure is central to the story.",
+    author: 'Christian Schnedler, CEO & Co-Founder, Rilian',
   },
 
   // ── Blogs ─────────────────────────────────────────────────
@@ -181,10 +186,31 @@ export const ARTICLES: Article[] = [
 export function cardHTML(article: Article): string {
   const target = article.external ? ' target="_blank" rel="noopener noreferrer"' : ' target="_blank"'
 
+  // All tabs: full card with image
   const imgBlock = article.image
     ? `<div class="news-card-img"><img src="${article.image}" alt="${article.title}" loading="lazy"></div>`
     : `<div class="news-card-img news-card-img--placeholder"><span class="news-card-placeholder-source">${article.source}</span></div>`
 
+  // Press + News: source | date (+ author for news) instead of description
+  if (article.tab === 'press' || article.tab === 'news') {
+    const authorLine = article.author
+      ? `<p class="news-author">By ${article.author}</p>`
+      : ''
+    return `<a class="news-card" href="${article.href}"${target}>
+  ${imgBlock}
+  <div class="news-card-content">
+    <span class="news-cat">${article.category}</span>
+    <h4>${article.title}</h4>
+    ${authorLine}
+    <div class="news-card-bottom">
+      <span class="news-meta">${article.source} | ${article.date}</span>
+      <span class="news-read-more">Read More ↗</span>
+    </div>
+  </div>
+</a>`
+  }
+
+  // Blogs + Events: description + read more
   const excerpt = article.excerpt
     ? `<p class="news-excerpt">${article.excerpt}</p>`
     : ''
@@ -198,6 +224,11 @@ export function cardHTML(article: Article): string {
     <span class="news-read-more">Read More ↗</span>
   </div>
 </a>`
+}
+
+/** Returns the grid modifier class for a given tab (reserved for future use) */
+export function gridClass(_tab: Tab): string {
+  return ''
 }
 
 /* ── Staggered reveal after inserting cards into DOM ───────── */
