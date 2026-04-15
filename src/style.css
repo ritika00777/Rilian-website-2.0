@@ -3150,6 +3150,10 @@ a.news-card {
   #dawntreader { padding-top: 0.5rem; padding-bottom: 4rem; }
   #armory      { margin-top: 0; padding-top: 4rem; }
   #why         { margin-top: 0; padding-top: 13rem; }
+  .armory-bg-sim { top: -3rem; }
+  .armory-glow   { top: -2rem; }
+  #armory .caspian-tick, #caspian .caspian-tick { display: none; }
+  #dawntreader .dt-bracket-bl { display: none; }
 
   /* ── Layout ── */
   .stats-grid   { grid-template-columns: 1fr; }
