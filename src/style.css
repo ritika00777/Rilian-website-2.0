@@ -3529,6 +3529,10 @@ a.news-card {
    uses the same margin-top: -100vh as desktop. Clip overflow-x to prevent
    the 280vw rise-arc from escaping its transformed stacking context. */
 @media (max-width: 768px) {
+  /* Use dvh so iOS Safari's browser chrome doesn't throw off the hero/rise overlap */
+  #hero          { min-height: 100dvh; }
+  #sections-rise { margin-top: -100dvh; }
+
   #sections-rise {
     /* Clip 280vw arc horizontally (prevents layout overflow + iOS zoom-out).
        overflow-y stays visible so the arc glow can breathe upward freely. */
