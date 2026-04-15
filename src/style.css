@@ -3519,6 +3519,16 @@ a.news-card {
       0 0 60px  25px rgba(50,  130, 255, 0.85),   /* mid spread */
       0 0 110px 45px rgba(20,  80,  255, 0.65),   /* atmospheric */
       0 0 180px 70px rgba(10,  50,  230, 0.35);   /* soft outer edge — fades before clip */
+    /* Fade out at the visible left/right edges of sections-rise.
+       32%/68% = (280vw − 100vw) / 2 / 280vw — maps exactly to screen edges. */
+    -webkit-mask-image: linear-gradient(to right,
+      transparent 32%, black 35%,
+      black 65%, transparent 68%
+    );
+    mask-image: linear-gradient(to right,
+      transparent 32%, black 35%,
+      black 65%, transparent 68%
+    );
   }
 }
 
