@@ -343,6 +343,10 @@ h1, h2, h3, h4, h5, h6,
   text-transform: uppercase;
 }
 
+.scroll-nudge-tagline {
+  display: none;
+}
+
 @keyframes nudge-bob {
   0%, 100% { transform: translateY(0); }
   50%       { transform: translateY(3px); }
@@ -3144,6 +3148,32 @@ a.news-card {
 }
 
 @media (max-width: 768px) {
+  /* ── Scroll nudge: stack tagline above arrow+label on mobile ── */
+  #scroll-nudge {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+    white-space: normal;
+    text-align: center;
+  }
+
+  .scroll-nudge-tagline {
+    display: block;
+    font-family: var(--font-mono, monospace);
+    font-size: 0.78rem;
+    letter-spacing: 0.18em;
+    color: rgba(255, 255, 255, 0.85);
+    text-transform: uppercase;
+    text-align: center;
+    width: 100%;
+  }
+
+  .scroll-nudge-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
   /* ── Section spacing: neutralize desktop overlap tricks, equal gaps ── */
   .section     { padding: 4rem 0; }
   #caspian     { margin-top: 0; padding-top: 4rem; padding-bottom: 4rem; }
