@@ -3533,13 +3533,12 @@ a.news-card {
   #hero          { min-height: 100dvh; }
   #sections-rise { margin-top: -100dvh; }
 
-  /* clip-path instead of overflow-x: clip — allows the arc to peek above (negative top)
-     while still clipping the 900vw width on left/right so iOS doesn't zoom out. */
-  #sections-rise { clip-path: inset(-5vh 0 0 0); }
+  /* overflow-x: clip contains the 900vw arc. Arc sits at top: 0 (inside panel)
+     so iOS clipping on y-axis doesn't cut it. */
+  #sections-rise { overflow-x: clip; }
+  .rise-arc      { top: 0; }
 
-  /* Simple arched line on mobile — no atmospheric glow to overflow or clip.
-     The arc border at top:-3vh is ~427px wide, fitting naturally within the
-     430px screen. overflow-x: clip on sections-rise handles the rest. */
+  /* Simple arched line on mobile — no atmospheric glow to overflow or clip. */
   .rise-arc {
     border: 1.5px solid rgba(120, 190, 255, 0.70);
     box-shadow:
