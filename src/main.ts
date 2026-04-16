@@ -365,18 +365,16 @@ const tick = setInterval(() => {
 function initHero() {
   loaderEl.classList.add('done')
 
-  // iOS Safari: window.innerHeight at load (URL bar visible) < 100vh (bar hidden).
-  // Canvas CSS stretches to fill the full hero, causing vertical stretch on the globe.
   // Re-measure the hero's actual CSS height and correct the renderer if needed.
-  if (isMobile) {
-    const heroEl = document.getElementById('hero')!
-    const actualH = heroEl.clientHeight
-    if (Math.abs(actualH - renderer.domElement.height) > 2) {
-      renderer.setSize(window.innerWidth, actualH)
-      camera.aspect = window.innerWidth / actualH
-      camera.updateProjectionMatrix()
-      composer.setSize(window.innerWidth, actualH)
-    }
+  // On desktop, the initial renderer.setSize() can fire before layout is settled,
+  // causing the canvas to be oversized and the bottom arc to be clipped on first load.
+  const heroEl = document.getElementById('hero')!
+  const actualH = heroEl.clientHeight
+  if (Math.abs(actualH - renderer.domElement.height) > 2) {
+    renderer.setSize(window.innerWidth, actualH)
+    camera.aspect = window.innerWidth / actualH
+    camera.updateProjectionMatrix()
+    composer.setSize(window.innerWidth, actualH)
   }
 
   animate()
