@@ -20,12 +20,19 @@ const NAV_HTML = `
       </div>
       <a href="/newsroom.html" class="nav-link">Newsroom</a>
       <a href="/#about" class="nav-link">About Us</a>
+      <a href="/request-briefing.html" class="btn-primary btn-sm nav-mobile-cta">Request a Briefing</a>
     </div>
     <div class="nav-actions">
       <a href="/request-briefing.html" class="btn-primary btn-sm">Request a Briefing</a>
     </div>
+    <button class="nav-burger" id="nav-burger" aria-label="Menu" aria-expanded="false">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
   </div>
-</nav>`
+</nav>
+<div id="nav-backdrop"></div>`
 
 const FOOTER_HTML = `
 <footer id="footer">
@@ -77,6 +84,30 @@ const navEl = document.getElementById('nav')
 window.addEventListener('scroll', () => {
   navEl?.classList.toggle('scrolled', window.scrollY > 60)
 }, { passive: true })
+
+/* ── Mobile nav burger ──────────────────────────────────────── */
+const burger = document.getElementById('nav-burger') as HTMLButtonElement | null
+if (burger && navEl) {
+  const closeNav = () => {
+    navEl.classList.remove('nav--open')
+    burger.setAttribute('aria-expanded', 'false')
+    document.body.style.overflow = ''
+  }
+
+  burger.addEventListener('click', () => {
+    const isOpen = navEl.classList.toggle('nav--open')
+    burger.setAttribute('aria-expanded', String(isOpen))
+    document.body.style.overflow = isOpen ? 'hidden' : ''
+  })
+
+  document.querySelectorAll('#nav .nav-link, #nav .dropdown-link, #nav .nav-mobile-cta').forEach(link => {
+    link.addEventListener('click', closeNav)
+  })
+
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 768) closeNav()
+  }, { passive: true })
+}
 
 /* ── Button character stagger (matches main.ts) ─────────────── */
 document.querySelectorAll<HTMLElement>('.btn-primary, .btn-ghost').forEach(btn => {
