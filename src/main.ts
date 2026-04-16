@@ -15,12 +15,23 @@ const _initialHash = location.hash
 /* ─────────────────────────────────────────────────────────────
    SECTION SCROLL — shared by click handlers + hash-on-load
 ───────────────────────────────────────────────────────────── */
+// Walk the offsetParent chain to get true document position,
+// unaffected by CSS transforms (GSAP applies translateY to #sections-rise).
+function getDocumentTop(el: HTMLElement): number {
+  let top = 0
+  let node: HTMLElement | null = el
+  while (node) {
+    top += node.offsetTop
+    node = node.offsetParent as HTMLElement | null
+  }
+  return top
+}
+
 function scrollToSection(hash: string, behavior: ScrollBehavior = 'smooth') {
-  const el = document.querySelector(hash)
+  const el = document.querySelector(hash) as HTMLElement | null
   if (!el) return
   const navH = (document.getElementById('nav')?.offsetHeight ?? 0)
-  const top  = el.getBoundingClientRect().top + window.scrollY - navH
-  window.scrollTo({ top, behavior })
+  window.scrollTo({ top: getDocumentTop(el) - navH, behavior })
 }
 
 /* ─────────────────────────────────────────────────────────────
@@ -388,7 +399,7 @@ function initHero() {
   // If the page was loaded with a hash (e.g. navigating back from /newsroom),
   // scroll to the correct section now that ScrollTrigger pin math is ready.
   if (_initialHash) {
-    setTimeout(() => scrollToSection(_initialHash, 'smooth'), 100)
+    setTimeout(() => scrollToSection(_initialHash, 'instant'), 100)
   }
 }
 
