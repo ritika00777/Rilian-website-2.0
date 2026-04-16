@@ -213,8 +213,9 @@ const heroEl = document.getElementById('hero')!
 heroEl.style.cursor = 'grab'
 
 document.addEventListener('pointerdown', (e: PointerEvent) => {
-  // Only start drag if clicking within the hero section
+  // Only start drag if clicking within the hero section; disable on touch (conflicts with scroll)
   if (!heroEl.contains(e.target as Node)) return
+  if (e.pointerType === 'touch') return
   isDragging = true
   dragPrevX  = e.clientX
   dragPrevY  = e.clientY
@@ -237,8 +238,11 @@ document.addEventListener('pointerup', () => {
   heroEl.style.cursor = 'grab'
 })
 
+let navIsOpen = false
+
 function animate() {
   requestAnimationFrame(animate)
+  if (navIsOpen) return  // globe frozen while nav is open
 
   if (!isDragging) {
     dragVelX *= 0.97
@@ -322,12 +326,14 @@ if (burger) {
     nav.classList.remove('nav--open')
     burger.setAttribute('aria-expanded', 'false')
     document.body.style.overflow = ''
+    navIsOpen = false
   }
 
   burger.addEventListener('click', () => {
     const isOpen = nav.classList.toggle('nav--open')
     burger.setAttribute('aria-expanded', String(isOpen))
     document.body.style.overflow = isOpen ? 'hidden' : ''
+    navIsOpen = isOpen
   })
 
   // Close on any nav link / dropdown link click
@@ -974,6 +980,65 @@ if (caspianTitleNew) initRoboticTitle(caspianTitleNew)
     })
   })
 })
+
+/* ─────────────────────────────────────────────────────────────
+   CASPIAN CARD SCROLL DOTS (mobile only)
+───────────────────────────────────────────────────────────── */
+;(function caspianDots() {
+  const rail = document.querySelector<HTMLElement>('.caspian-cards')
+  const wrap = document.querySelector<HTMLElement>('.caspian-scroll-dots')
+  if (!rail || !wrap) return
+
+  const cards = Array.from(rail.querySelectorAll<HTMLElement>('.caspian-card'))
+
+  // Build dots
+  cards.forEach((_, i) => {
+    const dot = document.createElement('span')
+    dot.className = 'caspian-dot' + (i === 0 ? ' caspian-dot--active' : '')
+    wrap.appendChild(dot)
+  })
+
+  const dots = Array.from(wrap.querySelectorAll<HTMLElement>('.caspian-dot'))
+
+  rail.addEventListener('scroll', () => {
+    const scrollLeft = rail.scrollLeft
+    let activeIdx = 0, minDist = Infinity
+    cards.forEach((card, i) => {
+      const dist = Math.abs(card.offsetLeft - scrollLeft)
+      if (dist < minDist) { minDist = dist; activeIdx = i }
+    })
+    dots.forEach((dot, i) => dot.classList.toggle('caspian-dot--active', i === activeIdx))
+  }, { passive: true })
+})()
+
+/* ─────────────────────────────────────────────────────────────
+   DAWNTREADER CARD SCROLL DOTS (mobile only)
+───────────────────────────────────────────────────────────── */
+;(function dtDots() {
+  const rail = document.querySelector<HTMLElement>('.dt-cards')
+  const wrap = document.querySelector<HTMLElement>('.dt-scroll-dots')
+  if (!rail || !wrap) return
+
+  const cards = Array.from(rail.querySelectorAll<HTMLElement>('.dt-card'))
+
+  cards.forEach((_, i) => {
+    const dot = document.createElement('span')
+    dot.className = 'dt-dot' + (i === 0 ? ' dt-dot--active' : '')
+    wrap.appendChild(dot)
+  })
+
+  const dots = Array.from(wrap.querySelectorAll<HTMLElement>('.dt-dot'))
+
+  rail.addEventListener('scroll', () => {
+    const scrollLeft = rail.scrollLeft
+    let activeIdx = 0, minDist = Infinity
+    cards.forEach((card, i) => {
+      const dist = Math.abs(card.offsetLeft - scrollLeft)
+      if (dist < minDist) { minDist = dist; activeIdx = i }
+    })
+    dots.forEach((dot, i) => dot.classList.toggle('dt-dot--active', i === activeIdx))
+  }, { passive: true })
+})()
 
 /* ─────────────────────────────────────────────────────────────
    RISE ARC — pin bottom rim at Armory / Why Rilian boundary
