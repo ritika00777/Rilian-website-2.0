@@ -16,24 +16,11 @@ const _initialHash = location.hash
    SECTION SCROLL — shared by click handlers + hash-on-load
 ───────────────────────────────────────────────────────────── */
 function scrollToSection(hash: string, behavior: ScrollBehavior = 'smooth') {
-  const heroEl        = document.getElementById('hero')!
-  const problemEl     = document.getElementById('problem')!
-  const caspianEl     = document.getElementById('caspian')!
-  const dawntreaderEl = document.getElementById('dawntreader')!
-  const armoryEl      = document.getElementById('armory')!
-  const whyEl         = document.getElementById('why')!
-  const trigger       = ScrollTrigger.getAll().find(t => t.trigger === heroEl)
-  const pinEnd        = trigger ? trigger.end : heroEl.offsetHeight
-
-  const tops: Record<string, number> = {
-    '#caspian':     pinEnd + problemEl.offsetHeight,
-    '#dawntreader': pinEnd + problemEl.offsetHeight + caspianEl.offsetHeight,
-    '#armory':      pinEnd + problemEl.offsetHeight + caspianEl.offsetHeight + dawntreaderEl.offsetHeight,
-    '#about':       pinEnd + problemEl.offsetHeight + caspianEl.offsetHeight + dawntreaderEl.offsetHeight + armoryEl.offsetHeight + whyEl.offsetHeight,
-  }
-
-  const top = tops[hash]
-  if (top !== undefined) window.scrollTo({ top, behavior })
+  const el = document.querySelector(hash)
+  if (!el) return
+  const navH = (document.getElementById('nav')?.offsetHeight ?? 0)
+  const top  = el.getBoundingClientRect().top + window.scrollY - navH
+  window.scrollTo({ top, behavior })
 }
 
 /* ─────────────────────────────────────────────────────────────
