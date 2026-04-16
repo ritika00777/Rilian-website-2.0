@@ -3364,10 +3364,51 @@ a.news-card {
 .newsroom-hero {
   max-width: var(--max-w);
   margin: 0 auto;
-  padding: 4rem var(--pad-x) 0;
+  padding: 4rem var(--pad-x) 3.5rem;
   border-bottom: 1px solid var(--border);
-  padding-bottom: 3.5rem;
-  margin-bottom: 0;
+  position: relative;
+}
+
+.newsroom-rulers {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100vw;
+  pointer-events: none;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 6vw;
+}
+
+.newsroom-rulers .hr-line::before { top: 4rem; }
+.newsroom-rulers .hr-line::after  { bottom: 4rem; }
+
+/* Blue line grid — fades out toward bottom edges */
+.newsroom-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(var(--blue-bright-rgb), 0.22) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(var(--blue-bright-rgb), 0.22) 1px, transparent 1px);
+  background-size: 64px 64px;
+  -webkit-mask-image:
+    linear-gradient(to right,  transparent 0%, black 20%, black 80%, transparent 100%),
+    linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%);
+  -webkit-mask-composite: destination-in;
+  mask-image:
+    linear-gradient(to right,  transparent 0%, black 20%, black 80%, transparent 100%),
+    linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%);
+  mask-composite: intersect;
+  pointer-events: none;
+}
+
+
+.newsroom-hero .section-label,
+.newsroom-hero h1 {
+  position: relative;
 }
 
 .newsroom-hero .section-label {
@@ -3592,6 +3633,7 @@ a.news-card {
 }
 
 @media (max-width: 768px) {
+  .newsroom-rulers  { padding: 0 var(--pad-x); }
   .newsroom-hero h1 { font-size: 1.5rem; }
   .article-title    { font-size: 1.5rem; }
   .article-byline   { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
