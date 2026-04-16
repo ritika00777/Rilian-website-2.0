@@ -2254,6 +2254,14 @@ h1, h2, h3, h4, h5, h6,
   min-width: 0;
 }
 
+/* Auto-centers when Backed By is hidden — reverts automatically when uncommented */
+.backgrounds-section:only-child {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
 .backers-section {
   display: flex;
   flex-direction: column;
@@ -2262,9 +2270,9 @@ h1, h2, h3, h4, h5, h6,
 }
 
 .backgrounds-img {
-  width: 90%;
-  max-width: 90%;
-  margin: 0 auto;
+  width: 72%;
+  max-width: 72%;
+  margin: 1.2rem auto 0;
   display: block;
   mix-blend-mode: luminosity;
   opacity: 0.75;
@@ -3607,7 +3615,7 @@ a.news-card {
 
   /* ── About: logos row stacks vertically ── */
   .logos-row       { flex-direction: column; gap: 2.5rem; margin-top: 3rem; }
-  .backgrounds-img { width: 100%; max-width: 100%; }
+  .backgrounds-img { width: 100%; max-width: 100%; margin-top: -0.8rem; }
   .backers-img     { width: 90%; max-width: 90%; }
 
   /* ── Caspian cards: horizontal scroll on mobile ── */
